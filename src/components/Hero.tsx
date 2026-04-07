@@ -33,9 +33,6 @@ export default function Hero() {
           alt="Логотип ЦГБ Невский"
           className="w-44 md:w-60 lg:w-72 object-contain drop-shadow-2xl"
         />
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight">
-          ИНТЕРНАТУРА
-        </h1>
         <p className="text-base md:text-lg max-w-xl opacity-90">
           Методическое пособие для сотрудников отделения. Всё, что нужно знать с первого дня службы.
         </p>

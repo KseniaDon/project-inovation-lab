@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 
 interface HeaderProps {
@@ -7,6 +8,7 @@ interface HeaderProps {
 
 export default function Header({ className }: HeaderProps) {
   const [dark, setDark] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
@@ -35,12 +37,12 @@ export default function Header({ className }: HeaderProps) {
           ЦГБ Невский
         </div>
         <nav className="flex items-center gap-6">
-          <a
-            href="#about"
+          <button
+            onClick={() => navigate("/contacts")}
             className="text-white hover:text-red-400 transition-colors duration-300 uppercase text-sm"
           >
-            О пособии
-          </a>
+            Контакты
+          </button>
           <a
             href="#contact"
             className="text-white hover:text-red-400 transition-colors duration-300 uppercase text-sm"
