@@ -1,6 +1,33 @@
 import { useNavigate } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 
+const staff = [
+  {
+    role: "Куратор Отделения Интернатуры",
+    name: "Ksenia Donskaya",
+    nickname: "Ksenia_Donskaya",
+    href: "https://vk.ru/soul__shu",
+    badge: "Куратор",
+    badgeColor: "bg-red-600",
+  },
+  {
+    role: "Заместитель Заведующего ОИ",
+    name: "Egor Maslow",
+    nickname: "Egor_Maslow",
+    href: "https://vk.ru/cccuvigon",
+    badge: "Зам. Зав.",
+    badgeColor: "bg-zinc-700",
+  },
+  {
+    role: "Заместитель Заведующего ОИ",
+    name: "Andrei Schmidt",
+    nickname: "Andrei_Schmidt",
+    href: "https://vk.com/id392167605",
+    badge: "Зам. Зав.",
+    badgeColor: "bg-zinc-700",
+  },
+];
+
 export default function Contacts() {
   const navigate = useNavigate();
 
@@ -19,50 +46,48 @@ export default function Contacts() {
         <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-10">Руководящий состав ОИ</h1>
 
         <div className="flex flex-col gap-4">
-          <div className="border border-border p-6 flex flex-col gap-3">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground">
-              Куратор Отделения Интернатуры
-            </p>
+          {staff.map((person) => (
             <a
-              href="https://vk.ru/soul__shu"
+              key={person.nickname}
+              href={person.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xl md:text-2xl font-semibold text-red-600 hover:text-red-700 transition-colors flex items-center gap-2"
+              className="group block border border-border hover:border-red-600/60 transition-all duration-300 overflow-hidden"
             >
-              Ksenia_Donskaya
-              <Icon name="ExternalLink" size={18} />
-            </a>
-          </div>
+              <div className="flex items-stretch">
+                {/* Цветная вертикальная полоса */}
+                <div className={`w-1 shrink-0 ${person.badgeColor} transition-all duration-300 group-hover:w-1.5`} />
 
-          <div className="border border-border p-6 flex flex-col gap-3">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground">
-              Заместитель Заведующего ОИ
-            </p>
-            <a
-              href="https://vk.ru/cccuvigon"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xl md:text-2xl font-semibold text-red-600 hover:text-red-700 transition-colors flex items-center gap-2"
-            >
-              Egor_Maslow
-              <Icon name="ExternalLink" size={18} />
-            </a>
-          </div>
+                <div className="flex-1 px-6 py-5 flex flex-col gap-2">
+                  {/* Должность */}
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">
+                    {person.role}
+                  </p>
 
-          <div className="border border-border p-6 flex flex-col gap-3">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground">
-              Заместитель Заведующего ОИ
-            </p>
-            <a
-              href="https://vk.com/id392167605"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xl md:text-2xl font-semibold text-red-600 hover:text-red-700 transition-colors flex items-center gap-2"
-            >
-              Andrei_Schmidt
-              <Icon name="ExternalLink" size={18} />
+                  {/* Имя */}
+                  <p className="text-xl md:text-2xl font-bold text-foreground group-hover:text-red-500 transition-colors duration-300">
+                    {person.name}
+                  </p>
+
+                  {/* Никнейм + иконка */}
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <Icon name="Link" size={13} className="text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground group-hover:text-red-400 transition-colors duration-300 font-mono">
+                      {person.nickname}
+                    </span>
+                    <Icon name="ExternalLink" size={13} className="text-muted-foreground group-hover:text-red-400 transition-colors duration-300 ml-0.5" />
+                  </div>
+                </div>
+
+                {/* Бейдж справа */}
+                <div className="flex items-center pr-6">
+                  <span className={`text-xs uppercase tracking-wider text-white px-2.5 py-1 ${person.badgeColor} font-semibold`}>
+                    {person.badge}
+                  </span>
+                </div>
+              </div>
             </a>
-          </div>
+          ))}
         </div>
       </div>
     </div>

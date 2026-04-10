@@ -11,16 +11,12 @@ export default function Footer() {
               <div className="flex flex-col gap-1 sm:gap-2">
                 <h3 className="mb-1 sm:mb-2 uppercase text-neutral-400 text-xs sm:text-sm">Пособие</h3>
                 <a
-                  href="#rules"
+                  href="https://forum.gtaprovince.ru/topic/995741-cgb-g-nevskiy-vnutrenniy-ustav/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-white hover:text-neutral-400 transition-colors duration-300 text-sm sm:text-base"
                 >
-                  Правила
-                </a>
-                <a
-                  href="#protocols"
-                  className="text-white hover:text-neutral-400 transition-colors duration-300 text-sm sm:text-base"
-                >
-                  Протоколы
+                  Внутренний устав ЦГБ-Н
                 </a>
                 <a
                   href="#contacts"
@@ -52,7 +48,17 @@ export default function Footer() {
               </div>
             </div>
             <div className="flex justify-end items-end">
-              <p className="text-white text-sm sm:text-base">{new Date().getFullYear()} Отделение интернатуры</p>
+              <p className="text-neutral-400 text-xs sm:text-sm text-right max-w-sm">
+                Сделано специально для Отделения интернатуры ЦГБ города Невский by{" "}
+                <a
+                  href="https://vk.com/id132273284"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-red-400 transition-colors duration-300 font-semibold"
+                >
+                  Ksenia_Donskaya
+                </a>
+              </p>
             </div>
           </div>
         </div>
