@@ -14,6 +14,8 @@ import LearnFloorsSection from "./learn/LearnFloorsSection";
 import LearnActivitySection from "./learn/LearnActivitySection";
 import LearnDepartmentsSection from "./learn/LearnDepartmentsSection";
 import LearnDrugsSection from "./learn/LearnDrugsSection";
+import LearnCharterSection from "./learn/LearnCharterSection";
+import LearnOathSection from "./learn/LearnOathSection";
 
 export default function Learn() {
   const [active, setActive] = useState<SectionId>("intro");
@@ -172,11 +174,17 @@ export default function Learn() {
           {/* ЖУРНАЛ АКТИВНОСТИ */}
           {active === "intern-activity" && <LearnActivitySection go={go} />}
 
+          {/* УСТАВНАЯ ДОКУМЕНТАЦИЯ */}
+          {active === "intern-charter" && <LearnCharterSection go={go} />}
+
           {/* ОТДЕЛЕНИЯ ЦГБ-Н */}
           {active === "intern-departments" && <LearnDepartmentsSection go={go} />}
 
           {/* ПРЕПАРАТЫ */}
           {active === "intern-drugs" && <LearnDrugsSection go={go} />}
+
+          {/* КЛЯТВА ВРАЧА */}
+          {active === "intern-oath" && <LearnOathSection go={go} />}
 
           {/* ФЕЛЬДШЕР */}
           {active === "feldsher" && (
