@@ -98,6 +98,15 @@ export default function Learn() {
                       <p className="text-sm text-muted-foreground">
                         В устной речи мы проверяем, как Вы установили бинды и в случае чего, помогаем исправлять вместе с Вами.
                       </p>
+                      <a
+                        href="https://forum.gtaprovince.ru/topic/995732-cgb-g-nevskiy-bindy-dlya-sotrudnikov/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm text-red-500 hover:text-red-400 transition-colors font-medium mt-1"
+                      >
+                        <Icon name="ExternalLink" size={13} />
+                        Бинды для сотрудников
+                      </a>
                     </div>
                   </li>
 
