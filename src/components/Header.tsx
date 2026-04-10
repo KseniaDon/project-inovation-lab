@@ -42,7 +42,7 @@ export default function Header({ className }: HeaderProps) {
             onClick={() => { playClickSound(); navigate("/contacts"); }}
             className="text-white hover:text-red-400 transition-colors duration-300 uppercase text-sm"
           >
-            Контакты
+            Руководящий состав ОИ
           </button>
           <a
             href="#contact"

@@ -26,7 +26,7 @@ export default function Footer() {
                   href="#contacts"
                   className="text-white hover:text-neutral-400 transition-colors duration-300 text-sm sm:text-base"
                 >
-                  Контакты
+                  Руководящий состав ОИ
                 </a>
               </div>
               <div className="flex flex-col gap-1 sm:gap-2">
