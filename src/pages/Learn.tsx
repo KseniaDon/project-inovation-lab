@@ -9,6 +9,7 @@ import LearnRadioSection from "./learn/LearnRadioSection";
 import LearnReportsSection from "./learn/LearnReportsSection";
 import LearnCommandsSection from "./learn/LearnCommandsSection";
 import LearnScheduleSection from "./learn/LearnScheduleSection";
+import LearnFloorsSection from "./learn/LearnFloorsSection";
 
 export default function Learn() {
   const [active, setActive] = useState<SectionId>("intro");
@@ -157,6 +158,9 @@ export default function Learn() {
 
           {/* ГРАФИК РАБОТЫ */}
           {active === "intern-schedule" && <LearnScheduleSection go={go} />}
+
+          {/* РАСПРЕДЕЛЕНИЕ ЭТАЖЕЙ */}
+          {active === "intern-floors" && <LearnFloorsSection go={go} />}
 
           {/* ФЕЛЬДШЕР */}
           {active === "feldsher" && (
