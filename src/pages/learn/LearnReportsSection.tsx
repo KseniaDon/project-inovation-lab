@@ -7,26 +7,22 @@ interface LearnReportsSectionProps {
 }
 
 const MALE_REPORTS = [
-  {
-    label: "Заступление на смену",
-    template: "/r ОИ-Инициалы. Заступил на смену.",
-  },
-  {
-    label: "Сдача смены",
-    template: "/r ОИ-Инициалы. Сдал смену.",
-  },
-  {
-    label: "Перерыв",
-    template: "/r ОИ-Инициалы. Вышел на обеденный перерыв.",
-  },
-  {
-    label: "Окончание перерыва",
-    template: "/r ОИ-Инициалы. Вернулся с обеденного перерыва.",
-  },
+  { label: "Заступление на смену",  template: "/r ОИ-Инициалы. Заступил на смену." },
+  { label: "Сдача смены",           template: "/r ОИ-Инициалы. Сдал смену." },
+  { label: "Перерыв",               template: "/r ОИ-Инициалы. Вышел на обеденный перерыв." },
+  { label: "Окончание перерыва",    template: "/r ОИ-Инициалы. Вернулся с обеденного перерыва." },
+];
+
+const FEMALE_REPORTS = [
+  { label: "Заступление на смену",  template: "/r ОИ-Инициалы. Заступила на смену." },
+  { label: "Сдача смены",           template: "/r ОИ-Инициалы. Сдала смену." },
+  { label: "Перерыв",               template: "/r ОИ-Инициалы. Вышла на обеденный перерыв." },
+  { label: "Окончание перерыва",    template: "/r ОИ-Инициалы. Вернулась с обеденного перерыва." },
 ];
 
 export default function LearnReportsSection({ go }: LearnReportsSectionProps) {
   const [maleOpen, setMaleOpen] = useState(false);
+  const [femaleOpen, setFemaleOpen] = useState(false);
 
   return (
     <div className="flex flex-col gap-6">
@@ -75,10 +71,39 @@ export default function LearnReportsSection({ go }: LearnReportsSectionProps) {
               className={`text-muted-foreground transition-transform duration-200 ${maleOpen ? "rotate-180" : ""}`}
             />
           </button>
-
           {maleOpen && (
             <div className="flex flex-col gap-3 px-4 pb-4 pt-2 border-t border-border">
               {MALE_REPORTS.map(({ label, template }) => (
+                <div key={label} className="flex flex-col gap-1.5">
+                  <p className="text-sm text-foreground font-medium">{label}:</p>
+                  <div className="bg-secondary border border-border rounded-sm px-3 py-2">
+                    <code className="text-xs text-muted-foreground font-mono">{template}</code>
+                  </div>
+                </div>
+              ))}
+              <p className="text-sm italic text-muted-foreground mt-1">
+                Для интернов доступны только «Заступление на смену», «Сдача смены», а также доклады «Перерыв».
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Женские доклады — аккордеон */}
+        <div className="border border-border rounded-sm overflow-hidden">
+          <button
+            onClick={() => setFemaleOpen((v) => !v)}
+            className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-foreground hover:bg-secondary transition-colors"
+          >
+            <span>Женские доклады</span>
+            <Icon
+              name="ChevronDown"
+              size={16}
+              className={`text-muted-foreground transition-transform duration-200 ${femaleOpen ? "rotate-180" : ""}`}
+            />
+          </button>
+          {femaleOpen && (
+            <div className="flex flex-col gap-3 px-4 pb-4 pt-2 border-t border-border">
+              {FEMALE_REPORTS.map(({ label, template }) => (
                 <div key={label} className="flex flex-col gap-1.5">
                   <p className="text-sm text-foreground font-medium">{label}:</p>
                   <div className="bg-secondary border border-border rounded-sm px-3 py-2">
