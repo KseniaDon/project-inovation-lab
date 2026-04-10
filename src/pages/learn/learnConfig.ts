@@ -1,4 +1,4 @@
-export type SectionId = "intro" | "intern" | "intern-binds" | "intern-radio" | "intern-reports" | "intern-commands" | "intern-abbr" | "intern-schedule" | "intern-floors" | "intern-activity" | "intern-charter" | "intern-departments" | "intern-drugs" | "intern-oath" | "feldsher";
+export type SectionId = "intro" | "intern" | "intern-binds" | "intern-radio" | "intern-reports" | "intern-commands" | "intern-abbr" | "intern-schedule" | "intern-floors" | "intern-activity" | "intern-charter" | "intern-departments" | "intern-drugs" | "intern-oath" | "intern-report" | "intern-evidence" | "feldsher";
 
 export const NAV: { id: SectionId; label: string; icon: string; parent?: string; divider?: string }[] = [
   { id: "intro",           label: "Вступление",         icon: "Flag" },
@@ -15,5 +15,7 @@ export const NAV: { id: SectionId; label: string; icon: string; parent?: string;
   { id: "intern-departments",  label: "Отделения ЦГБ-Н",        icon: "Network",       parent: "intern", divider: "Шаг 3: Экзамен" },
   { id: "intern-drugs",        label: "Препараты",               icon: "Pill",          parent: "intern" },
   { id: "intern-oath",         label: "Клятва врача",            icon: "GraduationCap", parent: "intern" },
+  { id: "intern-report",       label: "Что дальше?",             icon: "ClipboardCheck", parent: "intern", divider: "Шаг 4: Отчет на повышение" },
+  { id: "intern-evidence",     label: "Фиксация доказательств",  icon: "Camera",        parent: "intern" },
   { id: "feldsher",            label: "Фельдшер",                icon: "Stethoscope" },
 ];
