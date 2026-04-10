@@ -50,12 +50,20 @@ export default function Hero() {
         <p className="text-base md:text-lg max-w-xl opacity-90">
           {heroData.subtitle}
         </p>
-        <button
-          onClick={() => { playClickSound(); navigate("/learn"); }}
-          className="mt-2 bg-red-600 hover:bg-red-700 text-white px-8 py-3 text-sm uppercase tracking-widest font-semibold transition-all duration-300"
-        >
-          {heroData.buttonText}
-        </button>
+        <div className="flex flex-col sm:flex-row items-center gap-3 mt-2">
+          <button
+            onClick={() => { playClickSound(); navigate("/learn"); }}
+            className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 text-sm uppercase tracking-widest font-semibold transition-all duration-300"
+          >
+            {heroData.buttonText}
+          </button>
+          <button
+            onClick={() => { playClickSound(); navigate("/admin/login"); }}
+            className="border border-white/30 hover:border-white/60 text-white/60 hover:text-white px-6 py-3 text-xs uppercase tracking-widest font-medium transition-all duration-300"
+          >
+            Для администрации
+          </button>
+        </div>
       </div>
     </div>
   );
