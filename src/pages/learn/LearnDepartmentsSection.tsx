@@ -42,9 +42,9 @@ const DEPARTMENTS = [
     abbr: "ОПРС",
     name: "Отделение Подготовки Руководящего Состава",
     desc: "это одно из отделений ЦГБ города Невский, сотрудники которого проходят курсы повышения квалификации для дальнейшей работы в Руководящем составе больницы.",
-    border: "border-blue-700/50",
-    bg: "bg-blue-950/30",
-    text: "text-blue-300",
+    border: "border-orange-700/50",
+    bg: "bg-orange-950/30",
+    text: "text-orange-300",
   },
 ];
 
@@ -66,7 +66,8 @@ export default function LearnDepartmentsSection({ go }: LearnDepartmentsSectionP
       <p className="text-base font-semibold text-muted-foreground">3.3. Отделения ЦГБ</p>
 
       <p className="text-base text-foreground leading-relaxed">
-        <span className="font-bold underline">Ты должен понимать структуру нашей больницы. Всего в нашей больнице 5 отделений.</span>
+        Ты должен понимать структуру нашей больницы. Всего в нашей больнице{" "}
+        <span className="font-bold underline">5 отделений</span>.
       </p>
 
       <ol className="flex flex-col gap-3">
