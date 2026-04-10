@@ -334,13 +334,14 @@ export default function Learn() {
                   <div className="border border-border rounded-sm p-4 flex flex-col gap-3 bg-secondary/40">
                     <p className="text-sm font-semibold text-foreground">Проверка:</p>
                     <p className="text-sm text-foreground">
-                      Если в консоли появилась строка вида — вы всё сделали правильно.
+                      Если в консоли появилась строка вида:
                     </p>
                     <div className="bg-secondary border border-border rounded-sm px-4 py-3">
                       <code className="text-xs text-muted-foreground font-mono">
                         * Bound key '1' 'down' to command 'say Здравствуйте, меня зовут [Ваше ИМЯ и ФАМИЛИЯ], я сотрудник ЦГБ города Невский'
                       </code>
                     </div>
+                    <p className="text-sm text-foreground">— вы всё сделали правильно.</p>
                   </div>
                 </div>
               </div>
