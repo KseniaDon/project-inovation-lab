@@ -167,25 +167,7 @@ export default function Learn() {
                 </li>
               </ol>
 
-              {/* Шаг 1 */}
-              <div className="mt-4 pt-6 border-t border-border flex flex-col gap-4">
-                <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Шаг 1: Подготовка</p>
 
-                {/* Карточка-ссылка на бинды */}
-                <button
-                  onClick={() => go("intern-binds")}
-                  className="group flex items-center justify-between border border-border hover:border-red-600/60 px-5 py-4 transition-all duration-200 text-left"
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon name="Keyboard" size={18} className="text-red-600" />
-                    <div>
-                      <p className="text-sm font-semibold text-foreground group-hover:text-red-500 transition-colors">Настройка биндов</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">1.1 — Обязательная настройка</p>
-                    </div>
-                  </div>
-                  <Icon name="ChevronRight" size={16} className="text-muted-foreground group-hover:text-red-400 transition-colors" />
-                </button>
-              </div>
             </div>
           )}
 
