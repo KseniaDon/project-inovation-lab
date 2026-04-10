@@ -6,6 +6,7 @@ import { SectionId } from "./learn/learnConfig";
 import LearnSidebar from "./learn/LearnSidebar";
 import LearnBindsSection from "./learn/LearnBindsSection";
 import LearnRadioSection from "./learn/LearnRadioSection";
+import LearnReportsSection from "./learn/LearnReportsSection";
 
 export default function Learn() {
   const [active, setActive] = useState<SectionId>("intro");
@@ -145,6 +146,9 @@ export default function Learn() {
 
           {/* ИСПОЛЬЗОВАНИЕ РАЦИИ */}
           {active === "intern-radio" && <LearnRadioSection go={go} />}
+
+          {/* ДОКЛАДЫ В РАЦИЮ */}
+          {active === "intern-reports" && <LearnReportsSection go={go} />}
 
           {/* ФЕЛЬДШЕР */}
           {active === "feldsher" && (
