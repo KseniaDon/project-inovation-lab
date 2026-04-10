@@ -50,7 +50,7 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
       </div>
 
       {/* Пошаговая инструкция */}
-      <div className="border border-border rounded-sm p-6 flex flex-col gap-5">
+      <div className="border border-border rounded-sm p-4 sm:p-6 flex flex-col gap-5">
         <h2 className="text-lg font-bold text-red-500 text-center">Пошаговая инструкция по установке биндов</h2>
 
         {/* Шаг 1 */}
@@ -111,10 +111,10 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
                   <span className="font-semibold text-foreground">скриншоте №2</span>;
                 </span>
               </div>
-              <div className="w-full rounded-sm border border-dashed border-border bg-secondary flex items-center justify-center py-10 text-xs text-muted-foreground ml-5">
+              <div className="w-full rounded-sm border border-dashed border-border bg-secondary flex items-center justify-center py-6 sm:py-10 text-xs text-muted-foreground ml-0 sm:ml-5">
                 Скриншот будет добавлен позже
               </div>
-              <p className="text-xs text-muted-foreground text-center ml-5">Скриншот №2: Консоль разработчика (F8).</p>
+              <p className="text-xs text-muted-foreground text-center ml-0 sm:ml-5">Скриншот №2: Консоль разработчика (F8).</p>
             </li>
 
             <li className="flex flex-col gap-3 text-sm text-foreground">
@@ -130,12 +130,12 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
                 </span>
               </div>
 
-              <p className="text-sm font-semibold text-foreground ml-5">Редактирование бинда:</p>
-              <p className="text-sm text-foreground ml-5">
+              <p className="text-sm font-semibold text-foreground ml-2 sm:ml-5">Редактирование бинда:</p>
+              <p className="text-sm text-foreground ml-2 sm:ml-5">
                 Замените шаблон <span className="font-bold">Имя Фамилия</span> на ваше Имя и Фамилию на русском языке (например, Ксения Донская).
               </p>
 
-              <div className="ml-5 border-l-2 border-red-600/40 pl-4">
+              <div className="ml-2 sm:ml-5 border-l-2 border-red-600/40 pl-2 sm:pl-4">
                 <p className="text-sm text-muted-foreground italic">
                   Убедитесь, что в строке отсутствует символ звёздочки *.
                 </p>
@@ -156,7 +156,7 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
             <p className="text-sm text-foreground">
               Если в консоли появилась строка вида:
             </p>
-            <div className="bg-secondary border border-border rounded-sm px-4 py-3">
+            <div className="bg-secondary border border-border rounded-sm px-4 py-3 overflow-x-auto">
               <code className="text-xs text-muted-foreground font-mono">
                 * Bound key '1' 'down' to command 'say Здравствуйте, меня зовут [Ваше ИМЯ и ФАМИЛИЯ], я сотрудник ЦГБ города Невский'
               </code>
@@ -177,7 +177,7 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
               </div>
               <button
                 onClick={() => navigator.clipboard.writeText(`bind 2 do На груди висит бейдж: "ЦГБ г. Невский | *Должность* | Отделение интернатуры | *Имя Фамилия*".`)}
-                className="ml-5 bg-secondary border border-border rounded-sm px-4 py-3 text-left group relative hover:border-muted-foreground transition-colors"
+                className="ml-2 sm:ml-5 bg-secondary border border-border rounded-sm px-4 py-3 text-left group relative hover:border-muted-foreground transition-colors overflow-x-auto"
               >
                 <code className="text-xs text-muted-foreground font-mono">
                   bind 2 do На груди висит бейдж: "ЦГБ г. Невский | *Должность* | Отделение интернатуры | *Имя Фамилия*".
@@ -194,7 +194,7 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
                 <span className="shrink-0 font-medium text-muted-foreground">2.</span>
                 <span>Вставьте строку в консоль и отредактируйте два поля:</span>
               </div>
-              <div className="ml-5 flex flex-col gap-2">
+              <div className="ml-2 sm:ml-5 flex flex-col gap-2">
                 <p className="text-sm text-foreground">
                   Замените{" "}
                   <code className="bg-secondary border border-border rounded px-1.5 py-0.5 text-xs font-mono">*Должность*</code>{" "}
@@ -213,7 +213,7 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
                 <span className="shrink-0 font-medium text-muted-foreground">3.</span>
                 <span>Нажмите <span className="font-bold">Enter</span>.</span>
               </div>
-              <div className="ml-5 border border-border rounded-sm p-4 flex flex-col gap-2 bg-secondary/40">
+              <div className="ml-2 sm:ml-5 border border-border rounded-sm p-4 flex flex-col gap-2 bg-secondary/40">
                 <p className="text-sm font-semibold text-foreground">Проверка:</p>
                 <p className="text-sm text-foreground">Если в консоли появилась строка, содержащая <span className="font-bold">Интерн</span> и ваше имя с фамилией, вы сделали всё верно.</p>
               </div>

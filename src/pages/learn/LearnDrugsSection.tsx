@@ -85,7 +85,7 @@ export default function LearnDrugsSection({ go }: LearnDrugsSectionProps) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Поиск по симптому или препарату..."
-          className="w-full bg-secondary border border-border rounded-sm pl-9 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-muted-foreground transition-colors"
+          className="w-full bg-secondary border border-border rounded-sm pl-8 sm:pl-9 pr-3 sm:pr-4 py-2 sm:py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-muted-foreground transition-colors"
         />
         {search && (
           <button
@@ -115,16 +115,16 @@ export default function LearnDrugsSection({ go }: LearnDrugsSectionProps) {
               </button>
             </div>
             {openHints[symptom] && (
-              <div className="flex items-start gap-2 bg-secondary/50 border border-border rounded-sm px-3 py-2.5 text-sm text-muted-foreground ml-2">
+              <div className="flex items-start gap-2 bg-secondary/50 border border-border rounded-sm px-2 sm:px-3 py-2.5 text-sm text-muted-foreground ml-1 sm:ml-2">
                 <Icon name="Lightbulb" size={14} className="text-yellow-400 shrink-0 mt-0.5" />
                 <span><span className="font-semibold text-foreground">Подсказка:</span> {hint}</span>
               </div>
             )}
-            <div className="flex flex-wrap gap-1.5 ml-2">
+            <div className="flex flex-wrap gap-1 sm:gap-1.5 ml-1 sm:ml-2">
               {drugs.map((drug) => (
                 <span
                   key={drug}
-                  className="text-sm font-bold text-foreground bg-secondary border border-border rounded-sm px-2.5 py-1"
+                  className="text-xs sm:text-sm font-bold text-foreground bg-secondary border border-border rounded-sm px-2 sm:px-2.5 py-1"
                 >
                   {drug}
                 </span>

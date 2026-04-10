@@ -44,16 +44,16 @@ export default function Learn() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Top bar */}
-      <div className="border-b border-border px-6 py-4 flex items-center gap-4">
+      <div className="border-b border-border px-4 md:px-6 py-3 md:py-4 flex items-center gap-3">
         <button
           onClick={() => { playClickSound(); navigate("/"); }}
-          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors shrink-0"
         >
           <Icon name="ArrowLeft" size={16} />
-          На главную
+          <span className="hidden sm:inline">На главную</span>
         </button>
-        <div className="w-px h-4 bg-border" />
-        <p className="text-xs uppercase tracking-widest text-red-600">Отделение интернатуры</p>
+        <div className="w-px h-4 bg-border hidden sm:block" />
+        <p className="text-xs uppercase tracking-widest text-red-600 truncate">Отделение интернатуры</p>
         <div className="ml-auto">
           <button
             onClick={() => { playClickSound(); toggleTheme(); }}
@@ -65,11 +65,11 @@ export default function Learn() {
         </div>
       </div>
 
-      <div className="flex flex-1">
+      <div className="flex flex-1 pb-16 md:pb-0">
         <LearnSidebar active={active} go={go} />
 
         {/* ── Content ── */}
-        <main className={`flex-1 px-8 py-10 ${active === "intern-binds" ? "max-w-4xl" : "max-w-2xl"}`}>
+        <main className={`flex-1 px-4 md:px-8 py-6 md:py-10 min-w-0 ${active === "intern-binds" ? "max-w-4xl" : "max-w-2xl"}`}>
 
           {/* ВСТУПЛЕНИЕ */}
           {active === "intro" && (

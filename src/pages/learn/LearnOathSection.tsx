@@ -47,7 +47,7 @@ export default function LearnOathSection({ go }: LearnOathSectionProps) {
       </p>
 
       {/* Совет */}
-      <div className="flex items-start gap-3 bg-sky-950/30 border border-sky-700/50 rounded-sm px-5 py-4">
+      <div className="flex items-start gap-2 sm:gap-3 bg-sky-950/30 border border-sky-700/50 rounded-sm px-3 sm:px-5 py-3 sm:py-4">
         <Icon name="Lightbulb" size={18} className="text-sky-400 shrink-0 mt-0.5" />
         <p className="text-sm text-foreground leading-relaxed">
           <span className="font-semibold text-sky-400">Совет:</span>{" "}
@@ -61,13 +61,13 @@ export default function LearnOathSection({ go }: LearnOathSectionProps) {
           <button
             key={idx}
             onClick={() => handleCopy(line, idx)}
-            className="group relative flex items-center justify-between gap-3 bg-secondary/40 hover:bg-secondary border border-border hover:border-muted-foreground rounded-sm px-3 py-2.5 text-left transition-colors"
+            className="group relative flex items-center justify-between gap-2 sm:gap-3 bg-secondary/40 hover:bg-secondary border border-border hover:border-muted-foreground rounded-sm px-2 sm:px-3 py-2 sm:py-2.5 text-left transition-colors"
           >
-            <p className="text-sm font-mono text-foreground leading-relaxed pr-16">{line}</p>
+            <p className="text-xs sm:text-sm font-mono text-foreground leading-relaxed pr-14 sm:pr-16">{line}</p>
             <span className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-xs shrink-0">
               {copiedIdx === idx
-                ? <><Icon name="Check" size={13} className="text-green-400" /><span className="text-green-400">Скопировано!</span></>
-                : <><Icon name="Copy" size={13} className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" /><span className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">Копировать</span></>
+                ? <><Icon name="Check" size={13} className="text-green-400" /><span className="hidden sm:inline text-green-400">Скопировано!</span></>
+                : <><Icon name="Copy" size={13} className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" /><span className="hidden sm:inline text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">Копировать</span></>
               }
             </span>
           </button>

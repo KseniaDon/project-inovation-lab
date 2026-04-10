@@ -68,9 +68,9 @@ export default function Contacts() {
                   </p>
                 </div>
 
-                <div className="flex items-center pr-6 gap-3">
+                <div className="flex items-center pr-4 md:pr-6 gap-2 md:gap-3 shrink-0">
                   <Icon name="ExternalLink" size={15} className="text-muted-foreground group-hover:text-red-400 transition-colors duration-300" />
-                  <span className={`text-xs uppercase tracking-wider text-white px-2.5 py-1 ${person.badgeColor} font-semibold`}>
+                  <span className={`text-xs uppercase tracking-wider text-white px-2 md:px-2.5 py-1 ${person.badgeColor} font-semibold hidden sm:inline`}>
                     {person.badge}
                   </span>
                 </div>

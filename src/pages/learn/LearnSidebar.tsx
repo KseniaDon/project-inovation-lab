@@ -9,7 +9,7 @@ interface LearnSidebarProps {
 
 const ACCORDION_PARENTS: SectionId[] = ["intern", "feldsher"];
 
-export default function LearnSidebar({ active, go }: LearnSidebarProps) {
+function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: SectionId) => void; onClose?: () => void }) {
   const isInternActive = NAV.some((n) => n.parent === "intern" && n.id === active) || active === "intern";
   const isFeldsherActive = active === "feldsher";
 
@@ -24,109 +24,65 @@ export default function LearnSidebar({ active, go }: LearnSidebarProps) {
 
   const topItems = NAV.filter((item) => !item.parent && !ACCORDION_PARENTS.includes(item.id));
 
+  const handleGo = (id: SectionId) => {
+    go(id);
+    onClose?.();
+  };
+
   return (
-    <aside className="w-64 shrink-0 border-r border-border flex flex-col py-6 sticky top-0 h-screen overflow-y-auto">
-      <p className="px-5 text-xs uppercase tracking-widest text-muted-foreground mb-3">Разделы</p>
-      <nav className="flex flex-col gap-0.5 px-3">
-
-        {/* Вступление и прочие top-level не-аккордеон */}
-        {topItems.map((item) => {
-          const isActive = active === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => go(item.id)}
-              className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-sm transition-colors text-left rounded-none
-                ${isActive
-                  ? "bg-red-600/10 text-red-500 border-l-2 border-red-600"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
-                }`}
-            >
-              <Icon name={item.icon as "Flag"} size={16} className={isActive ? "text-red-500" : ""} />
-              {item.label}
-            </button>
-          );
-        })}
-
-        {/* Аккордеон: Интерн */}
-        <div className="flex flex-col">
+    <nav className="flex flex-col gap-0.5 px-3">
+      {topItems.map((item) => {
+        const isActive = active === item.id;
+        return (
           <button
-            onClick={() => { toggleGroup("intern"); if (!openGroups["intern"]) go("intern"); }}
-            className={`w-full flex items-center justify-between gap-2.5 px-3 py-2.5 text-sm transition-colors text-left rounded-none
-              ${active === "intern"
+            key={item.id}
+            onClick={() => handleGo(item.id)}
+            className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-sm transition-colors text-left rounded-none
+              ${isActive
                 ? "bg-red-600/10 text-red-500 border-l-2 border-red-600"
                 : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
               }`}
           >
-            <span className="flex items-center gap-2.5">
-              <Icon name="GraduationCap" size={16} className={active === "intern" ? "text-red-500" : ""} />
-              Интерн
-            </span>
-            <Icon
-              name="ChevronDown"
-              size={14}
-              className={`shrink-0 transition-transform duration-200 ${openGroups["intern"] ? "rotate-180" : ""}`}
-            />
+            <Icon name={item.icon as "Flag"} size={16} className={isActive ? "text-red-500" : ""} />
+            {item.label}
           </button>
+        );
+      })}
 
-          {openGroups["intern"] && (
-            <div className="flex flex-col gap-0.5">
-              {NAV.filter((n) => n.parent === "intern").map((item) => {
-                const isActive = active === item.id;
-                return (
-                  <div key={item.id}>
-                    {item.divider && (
-                      <p className="px-3 pt-3 pb-1 text-xs text-zinc-500 uppercase tracking-widest select-none">
-                        {item.divider}
-                      </p>
-                    )}
-                    <button
-                      onClick={() => go(item.id)}
-                      className={`w-full flex items-center gap-2.5 ml-4 pl-3 pr-3 py-2.5 text-xs transition-colors text-left rounded-none
-                        ${isActive
-                          ? "bg-red-600/10 text-red-500 border-l-2 border-red-600"
-                          : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
-                        }`}
-                    >
-                      <Icon name={item.icon as "Flag"} size={14} className={isActive ? "text-red-500" : ""} />
-                      {item.label}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
+      {/* Аккордеон: Интерн */}
+      <div className="flex flex-col">
+        <button
+          onClick={() => { toggleGroup("intern"); if (!openGroups["intern"]) handleGo("intern"); }}
+          className={`w-full flex items-center justify-between gap-2.5 px-3 py-2.5 text-sm transition-colors text-left rounded-none
+            ${active === "intern"
+              ? "bg-red-600/10 text-red-500 border-l-2 border-red-600"
+              : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
+            }`}
+        >
+          <span className="flex items-center gap-2.5">
+            <Icon name="GraduationCap" size={16} className={active === "intern" ? "text-red-500" : ""} />
+            Интерн
+          </span>
+          <Icon
+            name="ChevronDown"
+            size={14}
+            className={`shrink-0 transition-transform duration-200 ${openGroups["intern"] ? "rotate-180" : ""}`}
+          />
+        </button>
 
-        {/* Аккордеон: Фельдшер */}
-        <div className="flex flex-col">
-          <button
-            onClick={() => { toggleGroup("feldsher"); if (!openGroups["feldsher"]) go("feldsher"); }}
-            className={`w-full flex items-center justify-between gap-2.5 px-3 py-2.5 text-sm transition-colors text-left rounded-none
-              ${active === "feldsher"
-                ? "bg-red-600/10 text-red-500 border-l-2 border-red-600"
-                : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
-              }`}
-          >
-            <span className="flex items-center gap-2.5">
-              <Icon name="Stethoscope" size={16} className={active === "feldsher" ? "text-red-500" : ""} />
-              Фельдшер
-            </span>
-            <Icon
-              name="ChevronDown"
-              size={14}
-              className={`shrink-0 transition-transform duration-200 ${openGroups["feldsher"] ? "rotate-180" : ""}`}
-            />
-          </button>
-
-          {openGroups["feldsher"] && (
-            <div className="flex flex-col gap-0.5">
-              {NAV.filter((n) => n.parent === "feldsher").map((item) => {
-                const isActive = active === item.id;
-                return (
+        {openGroups["intern"] && (
+          <div className="flex flex-col gap-0.5">
+            {NAV.filter((n) => n.parent === "intern").map((item) => {
+              const isActive = active === item.id;
+              return (
+                <div key={item.id}>
+                  {item.divider && (
+                    <p className="px-3 pt-3 pb-1 text-xs text-zinc-500 uppercase tracking-widest select-none">
+                      {item.divider}
+                    </p>
+                  )}
                   <button
-                    key={item.id}
-                    onClick={() => go(item.id)}
+                    onClick={() => handleGo(item.id)}
                     className={`w-full flex items-center gap-2.5 ml-4 pl-3 pr-3 py-2.5 text-xs transition-colors text-left rounded-none
                       ${isActive
                         ? "bg-red-600/10 text-red-500 border-l-2 border-red-600"
@@ -136,13 +92,108 @@ export default function LearnSidebar({ active, go }: LearnSidebarProps) {
                     <Icon name={item.icon as "Flag"} size={14} className={isActive ? "text-red-500" : ""} />
                     {item.label}
                   </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
-      </nav>
-    </aside>
+      {/* Аккордеон: Фельдшер */}
+      <div className="flex flex-col">
+        <button
+          onClick={() => { toggleGroup("feldsher"); if (!openGroups["feldsher"]) handleGo("feldsher"); }}
+          className={`w-full flex items-center justify-between gap-2.5 px-3 py-2.5 text-sm transition-colors text-left rounded-none
+            ${active === "feldsher"
+              ? "bg-red-600/10 text-red-500 border-l-2 border-red-600"
+              : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
+            }`}
+        >
+          <span className="flex items-center gap-2.5">
+            <Icon name="Stethoscope" size={16} className={active === "feldsher" ? "text-red-500" : ""} />
+            Фельдшер
+          </span>
+          <Icon
+            name="ChevronDown"
+            size={14}
+            className={`shrink-0 transition-transform duration-200 ${openGroups["feldsher"] ? "rotate-180" : ""}`}
+          />
+        </button>
+
+        {openGroups["feldsher"] && (
+          <div className="flex flex-col gap-0.5">
+            {NAV.filter((n) => n.parent === "feldsher").map((item) => {
+              const isActive = active === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleGo(item.id)}
+                  className={`w-full flex items-center gap-2.5 ml-4 pl-3 pr-3 py-2.5 text-xs transition-colors text-left rounded-none
+                    ${isActive
+                      ? "bg-red-600/10 text-red-500 border-l-2 border-red-600"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
+                    }`}
+                >
+                  <Icon name={item.icon as "Flag"} size={14} className={isActive ? "text-red-500" : ""} />
+                  {item.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+}
+
+export default function LearnSidebar({ active, go }: LearnSidebarProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const activeLabel = NAV.find((n) => n.id === active)?.label ?? "Меню";
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <aside className="hidden md:flex w-64 shrink-0 border-r border-border flex-col py-6 sticky top-0 h-screen overflow-y-auto">
+        <p className="px-5 text-xs uppercase tracking-widest text-muted-foreground mb-3">Разделы</p>
+        <SidebarContent active={active} go={go} />
+      </aside>
+
+      {/* Mobile: bottom bar button */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-background border-t border-border px-4 py-3 flex items-center justify-between">
+        <span className="text-sm text-muted-foreground truncate max-w-[60%]">{activeLabel}</span>
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="flex items-center gap-2 text-sm text-foreground font-medium"
+        >
+          <Icon name="Menu" size={18} />
+          Разделы
+        </button>
+      </div>
+
+      {/* Mobile drawer overlay */}
+      {mobileOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setMobileOpen(false)}
+          />
+          <div className="relative ml-auto w-72 max-w-[85vw] bg-background h-full flex flex-col overflow-y-auto shadow-xl">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+              <p className="text-xs uppercase tracking-widest text-muted-foreground">Разделы</p>
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Icon name="X" size={18} />
+              </button>
+            </div>
+            <div className="py-4">
+              <SidebarContent active={active} go={go} onClose={() => setMobileOpen(false)} />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
