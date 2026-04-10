@@ -70,11 +70,6 @@ export default function LearnReportSection({ go }: LearnReportSectionProps) {
         </p>
       </div>
 
-      <div className="flex items-start gap-3 bg-secondary border border-border px-4 py-3 rounded-sm">
-        <Icon name="FileText" size={16} className="text-red-500 shrink-0 mt-0.5" />
-        <p className="text-sm text-foreground font-semibold">Заявление на повышение</p>
-      </div>
-
       <div className="flex justify-end">
         <button
           onClick={() => go("intern-evidence")}
