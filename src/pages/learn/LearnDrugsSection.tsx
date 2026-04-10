@@ -208,7 +208,7 @@ export default function LearnDrugsSection({ go }: LearnDrugsSectionProps) {
         <h1 className="text-3xl font-bold">Препараты</h1>
       </div>
 
-      <p className="text-base font-semibold text-muted-foreground">3.2. Список препаратов (Раздел 3)</p>
+      <p className="text-base font-semibold text-muted-foreground">3.2. Список препаратов</p>
 
       {/* Поиск */}
       <div className="relative">
@@ -274,6 +274,19 @@ export default function LearnDrugsSection({ go }: LearnDrugsSectionProps) {
           </div>
         ))}
       </div>
+
+      <p className="text-sm text-muted-foreground">
+        Информационный раздел нашей больницы на госпортале по препаратам:{" "}
+        <a
+          href="https://forum.gtaprovince.ru/topic/995733-cgb-g-nevskiy-informacionnyy-razdel/?do=findComment&comment=6982146"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+        >
+          Раздел 3. Список препаратов.
+          <Icon name="ExternalLink" size={13} />
+        </a>
+      </p>
     </div>
   );
 }
