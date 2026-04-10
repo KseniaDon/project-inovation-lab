@@ -119,7 +119,7 @@ export default function LearnDrugsSection({ go }: LearnDrugsSectionProps) {
             {openHints[symptom] && (
               <div className="flex items-start gap-2 bg-secondary/50 border border-border rounded-sm px-3 py-2.5 text-sm text-muted-foreground ml-2">
                 <Icon name="Lightbulb" size={14} className="text-yellow-400 shrink-0 mt-0.5" />
-                <span>{hint}</span>
+                <span><span className="font-semibold text-foreground">Подсказка:</span> {hint}</span>
               </div>
             )}
             <div className="flex flex-wrap gap-1.5 ml-2">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import { playClickSound } from "@/hooks/useSound";
@@ -19,7 +19,25 @@ import LearnOathSection from "./learn/LearnOathSection";
 
 export default function Learn() {
   const [active, setActive] = useState<SectionId>("intro");
+  const [dark, setDark] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") setDark(true);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = !dark;
+    setDark(next);
+    if (next) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
 
   const go = (id: SectionId) => { playClickSound(); setActive(id); };
 
@@ -36,6 +54,15 @@ export default function Learn() {
         </button>
         <div className="w-px h-4 bg-border" />
         <p className="text-xs uppercase tracking-widest text-red-600">Отделение интернатуры</p>
+        <div className="ml-auto">
+          <button
+            onClick={() => { playClickSound(); toggleTheme(); }}
+            className="text-muted-foreground hover:text-foreground transition-colors p-1"
+            aria-label="Переключить тему"
+          >
+            <Icon name={dark ? "Sun" : "Moon"} size={18} />
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-1">
@@ -60,6 +87,13 @@ export default function Learn() {
               <p className="text-base text-foreground leading-relaxed">
                 На выход из Отделения Интернатуры и повышения до лаборанта вам дается{" "}
                 <span className="text-red-600 font-semibold">14 дней</span>.
+              </p>
+              <p className="text-base text-foreground leading-relaxed">
+                За <span className="text-red-600 font-bold">7 дней</span> —{" "}
+                <strong>повыситься до Фельдшера.</strong>
+              </p>
+              <p className="text-base text-foreground leading-relaxed">
+                После повышения ещё <span className="text-red-600 font-bold">7 дней</span> — выйти из ОИ.
               </p>
             </div>
           )}
