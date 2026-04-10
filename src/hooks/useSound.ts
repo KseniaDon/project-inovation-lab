@@ -9,16 +9,34 @@ const getAudioContext = (): AudioContext | null => {
 export function playClickSound() {
   const ac = getAudioContext();
   if (!ac) return;
-  const osc = ac.createOscillator();
-  const g = ac.createGain();
-  osc.type = "sine";
-  osc.frequency.setValueAtTime(900, ac.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(400, ac.currentTime + 0.06);
-  g.gain.setValueAtTime(0.18, ac.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.08);
-  osc.connect(g);
-  g.connect(ac.destination);
-  osc.start(ac.currentTime);
-  osc.stop(ac.currentTime + 0.1);
-  setTimeout(() => ac.close(), 200);
+
+  const t = ac.currentTime;
+
+  // Мягкий верхний тон
+  const osc1 = ac.createOscillator();
+  const g1 = ac.createGain();
+  osc1.type = "sine";
+  osc1.frequency.setValueAtTime(1200, t);
+  osc1.frequency.exponentialRampToValueAtTime(900, t + 0.07);
+  g1.gain.setValueAtTime(0.10, t);
+  g1.gain.exponentialRampToValueAtTime(0.001, t + 0.10);
+  osc1.connect(g1);
+  g1.connect(ac.destination);
+  osc1.start(t);
+  osc1.stop(t + 0.12);
+
+  // Тёплый нижний тон
+  const osc2 = ac.createOscillator();
+  const g2 = ac.createGain();
+  osc2.type = "sine";
+  osc2.frequency.setValueAtTime(600, t);
+  osc2.frequency.exponentialRampToValueAtTime(400, t + 0.09);
+  g2.gain.setValueAtTime(0.07, t);
+  g2.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+  osc2.connect(g2);
+  g2.connect(ac.destination);
+  osc2.start(t);
+  osc2.stop(t + 0.14);
+
+  setTimeout(() => ac.close(), 300);
 }
