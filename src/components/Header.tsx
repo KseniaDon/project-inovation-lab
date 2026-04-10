@@ -34,8 +34,9 @@ export default function Header({ className }: HeaderProps) {
   return (
     <header className={`absolute top-0 left-0 right-0 z-10 p-6 ${className ?? ""}`}>
       <div className="flex justify-between items-center">
-        <div className="text-white text-sm uppercase tracking-wide font-semibold">
-          ЦГБ Невский
+        <div className="text-white text-sm uppercase tracking-wide font-semibold leading-tight">
+          <span className="block">ЦГБ Невский</span>
+          <span className="block text-xs font-normal tracking-widest opacity-70 normal-case">Отделение Интернатуры</span>
         </div>
         <nav className="flex items-center gap-6">
           <button

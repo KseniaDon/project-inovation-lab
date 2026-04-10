@@ -16,7 +16,7 @@ export default function Contacts() {
         </button>
 
         <p className="text-xs uppercase tracking-widest text-red-600 mb-2">ЦГБ Невский</p>
-        <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-10">Контакты</h1>
+        <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-10">Руководящий состав ОИ</h1>
 
         <div className="flex flex-col gap-4">
           <div className="border border-border p-6 flex flex-col gap-3">
