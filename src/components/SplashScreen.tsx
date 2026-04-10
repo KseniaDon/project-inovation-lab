@@ -65,18 +65,30 @@ const BEAT_MS    = 1300;  // ~46 уд/мин — медленно и чётко
 const BEAT_TIMES = [500, 1800, 3100]; // ms
 const TOTAL_MS   = 4500;
 
-// Звук ЭКГ-аппарата: характерный «пип» 1000Гц
-function playEcgBeep(ac: AudioContext, t: number) {
-  const osc = ac.createOscillator();
-  const g   = ac.createGain();
-  osc.type = "sine";
-  osc.frequency.value = 1000;
-  g.gain.setValueAtTime(0, t);
-  g.gain.linearRampToValueAtTime(0.35, t + 0.010);
-  g.gain.setValueAtTime(0.35, t + 0.080);
-  g.gain.linearRampToValueAtTime(0, t + 0.140);
-  osc.connect(g); g.connect(ac.destination);
-  osc.start(t); osc.stop(t + 0.160);
+// Приятное сердцебиение: двойной удар «lub-dub»
+function playHeartbeat(ac: AudioContext, t: number) {
+  const thump = (start: number, freq: number, gain: number, dur: number) => {
+    const osc  = ac.createOscillator();
+    const g    = ac.createGain();
+    const filt = ac.createBiquadFilter();
+    filt.type            = "lowpass";
+    filt.frequency.value = 180;
+    filt.Q.value         = 1.2;
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(freq, start);
+    osc.frequency.exponentialRampToValueAtTime(freq * 0.4, start + dur);
+    g.gain.setValueAtTime(0, start);
+    g.gain.linearRampToValueAtTime(gain, start + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.001, start + dur);
+    osc.connect(filt); filt.connect(g); g.connect(ac.destination);
+    osc.start(start); osc.stop(start + dur + 0.02);
+  };
+  // «lub» — первый, более сильный удар
+  thump(t,        70, 0.55, 0.13);
+  thump(t,       110, 0.30, 0.11);
+  // «dub» — второй, тише, через ~220мс
+  thump(t + 0.22, 60, 0.35, 0.11);
+  thump(t + 0.22, 95, 0.18, 0.09);
 }
 
 export default function SplashScreen({ onFinish }: SplashScreenProps) {
@@ -100,9 +112,8 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
     if (!AC) return;
     const ac = new AC();
     BEAT_TIMES.forEach(ms => {
-      // пик R приходится примерно на 39% бита
       const peakOffset = BEAT_MS * 0.39 / 1000;
-      playEcgBeep(ac, ac.currentTime + ms / 1000 + peakOffset);
+      playHeartbeat(ac, ac.currentTime + ms / 1000 + peakOffset);
     });
     return () => { ac.close(); };
   }, []);
