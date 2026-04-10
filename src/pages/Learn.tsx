@@ -224,6 +224,44 @@ export default function Learn() {
                   Обязательно установите бинды, меняя на свои данные в нужных местах.
                 </p>
               </div>
+
+              {/* Пошаговая инструкция */}
+              <div className="border border-border rounded-sm p-6 flex flex-col gap-5">
+                <h2 className="text-lg font-bold text-red-500 text-center">Пошаговая инструкция по установке биндов</h2>
+
+                <div className="flex flex-col gap-3">
+                  <p className="text-base font-semibold text-center text-foreground">Установка бинда</p>
+
+                  <ol className="flex flex-col gap-2">
+                    <li className="flex items-start gap-2 text-sm text-foreground">
+                      <span className="shrink-0 font-medium text-muted-foreground">1.</span>
+                      <span>Перейдите по официальной ссылке на форум (см. выше);</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm text-foreground">
+                      <span className="shrink-0 font-medium text-muted-foreground">2.</span>
+                      <span>
+                        На открывшейся странице найдите и скопируйте нужный текст для приветствия (выделено красным) на{" "}
+                        <span className="text-foreground font-semibold">скриншоте №1</span>:
+                      </span>
+                    </li>
+                  </ol>
+
+                  <img
+                    src="https://skrinshoter.ru/s/100426/vF4l2KCt.jpg?download=1&name=%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82-10-04-2026%2016:14:36.jpg"
+                    alt="Скриншот №1"
+                    className="w-full rounded-sm border border-border mt-1"
+                  />
+                  <p className="text-xs text-muted-foreground text-center">Скриншот №1: Выделенный текст для копирования</p>
+                </div>
+
+                {/* Важное правило */}
+                <div className="flex items-start gap-3 bg-red-950/30 border border-red-800/40 rounded-sm px-4 py-3">
+                  <Icon name="AlertTriangle" size={18} className="text-red-500 shrink-0 mt-0.5" />
+                  <p className="text-sm text-foreground leading-relaxed">
+                    <span className="font-semibold text-red-400">Важное правило:</span> Настройку биндов необходимо производить построчно. Не копируйте весь блок текста сразу!
+                  </p>
+                </div>
+              </div>
             </div>
           )}
 
