@@ -67,6 +67,22 @@ export default function Learn() {
         </div>
 
         <div className="flex flex-col gap-4">
+          {/* Блок вступления */}
+          <div className="border border-border overflow-hidden">
+            <div className="flex items-stretch">
+              <div className="w-1 shrink-0 bg-red-600" />
+              <div className="flex-1 px-6 py-5 flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <Icon name="Flag" size={18} className="text-red-600" />
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">Вступление</p>
+                </div>
+                <p className="text-sm text-foreground leading-relaxed">
+                  Добро пожаловать в Отделение интернатуры ЦГБ города Невский. Данный раздел содержит программу подготовки для каждой должности. Ознакомьтесь с материалами своего уровня и следуйте указаниям куратора.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {sections.map((section) => {
             const isOpen = open.includes(section.id);
             return (
