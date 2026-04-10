@@ -67,7 +67,7 @@ export default function Learn() {
         </aside>
 
         {/* ── Content ── */}
-        <main className="flex-1 px-8 py-10 max-w-2xl">
+        <main className={`flex-1 px-8 py-10 ${active === "intern-binds" ? "max-w-4xl" : "max-w-2xl"}`}>
 
           {/* ВСТУПЛЕНИЕ */}
           {active === "intro" && (
