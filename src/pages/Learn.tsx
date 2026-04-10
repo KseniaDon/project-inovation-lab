@@ -230,7 +230,7 @@ export default function Learn() {
                 <h2 className="text-lg font-bold text-red-500 text-center">Пошаговая инструкция по установке биндов</h2>
 
                 <div className="flex flex-col gap-3">
-                  <p className="text-base font-semibold text-center text-foreground">Установка бинда</p>
+                  <p className="text-base font-semibold text-center text-foreground">Шаг 1: Установка бинда</p>
 
                   <ol className="flex flex-col gap-2">
                     <li className="flex items-start gap-2 text-sm text-foreground">
@@ -241,7 +241,7 @@ export default function Learn() {
                       <span className="shrink-0 font-medium text-muted-foreground">2.</span>
                       <span>
                         На открывшейся странице найдите и скопируйте нужный текст для приветствия (выделено красным) на{" "}
-                        <span className="text-foreground font-semibold">скриншоте №1</span>:
+                        <span className="text-foreground font-semibold">скриншоте №1</span>;
                       </span>
                     </li>
                   </ol>
