@@ -64,7 +64,7 @@ export default function LearnActivitySection({ go }: LearnActivitySectionProps) 
         <p className="text-base font-bold text-foreground">Правила AFK</p>
         <ul className="flex flex-col gap-2">
           <li className="flex items-start gap-2 text-sm text-foreground">
-            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-muted-foreground shrink-0" />
+            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" />
             Вставать в АФК разрешено где угодно в пределах больницы (Исключение: крыша больницы).
           </li>
           <li className="flex items-start gap-2 text-sm text-foreground">
@@ -82,6 +82,33 @@ export default function LearnActivitySection({ go }: LearnActivitySectionProps) 
             </span>
           </li>
         </ul>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <p className="text-sm text-muted-foreground">
+          Ссылка на Журнал Активности:{" "}
+          <a
+            href="https://status-journal.com/dashboard"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+          >
+            Сайт ЖА
+            <Icon name="ExternalLink" size={13} />
+          </a>
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Приложение на ПК Журнала Активности:{" "}
+          <a
+            href="https://github.com/HM-Province/gta-journal"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+          >
+            Приложение ЖА
+            <Icon name="ExternalLink" size={13} />
+          </a>
+        </p>
       </div>
 
       <p className="text-sm text-muted-foreground">
