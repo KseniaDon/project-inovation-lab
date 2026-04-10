@@ -89,8 +89,7 @@ export default function Learn() {
                 <span className="text-red-600 font-semibold">14 дней</span>.
               </p>
               <p className="text-base text-foreground leading-relaxed">
-                За <span className="text-red-600 font-bold">7 дней</span> —{" "}
-                <strong>повыситься до Фельдшера.</strong>
+                За <span className="text-red-600 font-bold">7 дней</span> — повыситься до <strong>Фельдшера.</strong>
               </p>
               <p className="text-base text-foreground leading-relaxed">
                 После повышения ещё <span className="text-red-600 font-bold">7 дней</span> — выйти из ОИ.
