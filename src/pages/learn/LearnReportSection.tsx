@@ -23,7 +23,7 @@ export default function LearnReportSection({ go }: LearnReportSectionProps) {
       <p className="text-base font-semibold text-muted-foreground">4.1. Что дальше?</p>
 
       <p className="text-base text-foreground leading-relaxed">
-        После успешной сдачи всех экзаменов и получения допуска к лечению, твой последний шаг в отделении Интернатуры:
+        После успешной сдачи всех экзаменов и получения допуска к лечению, твой последний шаг на должности Интерна:
       </p>
 
       <ol className="flex flex-col gap-4">
