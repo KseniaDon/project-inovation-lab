@@ -54,6 +54,19 @@ export default function LearnFloorsSection({ go }: LearnFloorsSectionProps) {
           Выдача витаминного комплекса (Компливит, Витрум) можно производить на любом из этажей, в любом месте, т.к. данные препараты не требуют полного осмотра пациента.
         </p>
       </div>
+
+      <p className="text-sm text-muted-foreground">
+        Информационный раздел нашей больницы на госпортале по распределению этажей:{" "}
+        <a
+          href="https://forum.gtaprovince.ru/topic/995733-cgb-g-nevskiy-informacionnyy-razdel/?do=findComment&comment=6982151"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+        >
+          Раздел 4. Распределение этажей и кабинетов.
+          <Icon name="ExternalLink" size={13} />
+        </a>
+      </p>
     </div>
   );
 }
