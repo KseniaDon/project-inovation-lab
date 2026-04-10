@@ -71,6 +71,19 @@ export default function LearnAbbrSection({ go }: LearnAbbrSectionProps) {
           </li>
         ))}
       </ul>
+
+      <p className="text-sm text-muted-foreground">
+        Информационный раздел нашей больницы на госпортале по аббревиатурам:{" "}
+        <a
+          href="https://forum.gtaprovince.ru/topic/995733-cgb-g-nevskiy-informacionnyy-razdel/?do=findComment&comment=6982139"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+        >
+          Раздел 1. Аббревиатуры.
+          <Icon name="ExternalLink" size={13} />
+        </a>
+      </p>
     </div>
   );
 }
