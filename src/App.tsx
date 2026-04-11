@@ -15,10 +15,8 @@ import AdminPanel from "./pages/AdminPanel";
 
 const queryClient = new QueryClient();
 
-const isAdminLoggedIn = () => !!localStorage.getItem("admin_token");
-
 const App = () => {
-  const [showSplash, setShowSplash] = useState(!isAdminLoggedIn());
+  const [showSplash, setShowSplash] = useState(true);
 
   return (
     <QueryClientProvider client={queryClient}>

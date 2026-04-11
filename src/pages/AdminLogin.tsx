@@ -19,8 +19,8 @@ export default function AdminLogin() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (localStorage.getItem("admin_token")) navigate("/admin");
-  }, [navigate]);
+    // Не делаем автоматический редирект — пользователь сам нажмёт на панель
+  }, []);
 
   const cleanNick = (v: string) => {
     let s = v.trim().toLowerCase();
