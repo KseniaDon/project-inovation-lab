@@ -45,6 +45,7 @@ export default function AdminPanel() {
   const [saving, setSaving] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [previewPage, setPreviewPage] = useState("/");
+  const [mobilePreview, setMobilePreview] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   // Site content state
@@ -280,6 +281,13 @@ export default function AdminPanel() {
                   </button>
                 ))}
                 <button
+                  onClick={() => setMobilePreview(v => !v)}
+                  className={`transition-colors p-1 ${mobilePreview ? "text-red-400" : "text-zinc-500 hover:text-white"}`}
+                  title={mobilePreview ? "Десктоп" : "Мобильный"}
+                >
+                  <Icon name={mobilePreview ? "Monitor" : "Smartphone"} size={12} />
+                </button>
+                <button
                   onClick={() => { iframeRef.current?.contentWindow?.location.reload(); }}
                   className="text-zinc-500 hover:text-white transition-colors p-1"
                   title="Обновить"
@@ -289,12 +297,15 @@ export default function AdminPanel() {
               </div>
             </div>
             {/* iframe */}
-            <iframe
-              ref={iframeRef}
-              src={previewPage}
-              className="flex-1 w-full bg-white"
-              title="Превью сайта"
-            />
+            <div className={`flex-1 overflow-auto ${mobilePreview ? "flex justify-center bg-zinc-950 py-4" : ""}`}>
+              <iframe
+                ref={iframeRef}
+                src={previewPage}
+                className="bg-white h-full"
+                style={mobilePreview ? { width: 390, minHeight: "100%", height: "auto", borderRadius: 12, border: "1px solid #3f3f46" } : { width: "100%", height: "100%" }}
+                title="Превью сайта"
+              />
+            </div>
           </div>
         )}
       </div>
