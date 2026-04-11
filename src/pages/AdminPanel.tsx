@@ -200,8 +200,8 @@ export default function AdminPanel() {
       </div>
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
-        <aside className="w-14 md:w-52 border-r border-zinc-800 flex flex-col py-2 shrink-0 overflow-y-auto">
+        {/* Sidebar — скрыт на мобильных в режиме превью */}
+        <aside className={`w-14 md:w-52 border-r border-zinc-800 flex flex-col py-2 shrink-0 overflow-y-auto ${showPreview ? "hidden sm:flex" : "flex"}`}>
           {TABS.map(t => (
             <button key={t.id} onClick={() => handleTabChange(t.id)}
               className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${tab === t.id ? "bg-zinc-800 text-white border-r-2 border-red-600" : "text-zinc-400 hover:text-white hover:bg-zinc-900"}`}>
@@ -211,8 +211,8 @@ export default function AdminPanel() {
           ))}
         </aside>
 
-        {/* Content */}
-        <main className={`overflow-y-auto p-5 md:p-8 ${showPreview ? "w-[420px] shrink-0" : "flex-1"}`}>
+        {/* Content — скрыт на мобильных в режиме превью */}
+        <main className={`overflow-y-auto p-5 md:p-8 ${showPreview ? "hidden sm:block w-full sm:w-[420px] sm:shrink-0" : "flex-1"}`}>
           <AdminSiteContent
             tab={tab}
             saved={saved}
