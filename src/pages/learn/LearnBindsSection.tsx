@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
+import ImageLightbox from "@/components/ui/image-lightbox";
 import { SectionId } from "./learnConfig";
 
 interface LearnBindsSectionProps {
@@ -91,12 +92,12 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
             </li>
           </ol>
 
-          <img
+          <ImageLightbox
             src="https://skrinshoter.ru/s/100426/vF4l2KCt.jpg?download=1&name=%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82-10-04-2026%2016:14:36.jpg"
             alt="Скриншот №1"
             className="w-full rounded-sm border border-border mt-1"
+            caption="Скриншот №1: Выделенный текст для копирования"
           />
-          <p className="text-xs text-muted-foreground text-center">Скриншот №1: Выделенный текст для копирования</p>
         </div>
 
         {/* Важное правило */}
