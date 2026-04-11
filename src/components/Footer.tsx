@@ -20,7 +20,7 @@ export default function Footer() {
                 </a>
                 <a
                   href="#contacts"
-                  className="hidden sm:block text-white hover:text-neutral-400 transition-colors duration-300 text-sm sm:text-base"
+                  className="text-white hover:text-neutral-400 transition-colors duration-300 text-sm sm:text-base"
                 >
                   Руководящий состав ОИ
                 </a>
