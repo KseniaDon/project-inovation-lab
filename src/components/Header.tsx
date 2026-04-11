@@ -53,6 +53,14 @@ export default function Header({ className }: HeaderProps) {
             Правила
           </a>
           <button
+            onClick={() => { playClickSound(); navigate("/contacts"); }}
+            className="sm:hidden flex items-center gap-1.5 text-white hover:text-red-400 transition-colors duration-300 p-1"
+            aria-label="Руководящий состав ОИ"
+          >
+            <Icon name="Phone" size={16} />
+            <span className="text-xs uppercase tracking-wide font-semibold">РС ОИ</span>
+          </button>
+          <button
             onClick={() => { playClickSound(); toggleTheme(); }}
             className="text-white hover:text-red-400 transition-colors duration-300 p-1"
             aria-label="Переключить тему"
