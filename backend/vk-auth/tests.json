@@ -13,18 +13,16 @@
       "expectedStatus": 401
     },
     {
-      "name": "login with unknown nickname returns 403",
+      "name": "check_nick unknown returns 403",
       "method": "POST",
-      "path": "/?action=login",
-      "body": {"nickname": "unknown_user_xyz"},
-      "expectedStatus": 403,
-      "expectedBody": {"error": "denied"},
-      "bodyMatcher": "partial"
+      "path": "/?action=check_nick",
+      "body": {"nickname": "unknown_xyz_123"},
+      "expectedStatus": 403
     },
     {
-      "name": "login with super admin returns token",
+      "name": "check_nick super_admin returns 200",
       "method": "POST",
-      "path": "/?action=login",
+      "path": "/?action=check_nick",
       "body": {"nickname": "soul__shu"},
       "expectedStatus": 200,
       "expectedBody": {"role": "super_admin"},

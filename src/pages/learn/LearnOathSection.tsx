@@ -1,12 +1,13 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import { SectionId } from "./learnConfig";
+import { useSiteData } from "@/hooks/useSiteData";
 
 interface LearnOathSectionProps {
   go: (id: SectionId) => void;
 }
 
-const OATH_LINES = [
+const DEFAULT_OATH_LINES = [
   "say Получая высокое звание врача и приступая к профессиональной деятельности, я торжественно...",
   "say ...клянусь честно исполнять свой врачебный долг, быть всегда готовым оказать медицинскую...",
   "say ...помощь, хранить врачебную тайну, внимательно и заботливо относиться к пациенту,..",
@@ -18,6 +19,7 @@ const OATH_LINES = [
 ];
 
 export default function LearnOathSection({ go }: LearnOathSectionProps) {
+  const OATH_LINES = useSiteData<string[]>("oath_lines", DEFAULT_OATH_LINES);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
 
   const handleCopy = async (line: string, idx: number) => {

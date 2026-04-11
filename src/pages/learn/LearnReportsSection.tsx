@@ -1,19 +1,22 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import { SectionId } from "./learnConfig";
+import { useSiteData } from "@/hooks/useSiteData";
 
 interface LearnReportsSectionProps {
   go: (id: SectionId) => void;
 }
 
-const MALE_REPORTS = [
+type Report = { label: string; template: string };
+
+const DEFAULT_MALE: Report[] = [
   { label: "Заступление на смену",  template: "/r ОИ-Инициалы. Заступил на смену." },
   { label: "Сдача смены",           template: "/r ОИ-Инициалы. Сдал смену." },
   { label: "Перерыв",               template: "/r ОИ-Инициалы. Вышел на обеденный перерыв." },
   { label: "Окончание перерыва",    template: "/r ОИ-Инициалы. Вернулся с обеденного перерыва." },
 ];
 
-const FEMALE_REPORTS = [
+const DEFAULT_FEMALE: Report[] = [
   { label: "Заступление на смену",  template: "/r ОИ-Инициалы. Заступила на смену." },
   { label: "Сдача смены",           template: "/r ОИ-Инициалы. Сдала смену." },
   { label: "Перерыв",               template: "/r ОИ-Инициалы. Вышла на обеденный перерыв." },
@@ -21,6 +24,8 @@ const FEMALE_REPORTS = [
 ];
 
 export default function LearnReportsSection({ go }: LearnReportsSectionProps) {
+  const MALE_REPORTS = useSiteData<Report[]>("reports_male", DEFAULT_MALE);
+  const FEMALE_REPORTS = useSiteData<Report[]>("reports_female", DEFAULT_FEMALE);
   const [maleOpen, setMaleOpen] = useState(false);
   const [femaleOpen, setFemaleOpen] = useState(false);
 

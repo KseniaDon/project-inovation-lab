@@ -1,6 +1,6 @@
 """
-Авторизация администраторов по никнейму ВКонтакте.
-Действия: login, me, site_data, save_site_data
+Авторизация администраторов по никнейму ВК + пароль.
+Доступы хранятся в БД. Пароли — SHA-256 хэш.
 """
 import json
 import os
@@ -16,22 +16,17 @@ CORS = {
     "Access-Control-Allow-Headers": "Content-Type, X-Authorization",
 }
 
-# Белый список: никнейм ВК (строчные, без vk.ru/) -> роль
-WHITELIST = {
-    "soul__shu":  "super_admin",
-    "cccuvigon":  "editor",
-}
-
 def resp(status, body):
     return {"statusCode": status, "headers": CORS, "body": json.dumps(body, ensure_ascii=False)}
 
+def get_schema():
+    return os.environ.get("MAIN_DB_SCHEMA", "public")
+
 def get_conn():
-    conn = psycopg2.connect(os.environ["DATABASE_URL"])
-    schema = os.environ.get("MAIN_DB_SCHEMA", "public")
-    cur = conn.cursor()
-    cur.execute(f"SET search_path TO {schema}")
-    cur.close()
-    return conn
+    return psycopg2.connect(os.environ["DATABASE_URL"])
+
+def hash_pw(pw: str) -> str:
+    return hashlib.sha256(pw.encode("utf-8")).hexdigest()
 
 def make_token(nickname: str, role: str) -> str:
     secret = os.environ.get("ADMIN_SECRET_KEY", "fallback-secret")
@@ -51,10 +46,6 @@ def verify_token(token: str):
         data = json.loads(base64.b64decode(payload).decode())
         if time.time() - data["t"] > 86400 * 30:
             return None
-        # Перепроверяем: вдруг убрали из вайтлиста
-        nick = data.get("nick", "")
-        if nick not in WHITELIST:
-            return None
         return data
     except Exception:
         return None
@@ -63,34 +54,90 @@ def get_current_user(event):
     token = (event.get("headers") or {}).get("X-Authorization", "").replace("Bearer ", "")
     return verify_token(token)
 
+def clean_nick(raw: str) -> str:
+    raw = raw.strip().lower()
+    for prefix in ["https://vk.ru/", "https://vk.com/", "http://vk.ru/", "http://vk.com/", "vk.ru/", "vk.com/", "@"]:
+        if raw.startswith(prefix):
+            raw = raw[len(prefix):]
+    return raw.strip("/").strip()
+
 def handler(event: dict, context) -> dict:
-    """Авторизация по никнейму ВК, проверка токена, управление данными сайта."""
+    """Авторизация по никнейму ВК + пароль, управление доступами и данными сайта."""
     if event.get("httpMethod") == "OPTIONS":
         return {"statusCode": 200, "headers": CORS, "body": ""}
 
     qs = event.get("queryStringParameters") or {}
     action = qs.get("action", "")
 
-    # ── POST login ────────────────────────────────────────────────────────────
+    # ── POST check_nick — проверка никнейма, есть ли в БД и есть ли пароль ───
+    if action == "check_nick":
+        body = json.loads(event.get("body") or "{}")
+        nick = clean_nick(body.get("nickname") or "")
+        if not nick:
+            return resp(400, {"error": "Введите никнейм"})
+        conn = get_conn()
+        cur = conn.cursor()
+        s = get_schema()
+        cur.execute(f"SELECT role, password_hash FROM {s}.access_list WHERE nickname = %s", (nick,))
+        row = cur.fetchone()
+        conn.close()
+        if not row:
+            return resp(403, {"error": "denied"})
+        role, pw_hash = row
+        has_password = pw_hash is not None
+        return resp(200, {"role": role, "has_password": has_password})
+
+    # ── POST login — вход с паролем ───────────────────────────────────────────
     if action == "login":
         body = json.loads(event.get("body") or "{}")
-        raw = (body.get("nickname") or "").strip().lower()
+        nick = clean_nick(body.get("nickname") or "")
+        password = (body.get("password") or "").strip()
+        if not nick or not password:
+            return resp(400, {"error": "Введите никнейм и пароль"})
+        conn = get_conn()
+        cur = conn.cursor()
+        s = get_schema()
+        cur.execute(f"SELECT role, password_hash FROM {s}.access_list WHERE nickname = %s", (nick,))
+        row = cur.fetchone()
+        conn.close()
+        if not row:
+            return resp(403, {"error": "denied"})
+        role, pw_hash = row
+        if pw_hash is None:
+            return resp(400, {"error": "no_password", "message": "Пароль ещё не задан"})
+        if not hmac.compare_digest(hash_pw(password), pw_hash):
+            return resp(401, {"error": "wrong_password", "message": "Неверный пароль"})
+        token = make_token(nick, role)
+        return resp(200, {"token": token, "nickname": nick, "role": role})
 
-        # Чистим ссылку: убираем https://vk.ru/, https://vk.com/, пробелы, @
-        for prefix in ["https://vk.ru/", "https://vk.com/", "http://vk.ru/", "http://vk.com/", "vk.ru/", "vk.com/", "@"]:
-            if raw.startswith(prefix):
-                raw = raw[len(prefix):]
-        raw = raw.strip("/").strip()
-
-        if not raw:
-            return resp(400, {"error": "Введите никнейм ВКонтакте"})
-
-        role = WHITELIST.get(raw)
-        if not role:
-            return resp(403, {"error": "denied", "message": "Ой, а вы не администратор…"})
-
-        token = make_token(raw, role)
-        return resp(200, {"token": token, "nickname": raw, "role": role})
+    # ── POST set_password — установить/сменить пароль (только свой) ──────────
+    if action == "set_password":
+        body = json.loads(event.get("body") or "{}")
+        nick = clean_nick(body.get("nickname") or "")
+        password = (body.get("password") or "").strip()
+        if not nick or not password:
+            return resp(400, {"error": "Не все поля заполнены"})
+        if len(password) < 6:
+            return resp(400, {"error": "Пароль должен быть не менее 6 символов"})
+        # Для смены пароля нужен токен (кроме первичной установки)
+        user = get_current_user(event)
+        conn = get_conn()
+        cur = conn.cursor()
+        s = get_schema()
+        cur.execute(f"SELECT role, password_hash FROM {s}.access_list WHERE nickname = %s", (nick,))
+        row = cur.fetchone()
+        if not row:
+            conn.close()
+            return resp(403, {"error": "Нет доступа"})
+        _, existing_hash = row
+        if existing_hash is not None:
+            if not user or user.get("nick") != nick:
+                conn.close()
+                return resp(403, {"error": "Можно менять только свой пароль"})
+        cur.execute(f"UPDATE {s}.access_list SET password_hash = %s WHERE nickname = %s", (hash_pw(password), nick))
+        conn.commit()
+        conn.close()
+        return resp(200, {"ok": True})
 
     # ── GET me ────────────────────────────────────────────────────────────────
     if action == "me":
@@ -98,10 +145,75 @@ def handler(event: dict, context) -> dict:
         if not user:
             return resp(401, {"error": "Unauthorized"})
         nick = user.get("nick", "")
-        role = WHITELIST.get(nick)
-        if not role:
+        conn = get_conn()
+        cur = conn.cursor()
+        s = get_schema()
+        cur.execute(f"SELECT role FROM {s}.access_list WHERE nickname = %s", (nick,))
+        row = cur.fetchone()
+        conn.close()
+        if not row:
             return resp(403, {"error": "Нет доступа"})
-        return resp(200, {"nickname": nick, "role": role})
+        return resp(200, {"nickname": nick, "role": row[0]})
+
+    # ── GET access_list — список доступов (все авторизованные) ───────────────
+    if action == "access_list":
+        user = get_current_user(event)
+        if not user:
+            return resp(401, {"error": "Unauthorized"})
+        conn = get_conn()
+        cur = conn.cursor()
+        s = get_schema()
+        cur.execute(f"SELECT nickname, role, created_at, created_by FROM {s}.access_list ORDER BY created_at")
+        rows = cur.fetchall()
+        conn.close()
+        users = [{"nickname": r[0], "role": r[1], "created_at": str(r[2]), "created_by": r[3]} for r in rows]
+        return resp(200, {"users": users})
+
+    # ── POST add_access — добавить пользователя (только super_admin) ──────────
+    if action == "add_access":
+        user = get_current_user(event)
+        if not user or user.get("role") != "super_admin":
+            return resp(403, {"error": "Только для главного администратора"})
+        body = json.loads(event.get("body") or "{}")
+        new_nick = clean_nick(body.get("nickname") or "")
+        role = body.get("role", "editor")
+        if not new_nick:
+            return resp(400, {"error": "Введите никнейм"})
+        if role not in ("super_admin", "editor"):
+            role = "editor"
+        conn = get_conn()
+        cur = conn.cursor()
+        s = get_schema()
+        cur.execute(f"SELECT id FROM {s}.access_list WHERE nickname = %s", (new_nick,))
+        if cur.fetchone():
+            conn.close()
+            return resp(409, {"error": "Пользователь уже есть в списке"})
+        cur.execute(
+            f"INSERT INTO {s}.access_list (nickname, role, created_by) VALUES (%s, %s, %s)",
+            (new_nick, role, user.get("nick"))
+        )
+        conn.commit()
+        conn.close()
+        return resp(200, {"ok": True})
+
+    # ── POST remove_access — удалить пользователя (только super_admin) ────────
+    if action == "remove_access":
+        user = get_current_user(event)
+        if not user or user.get("role") != "super_admin":
+            return resp(403, {"error": "Только для главного администратора"})
+        body = json.loads(event.get("body") or "{}")
+        target = clean_nick(body.get("nickname") or "")
+        if not target:
+            return resp(400, {"error": "Введите никнейм"})
+        if target == user.get("nick"):
+            return resp(400, {"error": "Нельзя удалить самого себя"})
+        conn = get_conn()
+        cur = conn.cursor()
+        s = get_schema()
+        cur.execute(f"DELETE FROM {s}.access_list WHERE nickname = %s", (target,))
+        conn.commit()
+        conn.close()
+        return resp(200, {"ok": True})
 
     # ── GET site_data ─────────────────────────────────────────────────────────
     if action == "site_data":
@@ -110,7 +222,8 @@ def handler(event: dict, context) -> dict:
             return resp(401, {"error": "Unauthorized"})
         conn = get_conn()
         cur = conn.cursor()
-        cur.execute("SELECT key, value FROM site_content")
+        s = get_schema()
+        cur.execute(f"SELECT key, value FROM {s}.site_content")
         rows = cur.fetchall()
         conn.close()
         data = {r[0]: json.loads(r[1]) for r in rows}
@@ -128,9 +241,10 @@ def handler(event: dict, context) -> dict:
             return resp(400, {"error": "Нет key"})
         conn = get_conn()
         cur = conn.cursor()
+        s = get_schema()
         cur.execute(
-            "INSERT INTO site_content (key, value, updated_by) VALUES (%s, %s, %s) "
-            "ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_by = EXCLUDED.updated_by, updated_at = NOW()",
+            f"INSERT INTO {s}.site_content (key, value, updated_by) VALUES (%s, %s, %s) "
+            f"ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_by = EXCLUDED.updated_by, updated_at = NOW()",
             (key, json.dumps(value, ensure_ascii=False), user.get("nick", ""))
         )
         conn.commit()
