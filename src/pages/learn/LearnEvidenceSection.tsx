@@ -52,18 +52,21 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
           <p className="text-sm text-orange-300 leading-relaxed">
             <span className="font-bold">ВАЖНО:</span> Фиксируйте лечение с уведомлением «Пациент согласился на лечение» и чтобы было видно дата и время над HUD'ом (либо использованный{" "}
             <code className="bg-secondary border border-border rounded px-1.5 py-0.5 text-xs font-mono text-foreground">/timestamp</code>
-            ) при прощании с пациентом.
+            {" "}при прощании с пациентом).
           </p>
         </div>
         <p className="text-base text-foreground leading-relaxed">
           Для примера, возьмите этот скриншот №1:
         </p>
-        <img
-          src="https://sun9-10.userapi.com/s/v1/ig2/BfVbLIn-bhKJkPnmmmEk850nAyKXThCRgmq0xhHuZ3TqCTQBEJVXxor9tlbszzKeZZt8T9DYwaEJA-gFhR8OFUMi.jpg?quality=95&as=32x18,48x27,72x40,108x61,160x90,240x135,360x202,480x270,540x304,640x360,720x405,1080x607,1280x720&from=bu&u=2TJ_uumXIjuS2EWJ_SCZvv3vZVQQvdAlJvRm_vbDIhU&cs=1280x0"
-          alt="Скриншот №1"
-          className="w-full rounded-sm border border-border"
-        />
-        <p className="text-xs text-muted-foreground text-center">Скриншот №1: Лечение пациента в палате и захват всего чата.</p>
+        <div className="flex flex-col items-center gap-2">
+          <img
+            src="https://sun9-10.userapi.com/s/v1/ig2/BfVbLIn-bhKJkPnmmmEk850nAyKXThCRgmq0xhHuZ3TqCTQBEJVXxor9tlbszzKeZZt8T9DYwaEJA-gFhR8OFUMi.jpg?quality=95&as=32x18,48x27,72x40,108x61,160x90,240x135,360x202,480x270,540x304,640x360,720x405,1080x607,1280x720&from=bu&u=2TJ_uumXIjuS2EWJ_SCZvv3vZVQQvdAlJvRm_vbDIhU&cs=1280x0"
+            alt="Скриншот №1"
+            className="w-full max-w-3xl rounded-sm border border-border"
+            style={{ imageRendering: "auto" }}
+          />
+          <p className="text-xs text-muted-foreground text-center">Скриншот №1: Лечение пациента в палате и захват всего чата.</p>
+        </div>
       </div>
     </div>
   );

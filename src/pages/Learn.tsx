@@ -71,7 +71,7 @@ export default function Learn() {
         <LearnSidebar active={active} go={go} />
 
         {/* ── Content ── */}
-        <main className={`flex-1 px-4 md:px-8 py-6 md:py-10 min-w-0 ${active === "intern-binds" ? "max-w-4xl" : "max-w-2xl"}`}>
+        <main className={`flex-1 px-4 md:px-8 py-6 md:py-10 min-w-0 ${active === "intern-binds" || active === "intern-evidence" ? "max-w-4xl" : "max-w-2xl"}`}>
 
           {/* ВСТУПЛЕНИЕ */}
           {active === "intro" && (
