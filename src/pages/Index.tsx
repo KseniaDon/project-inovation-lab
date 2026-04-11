@@ -8,7 +8,7 @@ const Index = () => {
     <main className="min-h-screen">
       <Header />
       <Hero />
-      <div className="hidden sm:block"><MobileStaff /></div>
+
       <Footer />
     </main>
   );
