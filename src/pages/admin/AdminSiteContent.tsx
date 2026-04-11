@@ -55,8 +55,8 @@ interface Props {
   setRadioRules: React.Dispatch<React.SetStateAction<RadioRule[]>>;
   activityData: { ja_link: string; app_link: string; forum_link: string; afk_rules: string[] };
   setActivityData: React.Dispatch<React.SetStateAction<{ ja_link: string; app_link: string; forum_link: string; afk_rules: string[] }>>;
-  introData: { welcome: string; line1: string; days_total: string; days_feldsher: string };
-  setIntroData: React.Dispatch<React.SetStateAction<{ welcome: string; line1: string; days_total: string; days_feldsher: string }>>;
+  introData: { welcome: string; line1: string; line2: string; days_total: string; line3: string; days_feldsher: string; line4: string; line5: string; line6: string };
+  setIntroData: React.Dispatch<React.SetStateAction<{ welcome: string; line1: string; line2: string; days_total: string; line3: string; days_feldsher: string; line4: string; line5: string; line6: string }>>;
   internExam: { title: string; desc: string; binds_link: string; charter_link: string; exam_items: string[] };
   setInternExam: React.Dispatch<React.SetStateAction<{ title: string; desc: string; binds_link: string; charter_link: string; exam_items: string[] }>>;
 }

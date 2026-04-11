@@ -17,8 +17,8 @@ interface Props {
   editStaffIdx: number | null;
   setEditStaffIdx: React.Dispatch<React.SetStateAction<number | null>>;
 
-  introData: { welcome: string; line1: string; days_total: string; days_feldsher: string };
-  setIntroData: React.Dispatch<React.SetStateAction<{ welcome: string; line1: string; days_total: string; days_feldsher: string }>>;
+  introData: { welcome: string; line1: string; line2: string; days_total: string; line3: string; days_feldsher: string; line4: string; line5: string; line6: string };
+  setIntroData: React.Dispatch<React.SetStateAction<{ welcome: string; line1: string; line2: string; days_total: string; line3: string; days_feldsher: string; line4: string; line5: string; line6: string }>>;
 
   internExam: { title: string; desc: string; binds_link: string; charter_link: string; exam_items: string[] };
   setInternExam: React.Dispatch<React.SetStateAction<{ title: string; desc: string; binds_link: string; charter_link: string; exam_items: string[] }>>;
@@ -161,22 +161,46 @@ export default function AdminTabsSiteBasic({
       {/* ── INTRO ──────────────────────────────────────────────────────── */}
       {tab === "intro" && (
         <div className="max-w-2xl">
-          <SectionHeader title="Вступление" desc="Текст приветствия при входе в раздел обучения" />
+          <SectionHeader title="Вступление" desc="Текст страницы приветствия в разделе обучения" />
           <div className="flex flex-col gap-4">
-            <Field label="Заголовок-приветствие">
+            <Field label="Заголовок (крупный текст)">
               <Inp value={introData.welcome} onChange={v => setIntroData(d => ({ ...d, welcome: v }))} />
             </Field>
-            <Field label="Первое предложение">
+            <Field label="Строка 1 — Вы являетесь сотрудником...">
               <textarea rows={2} value={introData.line1} onChange={e => setIntroData(d => ({ ...d, line1: e.target.value }))}
                 className="w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors resize-none" />
             </Field>
+            <Field label="Строка 2 — На выход из ОИ вам дается...">
+              <textarea rows={2} value={introData.line2} onChange={e => setIntroData(d => ({ ...d, line2: e.target.value }))}
+                className="w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors resize-none" />
+            </Field>
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Дней всего в ОИ">
-                <Inp value={introData.days_total} onChange={v => setIntroData(d => ({ ...d, days_total: v }))} />
+              <Field label="Число дней (всего в ОИ)">
+                <Inp value={introData.days_total} onChange={v => setIntroData(d => ({ ...d, days_total: v }))} placeholder="14" />
               </Field>
-              <Field label="Дней до Фельдшера">
-                <Inp value={introData.days_feldsher} onChange={v => setIntroData(d => ({ ...d, days_feldsher: v }))} />
+              <Field label="Число дней (до Фельдшера)">
+                <Inp value={introData.days_feldsher} onChange={v => setIntroData(d => ({ ...d, days_feldsher: v }))} placeholder="7" />
               </Field>
+            </div>
+            <Field label="Строка 3 — За N дней (текст перед числом)">
+              <Inp value={introData.line3} onChange={v => setIntroData(d => ({ ...d, line3: v }))} />
+            </Field>
+            <Field label="Строка 4 — ...дней — повыситься до Фельдшера.">
+              <Inp value={introData.line4} onChange={v => setIntroData(d => ({ ...d, line4: v }))} />
+            </Field>
+            <Field label="Строка 5 — После повышения ещё (текст перед числом)">
+              <Inp value={introData.line5} onChange={v => setIntroData(d => ({ ...d, line5: v }))} />
+            </Field>
+            <Field label="Строка 6 — ...дней — выйти из ОИ.">
+              <Inp value={introData.line6} onChange={v => setIntroData(d => ({ ...d, line6: v }))} />
+            </Field>
+            <div className="bg-zinc-900/50 border border-zinc-800 px-4 py-3 rounded-sm text-xs text-zinc-500">
+              <span className="text-zinc-400 font-semibold">Предпросмотр:</span><br />
+              <span className="text-white">{introData.welcome}</span><br />
+              <span>{introData.line1}</span><br />
+              <span>{introData.line2} <span className="text-red-400 font-bold">{introData.days_total} дней</span>.</span><br />
+              <span>{introData.line3} <span className="text-red-400 font-bold">{introData.days_feldsher} дней</span> — {introData.line4}</span><br />
+              <span>{introData.line5} <span className="text-red-400 font-bold">{introData.days_feldsher} дней</span> — {introData.line6}</span>
             </div>
             <SaveBtn onClick={() => saveBlock("intro_data", introData)} saved={saved} loading={saving} />
           </div>

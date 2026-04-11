@@ -87,14 +87,14 @@ export default function Learn() {
               <p className="text-2xl font-bold text-foreground">{introData.welcome}</p>
               <p className="text-base text-foreground leading-relaxed">{introData.line1}</p>
               <p className="text-base text-foreground leading-relaxed">
-                На выход из Отделения Интернатуры и повышения до лаборанта вам дается{" "}
+                {introData.line2}{" "}
                 <span className="text-red-600 font-semibold">{introData.days_total} дней</span>.
               </p>
               <p className="text-base text-foreground leading-relaxed">
-                За <span className="text-red-600 font-bold">{introData.days_feldsher} дней</span> — повыситься до <strong>Фельдшера.</strong>
+                {introData.line3} <span className="text-red-600 font-bold">{introData.days_feldsher} дней</span> — {introData.line4}
               </p>
               <p className="text-base text-foreground leading-relaxed">
-                После повышения ещё <span className="text-red-600 font-bold">{introData.days_feldsher} дней</span> — выйти из ОИ.
+                {introData.line5} <span className="text-red-600 font-bold">{introData.days_feldsher} дней</span> — {introData.line6}
               </p>
             </div>
           )}

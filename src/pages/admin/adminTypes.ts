@@ -13,7 +13,7 @@ export type StaffMember = { role: string; name: string; nickname: string; href: 
 export type HeroData = { subtitle: string; buttonText: string };
 export type Command = { cmd: string; desc: string };
 export type Floor = { num: string; desc: string };
-export type Department = { abbr: string; full: string; color: string };
+export type Department = { abbr: string; full: string; color: string; desc?: string };
 export type CharterDoc = { abbr: string; title: string; href: string };
 export type AbbrItem = { abbr: string; full: string };
 export type RadioCommand = { cmd: string; desc: string };
@@ -31,6 +31,7 @@ export const defaultSections: Section[] = [
 export const defaultStaff: StaffMember[] = [
   { role: "Куратор Отделения Интернатуры", name: "Ksenia Donskaya", nickname: "Ksenia_Donskaya", href: "https://vk.ru/soul__shu", badge: "Куратор", badgeColor: "bg-red-600" },
   { role: "Заместитель Заведующего ОИ", name: "Egor Maslow", nickname: "Egor_Maslow", href: "https://vk.ru/cccuvigon", badge: "Зам. Зав.", badgeColor: "bg-zinc-600" },
+  { role: "Заместитель Заведующего ОИ", name: "Andrei Schmidt", nickname: "Andrei_Schmidt", href: "https://vk.com/id392167605", badge: "Зам. Зав.", badgeColor: "bg-zinc-600" },
 ];
 export const defaultCommands: Command[] = [
   { cmd: "/r [Text]", desc: "RP рация сотрудников ЦГБ." },
@@ -52,11 +53,11 @@ export const defaultFloors: Floor[] = [
   { num: "5 этаж", desc: "служебный, отдых сотрудников, проведение собеседований." },
 ];
 export const defaultDepartments: Department[] = [
-  { abbr: "ОИ", full: "Отделение Интернатуры", color: "text-green-400" },
-  { abbr: "ОДС", full: "Отделение Дневного Стационара", color: "text-sky-400" },
-  { abbr: "ОИК", full: "Отделение Инфекционного Контроля", color: "text-red-400" },
-  { abbr: "СОП", full: "Стоматологическое Отделение Поликлиники", color: "text-pink-400" },
-  { abbr: "ОПРС", full: "Отделение Подготовки Руководящего Состава", color: "text-orange-400" },
+  { abbr: "ОИ",   full: "Отделение Интернатуры",                     color: "text-green-400",  desc: "Это одно из отделений ЦГБ города Невский, сотрудники которого обучаются работе в нашей больнице. Самое первое отделение каждого сотрудника." },
+  { abbr: "ОДС",  full: "Отделение Дневного Стационара",             color: "text-sky-400",    desc: "Сотрудники занимаются основной работой больницы, а также оказанием услуг на базе Травматолого-ортопедического центра, проведением проверок аптек и травматологических рейдов." },
+  { abbr: "ОИК",  full: "Отделение Инфекционного Контроля",          color: "text-red-400",    desc: "Сотрудники занимаются основной работой больницы, а также оказанием услуг на базе НИИ Эпидемиологии, проведением санитарных проверок и инфекционных рейдов." },
+  { abbr: "СОП",  full: "Стоматологическое Отделение Поликлиники",   color: "text-pink-400",   desc: "Сотрудники занимаются основной работой больницы, а также оказанием услуг на базе Стоматологической поликлиники «Дентист» и проведением стоматологических рейдов." },
+  { abbr: "ОПРС", full: "Отделение Подготовки Руководящего Состава", color: "text-orange-400", desc: "Сотрудники проходят курсы повышения квалификации для дальнейшей работы в Руководящем составе больницы." },
 ];
 export const defaultCharter: CharterDoc[] = [
   { abbr: "ОПСГО", title: "Общие правила для сотрудников госорганизаций", href: "https://forum.gtaprovince.ru/topic/816638" },
@@ -68,6 +69,11 @@ export const defaultCharter: CharterDoc[] = [
 export const defaultOathLines: string[] = [
   "say Получая высокое звание врача и приступая к профессиональной деятельности, я торжественно...",
   "say ...клянусь честно исполнять свой врачебный долг, быть всегда готовым оказать медицинскую...",
+  "say ...помощь, хранить врачебную тайну, внимательно и заботливо относиться к пациенту,..",
+  "say ...действовать исключительно в его интересах независимо от пола, расы, национальности,..",
+  "say ...языка, происхождения, а также других обстоятельств.",
+  "say Доброжелательно относиться к коллегам, обращаться к ним за помощью и советом...",
+  "say ...и самому никогда не отказывать коллегам в помощи и совете.",
   "say Беречь и развивать благородные традиции медицины.",
 ];
 export const defaultMaleReports: Report[] = [
@@ -150,8 +156,13 @@ export const defaultActivityData = {
 export const defaultIntroData = {
   welcome: "Добро пожаловать в ЦГБ города Невский!",
   line1: "С этого момента Вы являетесь сотрудником Отделения Интернатуры.",
+  line2: "На выход из Отделения Интернатуры и повышения до лаборанта вам дается",
   days_total: "14",
+  line3: "За",
   days_feldsher: "7",
+  line4: "дней — повыситься до Фельдшера.",
+  line5: "После повышения ещё",
+  line6: "дней — выйти из ОИ.",
 };
 export const defaultInternExam = {
   title: "Твоя первая и главная задача: Получить допуск к лечению.",

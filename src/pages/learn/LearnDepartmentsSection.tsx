@@ -55,10 +55,15 @@ export default function LearnDepartmentsSection({ go }: LearnDepartmentsSectionP
           const colors = COLOR_MAP[dept.color] || COLOR_MAP["text-zinc-400"];
           return (
             <li key={dept.abbr} className="flex flex-col gap-1.5">
-              <div className={`border ${colors.border} ${colors.bg} rounded-sm px-4 py-3 flex flex-col gap-1`}>
+              <div className={`border ${colors.border} ${colors.bg} rounded-sm px-4 py-3 flex flex-col gap-1.5`}>
                 <p className={`text-sm font-bold ${colors.text}`}>
                   {idx + 1}. {dept.full} ({dept.abbr})
                 </p>
+                {dept.desc && (
+                  <p className="text-sm text-foreground leading-relaxed">
+                    — {dept.desc}
+                  </p>
+                )}
               </div>
             </li>
           );

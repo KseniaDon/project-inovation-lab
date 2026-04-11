@@ -91,25 +91,34 @@ export default function AdminTabsInfrastructure({
       {tab === "departments" && (
         <div className="max-w-2xl">
           <div className="flex items-center justify-between mb-6">
-            <SectionHeader title="Отделения ЦГБ-Н" desc="Структура и аббревиатуры подразделений" />
-            <button onClick={() => { playClickSound(); setDepartments(d => [...d, { abbr: "ОТД", full: "Новое отделение", color: "text-zinc-400" }]); }}
+            <SectionHeader title="Отделения ЦГБ-Н" desc="Структура, описания и аббревиатуры подразделений" />
+            <button onClick={() => { playClickSound(); setDepartments(d => [...d, { abbr: "ОТД", full: "Новое отделение", color: "text-zinc-400", desc: "" }]); }}
               className="flex items-center gap-2 border border-zinc-700 hover:border-red-600 text-zinc-300 hover:text-white px-3 py-2 text-xs uppercase tracking-wider transition-colors shrink-0">
               <Icon name="Plus" size={13} />Добавить
             </button>
           </div>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             {departments.map((dept, idx) => (
-              <div key={idx} className="flex items-center gap-2 group">
-                <input value={dept.abbr} onChange={e => setDepartments(d => d.map((x, i) => i === idx ? { ...x, abbr: e.target.value } : x))}
-                  className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm font-bold outline-none focus:border-red-600 transition-colors w-20 shrink-0" />
-                <input value={dept.full} onChange={e => setDepartments(d => d.map((x, i) => i === idx ? { ...x, full: e.target.value } : x))}
-                  className="flex-1 bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors" />
-                <select value={dept.color} onChange={e => setDepartments(d => d.map((x, i) => i === idx ? { ...x, color: e.target.value } : x))}
-                  className="bg-zinc-900 border border-zinc-700 text-white px-2 py-2.5 text-xs outline-none focus:border-red-600 transition-colors w-28 shrink-0">
-                  {DEPT_COLORS.map(c => <option key={c} value={c}>{c.replace("text-", "")}</option>)}
-                </select>
-                <button onClick={() => { playClickSound(); setDepartments(d => d.filter((_, i) => i !== idx)); }}
-                  className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 shrink-0"><Icon name="X" size={14} /></button>
+              <div key={idx} className="border border-zinc-800 p-4 group">
+                <div className="flex items-center gap-2 mb-3">
+                  <input value={dept.abbr} onChange={e => setDepartments(d => d.map((x, i) => i === idx ? { ...x, abbr: e.target.value } : x))}
+                    className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-sm font-bold outline-none focus:border-red-600 transition-colors w-20 shrink-0" />
+                  <input value={dept.full} onChange={e => setDepartments(d => d.map((x, i) => i === idx ? { ...x, full: e.target.value } : x))}
+                    className="flex-1 bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-sm outline-none focus:border-red-600 transition-colors" />
+                  <select value={dept.color} onChange={e => setDepartments(d => d.map((x, i) => i === idx ? { ...x, color: e.target.value } : x))}
+                    className="bg-zinc-900 border border-zinc-700 text-white px-2 py-2 text-xs outline-none focus:border-red-600 transition-colors w-28 shrink-0">
+                    {DEPT_COLORS.map(c => <option key={c} value={c}>{c.replace("text-", "")}</option>)}
+                  </select>
+                  <button onClick={() => { playClickSound(); setDepartments(d => d.filter((_, i) => i !== idx)); }}
+                    className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 shrink-0"><Icon name="X" size={14} /></button>
+                </div>
+                <textarea
+                  value={dept.desc || ""}
+                  onChange={e => setDepartments(d => d.map((x, i) => i === idx ? { ...x, desc: e.target.value } : x))}
+                  rows={2}
+                  placeholder="Описание отделения..."
+                  className="w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-sm outline-none focus:border-red-600 transition-colors resize-none"
+                />
               </div>
             ))}
           </div>
@@ -159,11 +168,16 @@ export default function AdminTabsInfrastructure({
           </div>
           <div className="flex flex-col gap-2 mb-6">
             {oathLines.map((line, idx) => (
-              <div key={idx} className="flex items-center gap-2 group">
-                <input value={line} onChange={e => setOathLines(l => l.map((x, i) => i === idx ? e.target.value : x))}
-                  className="flex-1 bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-xs font-mono outline-none focus:border-red-600 transition-colors" />
+              <div key={idx} className="flex items-start gap-2 group">
+                <span className="text-zinc-600 text-xs pt-2.5 shrink-0 w-5 text-right">{idx + 1}.</span>
+                <textarea
+                  value={line}
+                  onChange={e => setOathLines(l => l.map((x, i) => i === idx ? e.target.value : x))}
+                  rows={2}
+                  className="flex-1 bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-xs font-mono outline-none focus:border-red-600 transition-colors resize-none"
+                />
                 <button onClick={() => { playClickSound(); setOathLines(l => l.filter((_, i) => i !== idx)); }}
-                  className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 shrink-0"><Icon name="X" size={14} /></button>
+                  className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 shrink-0 mt-2"><Icon name="X" size={14} /></button>
               </div>
             ))}
           </div>
