@@ -161,7 +161,7 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
             <li className="flex items-start gap-2 text-sm text-foreground">
               <span className="shrink-0 font-medium text-muted-foreground">1.</span>
               <span>
-                Нажимаете на <span className="font-bold text-red-500">F12</span>. После того, как нажали, Ваш скриншот автоматически будет сделан в папке игры.
+                Нажимаете на <span className="font-bold text-red-500">F12</span>. После того, как нажали, Ваш скриншот автоматически будет сделан в папке игры;
               </span>
             </li>
           </ol>
