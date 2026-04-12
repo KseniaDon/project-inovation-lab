@@ -28,27 +28,7 @@ export default function Footer() {
                   Руководящий состав ОИ
                 </button>
               </div>
-              <div className="flex flex-col gap-1 sm:gap-2">
-                <h3 className="mb-1 sm:mb-2 uppercase text-neutral-400 text-xs sm:text-sm">Обучение</h3>
-                <a
-                  href="#stages"
-                  className="text-white hover:text-neutral-400 transition-colors duration-300 text-sm sm:text-base"
-                >
-                  Этапы
-                </a>
-                <a
-                  href="#exams"
-                  className="text-white hover:text-neutral-400 transition-colors duration-300 text-sm sm:text-base"
-                >
-                  Аттестация
-                </a>
-                <a
-                  href="#faq"
-                  className="text-white hover:text-neutral-400 transition-colors duration-300 text-sm sm:text-base"
-                >
-                  FAQ
-                </a>
-              </div>
+
             </div>
             <div className="flex justify-end items-end">
               <p className="text-neutral-400 text-xs sm:text-sm text-right max-w-sm">

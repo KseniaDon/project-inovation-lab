@@ -46,13 +46,7 @@ export default function Header({ className }: HeaderProps) {
             <Icon name="Phone" size={14} />
             Руководящий состав ОИ
           </button>
-          <a
-            href="#contact"
-            onClick={playClickSound}
-            className="hidden sm:block text-white hover:text-red-400 transition-colors duration-300 uppercase text-xs md:text-sm"
-          >
-            Правила
-          </a>
+
           <button
             onClick={() => { playClickSound(); navigate("/contacts"); }}
             className="sm:hidden flex items-center gap-1.5 text-white hover:text-red-400 transition-colors duration-300 p-1"
