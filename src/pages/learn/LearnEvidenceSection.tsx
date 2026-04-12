@@ -94,6 +94,18 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
           className="w-full max-w-3xl rounded-sm border border-border"
           caption='Скриншот №2: Главное меню и расположение кнопки "Настройки".'
         />
+        <li className="flex items-start gap-2 text-sm text-foreground">
+          <span className="shrink-0 font-medium text-muted-foreground">2.</span>
+          <span>
+            После того, как нажали <span className="font-bold text-red-500">Настройки</span>, мы переходим в <span className="font-bold text-red-500">Интерфейс</span>, как показано на скриншоте №3.
+          </span>
+        </li>
+        <ImageLightbox
+          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/b3905453-6be0-4ec8-9f07-bb50d192ffba.jpg"
+          alt="Скриншот №3"
+          className="w-full max-w-3xl rounded-sm border border-border"
+          caption='Скриншот №3: Меню настройки и расположение кнопки "Интерфейс".'
+        />
       </div>
     </div>
   );
