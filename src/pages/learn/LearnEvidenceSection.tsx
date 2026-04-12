@@ -97,7 +97,7 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
         <li className="flex items-start gap-2 text-sm text-foreground">
           <span className="shrink-0 font-medium text-muted-foreground">2.</span>
           <span>
-            После того, как нажали <span className="font-bold text-red-500">Настройки</span>, мы переходим в <span className="font-bold text-red-500">Интерфейс</span>, как показано на скриншоте №3.
+            После того, как нажали <span className="font-bold text-red-500">Настройки</span>, мы переходим в <span className="font-bold text-red-500">Интерфейс</span>, как показано на скриншоте №3;
           </span>
         </li>
         <ImageLightbox
@@ -105,6 +105,18 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
           alt="Скриншот №3"
           className="w-full max-w-3xl rounded-sm border border-border"
           caption='Скриншот №3: Меню настройки и расположение кнопки "Интерфейс".'
+        />
+        <li className="flex items-start gap-2 text-sm text-foreground">
+          <span className="shrink-0 font-medium text-muted-foreground">3.</span>
+          <span>
+            Вы нажали на <span className="font-bold text-red-500">Интерфейс</span>, теперь мы переходим в <span className="font-bold text-red-500">Макет чата</span>, как показано на скриншоте №4;
+          </span>
+        </li>
+        <ImageLightbox
+          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/e58738e2-9866-4d9a-beb4-99fc293059f4.jpg"
+          alt="Скриншот №4"
+          className="w-full max-w-3xl rounded-sm border border-border"
+          caption='Скриншот №4: Меню интерфейса и расположение кнопки "Макет чата".'
         />
       </div>
     </div>
