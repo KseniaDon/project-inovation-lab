@@ -160,9 +160,9 @@ export const defaultIntroData = {
   days_total: "14",
   line3: "За",
   days_feldsher: "7",
-  line4: "дней — повыситься до Фельдшера.",
+  line4: "повыситься до Фельдшера.",
   line5: "После повышения ещё",
-  line6: "дней — выйти из ОИ.",
+  line6: "выйти из ОИ.",
 };
 export const defaultInternExam = {
   title: "Твоя первая и главная задача: Получить допуск к лечению.",
