@@ -65,6 +65,12 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
           className="w-full max-w-3xl rounded-sm border border-border"
           caption="Скриншот №1: Лечение пациента в палате и захват всего чата."
         />
+        <div className="flex items-start gap-3 bg-sky-500/10 border border-sky-500/40 rounded-sm px-4 py-3">
+          <span className="text-lg shrink-0 mt-0.5">🦙</span>
+          <p className="text-sm text-sky-300 leading-relaxed">
+            <span className="font-bold">Совет:</span> обрати внимание на то, как на Скриншоте №1 выглядит чат. Он выглядит расширенным и туда помещаются и твои действия, и действия твоих коллег, что увенчивается успехом при одобрении отчета.
+          </p>
+        </div>
       </div>
     </div>
   );
