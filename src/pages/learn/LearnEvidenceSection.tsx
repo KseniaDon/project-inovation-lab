@@ -73,6 +73,28 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
           </p>
         </div>
       </div>
+
+      {/* Шаг 2 */}
+      <div className="flex flex-col gap-3">
+        <p className="text-base font-semibold text-foreground text-center">Шаг 2. Как расширить чат</p>
+        <p className="text-base text-foreground leading-relaxed">
+          Во второй пошаговой инструкции мы разберем, как же сделать чат шире, если он автоматически был в уменьшенной версии.
+        </p>
+        <ol className="flex flex-col gap-2">
+          <li className="flex items-start gap-2 text-sm text-foreground">
+            <span className="shrink-0 font-medium text-muted-foreground">1.</span>
+            <span>
+              Нажимаем в игре на <span className="font-bold text-red-500">Esc</span>, у Вас откроется главное меню игры. После того, как открыли, переходим в <span className="font-bold text-red-500">Настройки</span>, как показано на скриншоте №2;
+            </span>
+          </li>
+        </ol>
+        <ImageLightbox
+          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/07138672-8083-43ce-8a2c-e502fcaee6a4.jpg"
+          alt="Скриншот №2"
+          className="w-full max-w-3xl rounded-sm border border-border"
+          caption='Скриншот №2: Главное меню и расположение кнопки "Настройки".'
+        />
+      </div>
     </div>
   );
 }
