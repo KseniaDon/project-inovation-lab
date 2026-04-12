@@ -28,7 +28,7 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
       </p>
 
       <div className="flex flex-col gap-3">
-        <p className="text-base font-semibold text-foreground">Шаг 1. Как правильно делать лечения</p>
+        <p className="text-base font-semibold text-foreground text-center">Шаг 1. Как правильно делать лечения</p>
         <p className="text-base text-foreground leading-relaxed">
           Мы всегда фиксируем свою работу, показывая чат, где видно как мы лечим пациента. Важно, чтобы была видна полная картина ситуации, а то есть:
         </p>
