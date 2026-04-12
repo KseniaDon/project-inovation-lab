@@ -118,6 +118,24 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
           className="w-full max-w-3xl rounded-sm border border-border"
           caption='Скриншот №4: Меню интерфейса и расположение кнопки "Макет чата".'
         />
+        <li className="flex items-start gap-2 text-sm text-foreground">
+          <span className="shrink-0 font-medium text-muted-foreground">4.</span>
+          <span>
+            Теперь у Вас открылось нужное для нас окошко, а то есть — <span className="font-bold text-red-500">Макет чата</span>. Вы можете отредактировать по-своему и для Вашего удобства, либо взять с примера настроек чата, как на скриншоте №5.
+          </span>
+        </li>
+        <ImageLightbox
+          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/597fabdc-38e7-4b8b-9165-93f5e1a18837.jpg"
+          alt="Скриншот №5"
+          className="w-full max-w-3xl rounded-sm border border-border"
+          caption="Скриншот №5: Макет чата и его настройки."
+        />
+        <div className="flex items-start gap-3 bg-sky-500/10 border border-sky-500/40 rounded-sm px-4 py-3">
+          <span className="text-lg shrink-0 mt-0.5">💡</span>
+          <p className="text-sm text-sky-300 leading-relaxed">
+            <span className="font-bold">Совет:</span> внимательнее проверяйте как будет выглядеть Ваш чат, если Вы уверены, что на нем все хорошо видно и он никак не мешает Вашей игре, то все отлично. Но не забывайте, также, если Вы будете ставить «Затухание сообщений», то делайте их не таким быстрым, чтобы Ваш чат при фиксации доказательств не исчез.
+          </p>
+        </div>
       </div>
     </div>
   );
