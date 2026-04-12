@@ -191,7 +191,7 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
             <li className="flex items-start gap-2 text-sm text-foreground">
               <span className="shrink-0 font-medium text-muted-foreground">3.</span>
               <span>
-                Если у Вас <span className="font-bold">NVIDIA GeForce Experience</span>, то Вы можете сделать скриншот через эту программу, если нажмете нужную комбинацию <span className="font-bold text-red-500">Alt</span> + <span className="font-bold text-red-500">Z</span>.
+                Если у Вас есть <span className="font-bold">NVIDIA GeForce Experience</span>, то Вы можете сделать скриншот через эту программу, если нажмете нужную комбинацию <span className="font-bold text-red-500">Alt</span> + <span className="font-bold text-red-500">Z</span>.
               </span>
             </li>
           </ol>
