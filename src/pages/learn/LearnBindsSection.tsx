@@ -132,9 +132,11 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
                   <span className="font-semibold text-foreground">скриншоте №2</span>;
                 </span>
               </div>
-              <div className="w-full rounded-sm border border-dashed border-border bg-secondary flex items-center justify-center py-6 sm:py-10 text-xs text-muted-foreground ml-0 sm:ml-5">
-                Скриншот будет добавлен позже
-              </div>
+              <img
+                src="https://skrinshoter.ru/sazbgIQPoBo"
+                alt="Скриншот №2: Консоль разработчика (F8)"
+                className="w-full rounded-sm border border-border ml-0 sm:ml-5 object-contain"
+              />
               <p className="text-xs text-muted-foreground text-center ml-0 sm:ml-5">Скриншот №2: Консоль разработчика (F8).</p>
             </li>
 
