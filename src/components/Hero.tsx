@@ -47,7 +47,7 @@ export default function Hero() {
           src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9e862ab9-9ec9-4b2e-a45e-db112feda735.png"
           alt="Логотип ЦГБ Невский"
           className="w-44 md:w-60 lg:w-72 object-contain"
-          style={{ mixBlendMode: "multiply", filter: "invert(1) brightness(1.15) contrast(1.1)" }}
+          style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
         />
         <div className="text-base md:text-lg max-w-xl opacity-90 rich-content text-center">
           <RichContent html={heroData.subtitle} />
