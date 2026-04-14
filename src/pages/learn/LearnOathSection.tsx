@@ -72,7 +72,11 @@ export default function LearnOathSection({ go }: LearnOathSectionProps) {
           <button
             key={idx}
             onClick={() => handleCopy(line, idx)}
-            className="group relative flex items-center justify-between gap-2 sm:gap-3 bg-secondary/40 hover:bg-secondary border border-border hover:border-muted-foreground rounded-sm px-2 sm:px-3 py-2 sm:py-2.5 text-left transition-colors"
+            className={`group relative flex items-center justify-between gap-2 sm:gap-3 border rounded-sm px-2 sm:px-3 py-2 sm:py-2.5 text-left transition-all duration-150 ${
+              copiedIdx === idx
+                ? "bg-green-100 dark:bg-green-900/40 border-green-400 dark:border-green-600"
+                : "bg-secondary/40 hover:bg-secondary border-border hover:border-muted-foreground"
+            }`}
           >
             <p className="text-xs sm:text-sm font-mono text-foreground leading-relaxed pr-14 sm:pr-16">{line}</p>
             <span className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-xs shrink-0">

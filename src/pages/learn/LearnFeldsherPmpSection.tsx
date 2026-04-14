@@ -21,15 +21,21 @@ function CopyBlock({ text, red }: { text: string; red?: boolean }) {
     <button
       onClick={handleCopy}
       title="Нажмите, чтобы скопировать"
-      className={`flex items-center justify-between gap-3 w-full text-left rounded-sm px-3 py-2 border transition-colors group ${
-        red
-          ? "bg-red-50 dark:bg-red-950/30 border-red-300 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/40"
-          : "bg-secondary border-border hover:bg-secondary/80"
+      className={`flex items-center justify-between gap-3 w-full text-left rounded-sm px-3 py-2 border transition-all duration-150 group ${
+        copied
+          ? "bg-green-100 dark:bg-green-900/40 border-green-400 dark:border-green-600"
+          : red
+            ? "bg-red-50 dark:bg-red-950/30 border-red-300 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/40"
+            : "bg-secondary border-border hover:bg-secondary/80"
       }`}
     >
       <code
-        className={`text-xs font-mono leading-relaxed flex-1 ${
-          red ? "text-red-700 dark:text-red-300" : "text-muted-foreground"
+        className={`text-xs font-mono leading-relaxed flex-1 transition-colors duration-150 ${
+          copied
+            ? "text-green-700 dark:text-green-300"
+            : red
+              ? "text-red-700 dark:text-red-300"
+              : "text-muted-foreground"
         }`}
       >
         {text}
@@ -37,7 +43,7 @@ function CopyBlock({ text, red }: { text: string; red?: boolean }) {
       <Icon
         name={copied ? "Check" : "Copy"}
         size={14}
-        className="shrink-0 text-muted-foreground group-hover:text-foreground transition-colors"
+        className={`shrink-0 transition-colors duration-150 ${copied ? "text-green-600 dark:text-green-400" : "text-muted-foreground group-hover:text-foreground"}`}
       />
     </button>
   );
@@ -153,16 +159,15 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
                 <CopyBlock text="me поднес ватку к носу пострадавшего" />
                 <CopyBlock text="do Человек пришел в чувство?" />
                 <CopyBlock text="b /do Да. или /do Нет." />
-                <p className="text-sm text-red-600 dark:text-red-400 font-medium mt-1">
-                  Если <span className="font-bold">/do Нет.</span>
+                <p className="text-sm text-red-600 dark:text-red-400 font-medium leading-relaxed mt-1">
+                  Если <strong>/do Нет.</strong>
                 </p>
                 <CopyBlock text="me отодвинул ватку от носа" />
                 <CopyBlock text="me повторно поднес ватку к носу пострадавшего и водит ей вокруг носа" />
                 <CopyBlock text="do Пострадавший пришел в чувство?" />
                 <CopyBlock text="b /do Да. или /do Нет." />
-                <p className="text-sm text-red-600 dark:text-red-400 leading-relaxed mt-1">
-                  Итак до тех пор, пока не будет <strong>/do Да.</strong> Всего попыток привести чувства человека через данные отыгровки можно 3 раза.
-                  Если все 3 раза <strong>/do Нет.</strong>, то дело серьезное и требует других действий.
+                <p className="text-sm text-red-600 dark:text-red-400 font-medium leading-relaxed mt-1">
+                  Итак до тех пор, пока не будет <strong>/do Да.</strong> Всего попыток привести чувства человека через данные отыгровки можно 3 раза. Если все 3 раза <strong>/do Нет.</strong>, то дело серьёзное и требует других действий.
                 </p>
               </GenderAccordion>
 
@@ -173,16 +178,15 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
                 <CopyBlock text="me поднесла ватку к носу пострадавшего" />
                 <CopyBlock text="do Человек пришел в чувство?" />
                 <CopyBlock text="b /do Да. или /do Нет." />
-                <p className="text-sm text-red-600 dark:text-red-400 font-medium mt-1">
-                  Если <span className="font-bold">/do Нет.</span>
+                <p className="text-sm text-red-600 dark:text-red-400 font-medium leading-relaxed mt-1">
+                  Если <strong>/do Нет.</strong>
                 </p>
                 <CopyBlock text="me отодвинула ватку от носа" />
                 <CopyBlock text="me повторно поднесла ватку к носу пострадавшего и водит ей вокруг носа" />
                 <CopyBlock text="do Пострадавший пришел в чувство?" />
                 <CopyBlock text="b /do Да. или /do Нет." />
-                <p className="text-sm text-red-600 dark:text-red-400 leading-relaxed mt-1">
-                  Итак до тех пор, пока не будет <strong>/do Да.</strong> Всего попыток привести чувства человека через данные отыгровки можно 3 раза.
-                  Если все 3 раза <strong>/do Нет.</strong>, то дело серьезное и требует других действий.
+                <p className="text-sm text-red-600 dark:text-red-400 font-medium leading-relaxed mt-1">
+                  Итак до тех пор, пока не будет <strong>/do Да.</strong> Всего попыток привести чувства человека через данные отыгровки можно 3 раза. Если все 3 раза <strong>/do Нет.</strong>, то дело серьёзное и требует других действий.
                 </p>
               </GenderAccordion>
             </div>
@@ -206,8 +210,8 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
             <CopyBlock text="me взяв кисть пострадавшего в руку, начал нажимать на артерию пострадавшего" />
             <CopyBlock text="do Есть ли у пострадавшего пульс?" />
             <CopyBlock text="b /do Да. или /do Нет." />
-            <p className="text-sm text-red-600 dark:text-red-400 font-semibold">Ждём ВЕРНОЙ отыгровки.</p>
-            <p className="text-sm text-red-600 dark:text-red-400 font-semibold">Если /do Нет.:</p>
+            <p className="text-sm text-red-600 dark:text-red-400 font-medium leading-relaxed">Ждём ВЕРНОЙ отыгровки.</p>
+            <p className="text-sm text-red-600 dark:text-red-400 font-medium leading-relaxed">Если /do Нет.:</p>
             <CopyBlock text="me убрал руку с кисти пострадавшего" />
             <CopyBlock text="do В медицинской сумке лежат лицевая маска и мешок Амбу." />
             <CopyBlock text="me достал из медицинской сумки лицевую маску и мешок амбу" />
@@ -217,15 +221,15 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
             <CopyBlock text="me взяв кисть пострадавшего в руку, начал нажимать на артерию" />
             <CopyBlock text="do Пульс присутствует?" />
             <CopyBlock text="b /do Да. или /do Нет." />
-            <p className="text-sm text-red-600 dark:text-red-400 font-semibold">Ждём ВЕРНОЙ отыгровки.</p>
-            <p className="text-sm text-red-600 dark:text-red-400 font-semibold">Если /do Нет. снова:</p>
+            <p className="text-sm text-red-600 dark:text-red-400 font-medium leading-relaxed">Ждём ВЕРНОЙ отыгровки.</p>
+            <p className="text-sm text-red-600 dark:text-red-400 font-medium leading-relaxed">Если /do Нет. снова:</p>
             <CopyBlock text="me убрал руку с кисти пострадавшего" />
             <CopyBlock text="me скрестив руки на груди пациента, начал выполнять непрямой массаж сердца" />
             <CopyBlock text="me сделав 30 компрессий, сделал 2 вдоха с помощью мешка Амбу и продолжил выполнять массаж" />
             <CopyBlock text="me взяв кисть пострадавшего в руку, начал нажимать на артерию" />
             <CopyBlock text="do Пульс присутствует?" />
             <CopyBlock text="b /do Да. или /do Нет." />
-            <p className="text-sm text-red-600 dark:text-red-400 leading-relaxed">
+            <p className="text-sm text-red-600 dark:text-red-400 font-medium leading-relaxed">
               Если и в этот раз /do Нет. — продолжаем выполнять ещё раз эту же отыгровку.
             </p>
             <CopyBlock text="me убрал руку с кисти пострадавшего" />
@@ -234,7 +238,7 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
             <CopyBlock text="me взяв кисть пострадавшего в руку, начал нажимать на артерию" />
             <CopyBlock text="do Пульс присутствует?" />
             <CopyBlock text="b /do Да. или /do Нет." />
-            <p className="text-sm text-red-600 dark:text-red-400 leading-relaxed">
+            <p className="text-sm text-red-600 dark:text-red-400 font-medium leading-relaxed">
               После 3 раза /do Нет. пишем жалобу на человека за перевод RP в свою сторону.
             </p>
           </GenderAccordion>
@@ -243,8 +247,8 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
             <CopyBlock text="me взяв кисть пострадавшего в руку, начала нажимать на артерию пострадавшего" />
             <CopyBlock text="do Есть ли у пострадавшего пульс?" />
             <CopyBlock text="b /do Да. или /do Нет." />
-            <p className="text-sm text-red-600 dark:text-red-400 font-semibold">Ждём ВЕРНОЙ отыгровки.</p>
-            <p className="text-sm text-red-600 dark:text-red-400 font-semibold">Если /do Нет.:</p>
+            <p className="text-sm text-red-600 dark:text-red-400 font-medium leading-relaxed">Ждём ВЕРНОЙ отыгровки.</p>
+            <p className="text-sm text-red-600 dark:text-red-400 font-medium leading-relaxed">Если /do Нет.:</p>
             <CopyBlock text="me убрала руку с кисти пострадавшего" />
             <CopyBlock text="do В медицинской сумке лежат лицевая маска и мешок Амбу." />
             <CopyBlock text="me достала из медицинской сумки лицевую маску и мешок амбу" />
@@ -254,15 +258,15 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
             <CopyBlock text="me взяв кисть пострадавшего в руку, начала нажимать на артерию" />
             <CopyBlock text="do Пульс присутствует?" />
             <CopyBlock text="b /do Да. или /do Нет." />
-            <p className="text-sm text-red-600 dark:text-red-400 font-semibold">Ждём ВЕРНОЙ отыгровки.</p>
-            <p className="text-sm text-red-600 dark:text-red-400 font-semibold">Если /do Нет. снова:</p>
+            <p className="text-sm text-red-600 dark:text-red-400 font-medium leading-relaxed">Ждём ВЕРНОЙ отыгровки.</p>
+            <p className="text-sm text-red-600 dark:text-red-400 font-medium leading-relaxed">Если /do Нет. снова:</p>
             <CopyBlock text="me убрала руку с кисти пострадавшего" />
             <CopyBlock text="me скрестив руки на груди пациента, начала выполнять непрямой массаж сердца" />
             <CopyBlock text="me сделав 30 компрессий, сделала 2 вдоха с помощью мешка Амбу и продолжила выполнять массаж" />
             <CopyBlock text="me взяв кисть пострадавшего в руку, начала нажимать на артерию" />
             <CopyBlock text="do Пульс присутствует?" />
             <CopyBlock text="b /do Да. или /do Нет." />
-            <p className="text-sm text-red-600 dark:text-red-400 leading-relaxed">
+            <p className="text-sm text-red-600 dark:text-red-400 font-medium leading-relaxed">
               Если и в этот раз /do Нет. — продолжаем выполнять ещё раз эту же отыгровку.
             </p>
             <CopyBlock text="me убрала руку с кисти пострадавшего" />
@@ -271,16 +275,14 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
             <CopyBlock text="me взяв кисть пострадавшего в руку, начала нажимать на артерию" />
             <CopyBlock text="do Пульс присутствует?" />
             <CopyBlock text="b /do Да. или /do Нет." />
-            <p className="text-sm text-red-600 dark:text-red-400 leading-relaxed">
+            <p className="text-sm text-red-600 dark:text-red-400 font-medium leading-relaxed">
               После 3 раза /do Нет. пишем жалобу на человека за перевод RP в свою сторону.
             </p>
           </GenderAccordion>
         </GenderAccordion>
 
         <p className="text-base text-foreground leading-relaxed">
-          Если с пульсом все в порядке (
-          <span className="text-red-600 dark:text-red-400 font-semibold">/do Да.</span>
-          ), то приступаем к осмотру, чтобы выявить видимые травмы и повреждения на теле.
+          Если с пульсом все в порядке — <strong>/do Да.</strong>, то приступаем к осмотру, чтобы выявить видимые травмы и повреждения на теле.
         </p>
 
         {/* Осмотр на травмы */}

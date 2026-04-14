@@ -103,7 +103,7 @@ const RADIO_GROUPS: RadioGroup[] = [
   },
 ];
 
-function CopyButton({ text }: { text: string }) {
+function CopyRow({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -116,10 +116,21 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      title="Скопировать"
-      className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
+      title="Нажмите, чтобы скопировать"
+      className={`flex items-start justify-between gap-2 w-full text-left rounded-sm px-3 py-2 border transition-all duration-150 group ${
+        copied
+          ? "bg-green-100 dark:bg-green-900/40 border-green-400 dark:border-green-600"
+          : "bg-secondary border-border hover:bg-secondary/80"
+      }`}
     >
-      <Icon name={copied ? "Check" : "Copy"} size={14} />
+      <code className={`text-xs font-mono flex-1 leading-relaxed transition-colors duration-150 ${copied ? "text-green-700 dark:text-green-300" : "text-muted-foreground"}`}>
+        {text}
+      </code>
+      <Icon
+        name={copied ? "Check" : "Copy"}
+        size={14}
+        className={`shrink-0 mt-0.5 transition-colors duration-150 ${copied ? "text-green-600 dark:text-green-400" : "text-muted-foreground group-hover:text-foreground"}`}
+      />
     </button>
   );
 }
@@ -143,13 +154,7 @@ function GenderBlock({ label, templates }: { label: string; templates: string[] 
       {open && (
         <div className="flex flex-col gap-2 px-3 pb-3 pt-2 border-t border-border">
           {templates.map((tpl) => (
-            <div
-              key={tpl}
-              className="flex items-start gap-2 bg-secondary border border-border rounded-sm px-3 py-2"
-            >
-              <code className="text-xs text-muted-foreground font-mono flex-1 leading-relaxed">{tpl}</code>
-              <CopyButton text={tpl} />
-            </div>
+            <CopyRow key={tpl} text={tpl} />
           ))}
         </div>
       )}
