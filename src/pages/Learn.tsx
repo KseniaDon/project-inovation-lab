@@ -27,6 +27,7 @@ import LearnGovSection from "./learn/LearnGovSection";
 import LearnFeldsherSection from "./learn/LearnFeldsherSection";
 import LearnFeldsherRadioSection from "./learn/LearnFeldsherRadioSection";
 import LearnFeldsherPmpSection from "./learn/LearnFeldsherPmpSection";
+import LearnFeldsherMzPortalSection from "./learn/LearnFeldsherMzPortalSection";
 
 export default function Learn() {
   const [active, setActive] = useState<SectionId>("intro");
@@ -195,6 +196,9 @@ export default function Learn() {
 
           {/* ФЕЛЬДШЕР — ПМП */}
           {active === "feldsher-pmp" && <LearnFeldsherPmpSection go={go} />}
+
+          {/* ФЕЛЬДШЕР — МЗ ПОРТАЛ */}
+          {active === "feldsher-mzportal" && <LearnFeldsherMzPortalSection go={go} />}
 
         </motion.div>
         </AnimatePresence>
