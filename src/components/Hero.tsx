@@ -36,6 +36,11 @@ export default function Hero() {
         />
       </motion.div>
 
+      <div className="absolute bottom-6 left-6 z-10 flex items-center gap-2 text-white/80">
+        <span className="text-2xl">🚃</span>
+        <span className="text-xs font-bold uppercase tracking-widest text-red-400">#1 MTA PROVINCE</span>
+      </div>
+
       <div className="relative z-10 text-center text-white flex flex-col items-center gap-6 px-6">
         <img
           src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9e862ab9-9ec9-4b2e-a45e-db112feda735.png"
