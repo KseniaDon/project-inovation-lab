@@ -135,6 +135,30 @@ export default function LearnGovSection({ go }: LearnGovSectionProps) {
             </p>
           </div>
         </div>
+
+        {/* Шаг 4 */}
+        <div className="flex flex-col gap-4 pt-4 border-t border-border">
+          <p className="text-base font-semibold text-center text-foreground">Шаг 4. Форма подачи отчета</p>
+          <p className="text-base text-foreground leading-relaxed">
+            Теперь перейдем к самому главному — к подаче отчета на повышение. В данном случае, тебе нужно будет написать по форме повышение на должность{" "}
+            <span className="text-red-400 font-semibold">Фельдшер</span>
+            , как представлено на скриншоте №4. Здесь тебе нужно будет выделить все и скопировать, что указано в этой форме, от «Куратору Отделения Интернатуры...» вплоть до подписи и её содержимого.
+          </p>
+
+          <div className="flex items-start gap-3 bg-orange-500/10 border border-orange-500/40 rounded-sm px-4 py-3.5">
+            <Icon name="TriangleAlert" size={16} className="text-orange-400 shrink-0 mt-0.5" />
+            <p className="text-sm text-orange-200 leading-relaxed">
+              <span className="font-bold text-orange-300">ВАЖНО:</span> Не забудь поменять данные на своё имя и фамилию, и обязательно в шапке заявления соблюдай падежи. Например: от Донской Ксении Игоревны. Также, внимательно указывай актуальную дату подачи отчета и не забывай указывать свою подпись.
+            </p>
+          </div>
+
+          <ImageLightbox
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/d2d71dc1-faa7-4a34-884b-da749f1dc928.png"
+            alt="Скриншот №4"
+            className="w-full rounded-sm border border-border"
+            caption="Скриншот №4: Форма подачи отчета на Фельдшера."
+          />
+        </div>
       </div>
 
       {/* Навигация */}
