@@ -90,20 +90,7 @@ export default function LearnFeldsherMzPortalSection({ go }: Props) {
         Бывают ситуации, когда помощь пациенту приходится импровизировать и на МЗ Портале таких отыгровок не найти. В этом случае — Вам поможет Ваше знание РП-мануала и пользование интернетом. Но не переживайте, Вы всему научитесь, а старшие коллеги помогут Вам не растеряться.
       </p>
 
-      <p className="text-sm text-muted-foreground">
-        Официальный сборник RP-отыгровок МЗ:{" "}
-        <a
-          href="https://forum.gtaprovince.ru/topic/853770-mz-obschiy-sbornik-rp-otygrovok-ministerstva-zdravoohraneniya/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
-        >
-          [МЗ] Общий сборник RP-отыгровок министерства здравоохранения
-          <Icon name="ExternalLink" size={13} />
-        </a>
-      </p>
-
-      <p className="text-xs text-muted-foreground leading-relaxed mt-2 flex items-center gap-1 flex-wrap">
+      <p className="text-xs text-muted-foreground leading-relaxed flex items-center gap-1 flex-wrap">
         Огромная благодарность за создание этого сайта —{" "}
         <a
           href="https://vk.ru/gizuzu"
@@ -123,6 +110,19 @@ export default function LearnFeldsherMzPortalSection({ go }: Props) {
           Matvey Slyusarenko
         </a>
         {" "}<PulsingHeart />
+      </p>
+
+      <p className="text-sm text-muted-foreground">
+        Официальный сборник RP-отыгровок МЗ:{" "}
+        <a
+          href="https://forum.gtaprovince.ru/topic/853770-mz-obschiy-sbornik-rp-otygrovok-ministerstva-zdravoohraneniya/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+        >
+          [МЗ] Общий сборник RP-отыгровок министерства здравоохранения
+          <Icon name="ExternalLink" size={13} />
+        </a>
       </p>
     </div>
   );
