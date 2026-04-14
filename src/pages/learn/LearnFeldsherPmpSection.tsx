@@ -300,6 +300,13 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
           Если с пульсом все в порядке — <strong>/do Да.</strong>, то приступаем к осмотру, чтобы выявить видимые травмы и повреждения на теле.
         </p>
 
+        <div className="flex items-start gap-3 bg-orange-50 dark:bg-orange-950/30 border border-orange-300 dark:border-orange-700 rounded-sm px-4 py-3">
+          <Icon name="AlertTriangle" size={18} className="text-orange-500 shrink-0 mt-0.5" />
+          <p className="text-sm text-orange-800 dark:text-orange-200 leading-relaxed">
+            <strong>ВАЖНО:</strong> В обоих случаях последует осмотр на наличие видимых травм и дальнейшее оказание ПМП, если эти травмы были обнаружены.
+          </p>
+        </div>
+
         {/* Осмотр на травмы */}
         <GenderAccordion label="Осмотр пострадавшего на наличие видимых травм">
           <GenderAccordion label="♂ Мужские отыгровки">
