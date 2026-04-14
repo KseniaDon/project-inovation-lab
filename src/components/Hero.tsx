@@ -55,15 +55,17 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row items-center gap-3 mt-2">
           <button
             onClick={() => { playClickSound(); navigate("/learn"); }}
-            className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 text-sm uppercase tracking-widest font-semibold transition-all duration-300"
+            className="group relative flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white px-10 py-4 text-sm uppercase tracking-widest font-bold transition-all duration-300 shadow-lg shadow-red-900/40 hover:shadow-red-700/60 hover:scale-105"
           >
+            <Icon name="BookOpen" size={18} className="transition-transform duration-300 group-hover:-translate-y-0.5" />
             {heroData.buttonText}
+            <Icon name="ArrowRight" size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
           </button>
           <button
             onClick={() => { playClickSound(); navigate("/admin/login"); }}
-            className="border border-white/30 hover:border-white/60 text-white/60 hover:text-white px-6 py-3 text-xs uppercase tracking-widest font-medium transition-all duration-300"
+            className="flex items-center gap-2 border border-white/30 hover:border-white/60 text-white/60 hover:text-white px-6 py-4 text-xs uppercase tracking-widest font-medium transition-all duration-300"
           >
-            <Icon name="UserCog" size={18} className="mr-1.5" />Для РС ОИ
+            <Icon name="UserCog" size={16} />Для РС ОИ
           </button>
         </div>
       </div>
