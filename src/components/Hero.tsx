@@ -55,9 +55,8 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row items-center gap-3 mt-2">
           <button
             onClick={() => { playClickSound(); navigate("/learn"); }}
-            className="group relative flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white px-10 py-4 text-sm uppercase tracking-widest font-bold transition-all duration-300 shadow-lg shadow-red-900/40 hover:shadow-red-700/60 hover:scale-105"
+            className="hover-pulse-outline group relative flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white px-10 py-4 text-sm uppercase tracking-widest font-bold transition-all duration-300 shadow-lg shadow-red-900/40 hover:shadow-red-700/60 hover:scale-105"
           >
-            <span className="absolute inset-0 opacity-0 group-hover:opacity-100 animate-ping bg-red-600 scale-105 transition-opacity duration-200 pointer-events-none" />
             <Icon name="BookOpen" size={18} className="relative transition-transform duration-300 group-hover:-translate-y-0.5" />
             <span className="relative">{heroData.buttonText}</span>
             <Icon name="ArrowRight" size={16} className="relative transition-transform duration-300 group-hover:translate-x-1" />
