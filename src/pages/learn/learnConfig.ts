@@ -23,9 +23,9 @@ export const NAV: { id: SectionId; label: string; icon: string; parent?: string;
   { id: "feldsher-ksmp",       label: "Работа на КСМП",          icon: "Ambulance",     parent: "feldsher", divider: "Шаг 1: Сдача ОМЭ" },
   { id: "feldsher-radio",      label: "Работа с рацией",         icon: "Megaphone",     parent: "feldsher" },
   { id: "feldsher-pmp",        label: "ПМП",                     icon: "HeartPulse",    parent: "feldsher" },
-  { id: "feldsher-mzportal",   label: "МЗ Портал",               icon: "LayoutDashboard", parent: "feldsher" },
+  { id: "feldsher-mzportal",   label: "МЗ Портал",               icon: "Globe",         parent: "feldsher" },
   { id: "feldsher-patrol",     label: "Пост и патрулирование",   icon: "ShieldCheck",   parent: "feldsher" },
   { id: "feldsher-prmo",       label: "ПРМО",                    icon: "ClipboardPlus", parent: "feldsher" },
   { id: "feldsher-medhelp",    label: "Оказание врачебной помощи", icon: "Syringe",   parent: "feldsher" },
-  { id: "feldsher-wards",      label: "Работа отделений",        icon: "LayoutGrid",    parent: "feldsher" },
+  { id: "feldsher-wards",      label: "Специализация отделений", icon: "Microscope",    parent: "feldsher" },
 ];
