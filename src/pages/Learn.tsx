@@ -24,6 +24,9 @@ import LearnReportSection from "./learn/LearnReportSection";
 import LearnMisSection from "./learn/LearnMisSection";
 import LearnEvidenceSection from "./learn/LearnEvidenceSection";
 import LearnGovSection from "./learn/LearnGovSection";
+import LearnFeldsherSection from "./learn/LearnFeldsherSection";
+import LearnFeldsherRadioSection from "./learn/LearnFeldsherRadioSection";
+import LearnFeldsherPmpSection from "./learn/LearnFeldsherPmpSection";
 
 export default function Learn() {
   const [active, setActive] = useState<SectionId>("intro");
@@ -185,17 +188,13 @@ export default function Learn() {
           {active === "intern-gov" && <LearnGovSection go={go} />}
 
           {/* ФЕЛЬДШЕР */}
-          {active === "feldsher" && (
-            <div className="flex flex-col gap-5">
-              <div>
-                <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Раздел</p>
-                <h1 className="text-3xl font-bold">{feldsherPage.title}</h1>
-              </div>
-              <div className="text-base text-foreground leading-relaxed rich-content">
-                <RichContent html={feldsherPage.content} />
-              </div>
-            </div>
-          )}
+          {active === "feldsher" && <LearnFeldsherSection go={go} />}
+
+          {/* ФЕЛЬДШЕР — РАБОТА С РАЦИЕЙ */}
+          {active === "feldsher-radio" && <LearnFeldsherRadioSection go={go} />}
+
+          {/* ФЕЛЬДШЕР — ПМП */}
+          {active === "feldsher-pmp" && <LearnFeldsherPmpSection go={go} />}
 
         </motion.div>
         </AnimatePresence>

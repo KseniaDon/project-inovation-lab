@@ -11,7 +11,7 @@ const ACCORDION_PARENTS: SectionId[] = ["intern", "feldsher"];
 
 function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: SectionId) => void; onClose?: () => void }) {
   const isInternActive = NAV.some((n) => n.parent === "intern" && n.id === active) || active === "intern";
-  const isFeldsherActive = active === "feldsher";
+  const isFeldsherActive = NAV.some((n) => n.parent === "feldsher" && n.id === active) || active === "feldsher";
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
     intern: isInternActive,
@@ -113,15 +113,15 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
         <button
           onClick={() => { toggleGroup("feldsher"); if (!openGroups["feldsher"]) handleGo("feldsher"); }}
           className={`w-full flex items-center justify-between gap-3 px-3 py-3 text-base font-semibold transition-colors text-left rounded-none
-            ${active === "feldsher"
+            ${isFeldsherActive
               ? "bg-[hsl(var(--red-border)/0.1)] text-[hsl(var(--red-border))] border-l-2 border-[hsl(var(--red-border))]"
               : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
             }`}
         >
           <span className="flex items-center gap-3">
             <span className="relative flex shrink-0">
-              {active === "feldsher" && <span className="absolute inset-0 animate-ping rounded-full bg-[hsl(var(--red-border))] opacity-30" />}
-              <Icon name="Stethoscope" size={18} className={active === "feldsher" ? "text-[hsl(var(--red-border))]" : ""} />
+              {isFeldsherActive && <span className="absolute inset-0 animate-ping rounded-full bg-[hsl(var(--red-border))] opacity-30" />}
+              <Icon name="Stethoscope" size={18} className={isFeldsherActive ? "text-[hsl(var(--red-border))]" : ""} />
             </span>
             Фельдшер
           </span>
