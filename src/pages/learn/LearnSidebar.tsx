@@ -57,15 +57,15 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
         <button
           onClick={() => { toggleGroup("intern"); if (!openGroups["intern"]) handleGo("intern"); }}
           className={`w-full flex items-center justify-between gap-3 px-3 py-3 text-base font-semibold transition-colors text-left rounded-none
-            ${active === "intern"
+            ${isInternActive
               ? "bg-[hsl(var(--red-border)/0.1)] text-[hsl(var(--red-border))] border-l-2 border-[hsl(var(--red-border))]"
               : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
             }`}
         >
           <span className="flex items-center gap-3">
             <span className="relative flex shrink-0">
-              {active === "intern" && <span className="absolute inset-0 animate-ping rounded-full bg-[hsl(var(--red-border))] opacity-30" />}
-              <Icon name="GraduationCap" size={18} className={active === "intern" ? "text-[hsl(var(--red-border))]" : ""} />
+              {isInternActive && <span className="absolute inset-0 animate-ping rounded-full bg-[hsl(var(--red-border))] opacity-30" />}
+              <Icon name="GraduationCap" size={18} className={isInternActive ? "text-[hsl(var(--red-border))]" : ""} />
             </span>
             Интерн
           </span>
