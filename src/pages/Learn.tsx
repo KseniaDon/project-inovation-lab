@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Icon from "@/components/ui/icon";
@@ -26,10 +26,6 @@ import LearnEvidenceSection from "./learn/LearnEvidenceSection";
 export default function Learn() {
   const [active, setActive] = useState<SectionId>("intro");
   const [dark, setDark] = useState(false);
-  const [search, setSearch] = useState("");
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchResults, setSearchResults] = useState<typeof NAV>([]);
-  const searchRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,17 +45,7 @@ export default function Learn() {
     }
   };
 
-  const go = (id: SectionId) => { playClickSound(); setActive(id); setSearch(""); setSearchOpen(false); };
-
-  useEffect(() => {
-    if (!search.trim()) { setSearchResults([]); return; }
-    const q = search.toLowerCase();
-    setSearchResults(NAV.filter(n => n.label.toLowerCase().includes(q)));
-  }, [search]);
-
-  useEffect(() => {
-    if (searchOpen) searchRef.current?.focus();
-  }, [searchOpen]);
+  const go = (id: SectionId) => { playClickSound(); setActive(id); };
   const introData = useSiteData("intro_data", defaultIntroData);
   const internExam = useSiteData("intern_exam", defaultInternExam);
 
@@ -93,44 +79,7 @@ export default function Learn() {
         {/* ── Content ── */}
         <main className={`flex-1 px-4 md:px-8 py-6 md:py-10 min-w-0 ${active === "intern-binds" || active === "intern-evidence" || active === "intern-mis" ? "max-w-4xl" : "max-w-2xl"}`}>
 
-          {/* Поисковик */}
-          <div className="relative mb-8">
-            <div className="flex items-center gap-3 bg-muted border border-border rounded-lg px-4 py-3 focus-within:border-red-500 transition-colors">
-              <Icon name="Search" size={18} className="text-muted-foreground shrink-0" />
-              <input
-                ref={searchRef}
-                value={search}
-                onChange={e => { setSearch(e.target.value); setSearchOpen(true); }}
-                onFocus={() => setSearchOpen(true)}
-                placeholder="Поиск по разделам обучения..."
-                className="bg-transparent text-sm outline-none flex-1 text-foreground placeholder:text-muted-foreground"
-              />
-              {search && (
-                <button onClick={() => { setSearch(""); setSearchOpen(false); }}>
-                  <Icon name="X" size={16} className="text-muted-foreground hover:text-foreground" />
-                </button>
-              )}
-            </div>
-            {searchResults.length > 0 && searchOpen && (
-              <div className="absolute left-0 right-0 top-full mt-1 bg-popover border border-border rounded-lg shadow-lg z-50 py-1 max-h-64 overflow-y-auto">
-                {searchResults.map(r => (
-                  <button
-                    key={r.id}
-                    onClick={() => go(r.id)}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted transition-colors text-left"
-                  >
-                    <Icon name={r.icon as "Home"} size={15} className="text-red-500 shrink-0" />
-                    <span>{r.label}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-            {search.trim() && searchResults.length === 0 && searchOpen && (
-              <div className="absolute left-0 right-0 top-full mt-1 bg-popover border border-border rounded-lg shadow-lg z-50 py-4 text-center text-sm text-muted-foreground">
-                Ничего не найдено
-              </div>
-            )}
-          </div>
+
         <AnimatePresence mode="wait">
         <motion.div key={active} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
 

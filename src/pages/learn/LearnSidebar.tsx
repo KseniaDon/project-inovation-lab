@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Icon from "@/components/ui/icon";
 import { SectionId, NAV } from "./learnConfig";
 
@@ -146,6 +146,63 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
   );
 }
 
+function SidebarSearch({ go }: { go: (id: SectionId) => void }) {
+  const [search, setSearch] = useState("");
+  const [results, setResults] = useState<typeof NAV>([]);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleChange = (val: string) => {
+    setSearch(val);
+    if (!val.trim()) { setResults([]); return; }
+    setResults(NAV.filter(n => n.label.toLowerCase().includes(val.toLowerCase())));
+  };
+
+  const handleGo = (id: SectionId) => {
+    go(id);
+    setSearch("");
+    setResults([]);
+  };
+
+  return (
+    <div className="relative px-3 mb-3">
+      <div className="flex items-center gap-2 bg-muted border border-border rounded px-3 py-2 focus-within:border-red-500 transition-colors">
+        <Icon name="Search" size={14} className="text-muted-foreground shrink-0" />
+        <input
+          ref={inputRef}
+          value={search}
+          onChange={e => handleChange(e.target.value)}
+          placeholder="Поиск по разделам..."
+          className="bg-transparent text-xs outline-none flex-1 text-foreground placeholder:text-muted-foreground"
+        />
+        {search && (
+          <button onClick={() => handleChange("")}>
+            <Icon name="X" size={12} className="text-muted-foreground hover:text-foreground" />
+          </button>
+        )}
+      </div>
+      {results.length > 0 && (
+        <div className="absolute left-3 right-3 top-full mt-1 bg-popover border border-border rounded shadow-lg z-50 py-1 max-h-52 overflow-y-auto">
+          {results.map(r => (
+            <button
+              key={r.id}
+              onClick={() => handleGo(r.id)}
+              className="w-full flex items-center gap-2 px-3 py-2 text-xs hover:bg-muted transition-colors text-left"
+            >
+              <Icon name={r.icon as "Home"} size={13} className="text-red-500 shrink-0" />
+              {r.label}
+            </button>
+          ))}
+        </div>
+      )}
+      {search.trim() && results.length === 0 && (
+        <div className="absolute left-3 right-3 top-full mt-1 bg-popover border border-border rounded shadow-lg z-50 py-3 text-center text-xs text-muted-foreground">
+          Ничего не найдено
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function LearnSidebar({ active, go }: LearnSidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -156,6 +213,7 @@ export default function LearnSidebar({ active, go }: LearnSidebarProps) {
       {/* Desktop sidebar */}
       <aside className="hidden md:flex w-64 shrink-0 border-r border-border flex-col py-6 sticky top-0 h-screen overflow-y-auto">
         <p className="px-5 text-xs uppercase tracking-widest text-muted-foreground mb-3">Разделы</p>
+        <SidebarSearch go={go} />
         <SidebarContent active={active} go={go} />
       </aside>
 
