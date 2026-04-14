@@ -195,6 +195,93 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
           <span className="text-red-600 dark:text-red-400 font-semibold">системно</span>.
           {" "}Это легко понять по его лежачему положению и беспомощности. Он не сможет с Вами разговаривать, кроме как отыгровками и в <strong>/b</strong> чате.
         </p>
+
+        <p className="text-base text-foreground leading-relaxed">
+          Подходим также к человеку, наклоняемся и проверяем уже в этом случае пульс.
+        </p>
+
+        {/* Аккордеон: ПМП при потере пульса */}
+        <GenderAccordion label="ПМП при потере пульса">
+          <GenderAccordion label="♂ Мужские отыгровки">
+            <CopyBlock text="me взяв кисть пострадавшего в руку, начал нажимать на артерию пострадавшего" />
+            <CopyBlock text="do Есть ли у пострадавшего пульс?" />
+            <CopyBlock text="b /do Да. или /do Нет." />
+            <p className="text-sm text-red-600 dark:text-red-400 font-semibold">Ждём ВЕРНОЙ отыгровки.</p>
+            <p className="text-sm text-red-600 dark:text-red-400 font-semibold">Если /do Нет.:</p>
+            <CopyBlock text="me убрал руку с кисти пострадавшего" />
+            <CopyBlock text="do В медицинской сумке лежат лицевая маска и мешок Амбу." />
+            <CopyBlock text="me достал из медицинской сумки лицевую маску и мешок амбу" />
+            <CopyBlock text="me надел лицевую маску на лицо пострадавшего, после чего надел мешок Амбу на маску" />
+            <CopyBlock text="me скрестив руки на груди пациента, начал выполнять непрямой массаж сердца" />
+            <CopyBlock text="me сделав 30 компрессий, сделал 2 вдоха с помощью мешка Амбу и продолжил выполнять массаж" />
+            <CopyBlock text="me взяв кисть пострадавшего в руку, начал нажимать на артерию" />
+            <CopyBlock text="do Пульс присутствует?" />
+            <CopyBlock text="b /do Да. или /do Нет." />
+            <p className="text-sm text-red-600 dark:text-red-400 font-semibold">Ждём ВЕРНОЙ отыгровки.</p>
+            <p className="text-sm text-red-600 dark:text-red-400 font-semibold">Если /do Нет. снова:</p>
+            <CopyBlock text="me убрал руку с кисти пострадавшего" />
+            <CopyBlock text="me скрестив руки на груди пациента, начал выполнять непрямой массаж сердца" />
+            <CopyBlock text="me сделав 30 компрессий, сделал 2 вдоха с помощью мешка Амбу и продолжил выполнять массаж" />
+            <CopyBlock text="me взяв кисть пострадавшего в руку, начал нажимать на артерию" />
+            <CopyBlock text="do Пульс присутствует?" />
+            <CopyBlock text="b /do Да. или /do Нет." />
+            <p className="text-sm text-red-600 dark:text-red-400 leading-relaxed">
+              Если и в этот раз /do Нет. — продолжаем выполнять ещё раз эту же отыгровку.
+            </p>
+            <CopyBlock text="me убрал руку с кисти пострадавшего" />
+            <CopyBlock text="me скрестив руки на груди пациента, начал выполнять непрямой массаж сердца" />
+            <CopyBlock text="me сделав 30 компрессий, сделал 2 вдоха с помощью мешка Амбу и продолжил выполнять массаж" />
+            <CopyBlock text="me взяв кисть пострадавшего в руку, начал нажимать на артерию" />
+            <CopyBlock text="do Пульс присутствует?" />
+            <CopyBlock text="b /do Да. или /do Нет." />
+            <p className="text-sm text-red-600 dark:text-red-400 leading-relaxed">
+              После 3 раза /do Нет. пишем жалобу на человека за перевод RP в свою сторону.
+            </p>
+          </GenderAccordion>
+
+          <GenderAccordion label="♀ Женские отыгровки">
+            <CopyBlock text="me взяв кисть пострадавшего в руку, начала нажимать на артерию пострадавшего" />
+            <CopyBlock text="do Есть ли у пострадавшего пульс?" />
+            <CopyBlock text="b /do Да. или /do Нет." />
+            <p className="text-sm text-red-600 dark:text-red-400 font-semibold">Ждём ВЕРНОЙ отыгровки.</p>
+            <p className="text-sm text-red-600 dark:text-red-400 font-semibold">Если /do Нет.:</p>
+            <CopyBlock text="me убрала руку с кисти пострадавшего" />
+            <CopyBlock text="do В медицинской сумке лежат лицевая маска и мешок Амбу." />
+            <CopyBlock text="me достала из медицинской сумки лицевую маску и мешок амбу" />
+            <CopyBlock text="me надела лицевую маску на лицо пострадавшего, после чего надела мешок Амбу на маску" />
+            <CopyBlock text="me скрестив руки на груди пациента, начала выполнять непрямой массаж сердца" />
+            <CopyBlock text="me сделав 30 компрессий, сделала 2 вдоха с помощью мешка Амбу и продолжила выполнять массаж" />
+            <CopyBlock text="me взяв кисть пострадавшего в руку, начала нажимать на артерию" />
+            <CopyBlock text="do Пульс присутствует?" />
+            <CopyBlock text="b /do Да. или /do Нет." />
+            <p className="text-sm text-red-600 dark:text-red-400 font-semibold">Ждём ВЕРНОЙ отыгровки.</p>
+            <p className="text-sm text-red-600 dark:text-red-400 font-semibold">Если /do Нет. снова:</p>
+            <CopyBlock text="me убрала руку с кисти пострадавшего" />
+            <CopyBlock text="me скрестив руки на груди пациента, начала выполнять непрямой массаж сердца" />
+            <CopyBlock text="me сделав 30 компрессий, сделала 2 вдоха с помощью мешка Амбу и продолжила выполнять массаж" />
+            <CopyBlock text="me взяв кисть пострадавшего в руку, начала нажимать на артерию" />
+            <CopyBlock text="do Пульс присутствует?" />
+            <CopyBlock text="b /do Да. или /do Нет." />
+            <p className="text-sm text-red-600 dark:text-red-400 leading-relaxed">
+              Если и в этот раз /do Нет. — продолжаем выполнять ещё раз эту же отыгровку.
+            </p>
+            <CopyBlock text="me убрала руку с кисти пострадавшего" />
+            <CopyBlock text="me скрестив руки на груди пациента, начала выполнять непрямой массаж сердца" />
+            <CopyBlock text="me сделав 30 компрессий, сделала 2 вдоха с помощью мешка Амбу и продолжила выполнять массаж" />
+            <CopyBlock text="me взяв кисть пострадавшего в руку, начала нажимать на артерию" />
+            <CopyBlock text="do Пульс присутствует?" />
+            <CopyBlock text="b /do Да. или /do Нет." />
+            <p className="text-sm text-red-600 dark:text-red-400 leading-relaxed">
+              После 3 раза /do Нет. пишем жалобу на человека за перевод RP в свою сторону.
+            </p>
+          </GenderAccordion>
+        </GenderAccordion>
+
+        <p className="text-base text-foreground leading-relaxed">
+          Если с пульсом все в порядке (
+          <span className="text-red-600 dark:text-red-400 font-semibold">/do Да.</span>
+          ), то приступаем к осмотру, чтобы выявить видимые травмы и повреждения на теле.
+        </p>
       </div>
     </div>
   );
