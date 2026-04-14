@@ -158,7 +158,32 @@ export default function LearnGovSection({ go }: LearnGovSectionProps) {
             className="w-full rounded-sm border border-border"
             caption="Скриншот №4: Форма подачи отчета на Фельдшера."
           />
+
+          <p className="text-base text-foreground leading-relaxed">
+            Пример правильной подачи отчета на повышение представлен на скриншоте №5.
+          </p>
+
+          <ImageLightbox
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/7cff428c-11de-4bc2-bff6-baa23cfbc2d8.png"
+            alt="Скриншот №5"
+            className="w-full rounded-sm border border-border"
+            caption="Скриншот №5: Пример подачи отчета."
+          />
         </div>
+      </div>
+
+      {/* Финальный текст */}
+      <p className="text-base font-bold text-red-500 text-center">
+        Ну вот и всё! Твой отчёт готов и ждёт своей проверки.
+      </p>
+
+      {/* Красная рамка — предупреждение */}
+      <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/40 rounded-sm px-4 py-3.5">
+        <Icon name="TriangleAlert" size={16} className="text-red-400 shrink-0 mt-0.5" />
+        <p className="text-sm text-red-200 leading-relaxed">
+          <span className="font-bold text-red-300">ВНИМАНИЕ:</span> Обычно проверка отчета занимает до 24 часов. Ни в коем случае не требуй, чтобы твой отчёт в скором времени проверили — это является нарушением. Также, помни, что ты должен за 1 неделю повыситься хотя бы на одну должность. Всего на выход из Отделения Интернатуры тебе дается{" "}
+          <strong><span className="text-red-400">2 недели</span></strong>.
+        </p>
       </div>
 
       {/* Навигация */}
