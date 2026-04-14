@@ -66,7 +66,7 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
 
       <div className="bg-secondary border border-border px-5 py-4">
         <p className="text-sm text-foreground leading-relaxed">
-          Обязательно установи бинды, меняя на свои данные в нужных местах.
+          Обязательно установите бинды, меняя на свои данные в нужных местах.
         </p>
       </div>
 
@@ -81,12 +81,12 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
           <ol className="flex flex-col gap-2">
             <li className="flex items-start gap-2 text-sm text-foreground">
               <span className="shrink-0 font-medium text-muted-foreground">1.</span>
-              <span>Перейди по официальной ссылке на форум (см. выше);</span>
+              <span>Перейдите по официальной ссылке на форум (см. выше);</span>
             </li>
             <li className="flex items-start gap-2 text-sm text-foreground">
               <span className="shrink-0 font-medium text-muted-foreground">2.</span>
               <span>
-                На открывшейся странице найди и скопируй нужный текст для приветствия (выделено красным) на{" "}
+                На открывшейся странице найдите и скопируйте нужный текст для приветствия (выделено красным) на{" "}
                 <span className="text-foreground font-semibold">скриншоте №1</span>;
               </span>
             </li>
@@ -104,7 +104,7 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
         <div className="flex items-start gap-3 bg-red-950/30 border border-red-800/40 rounded-sm px-4 py-3">
           <Icon name="AlertTriangle" size={18} className="text-red-500 shrink-0 mt-0.5" />
           <p className="text-sm text-foreground leading-relaxed">
-            <span className="font-semibold text-red-400">Важное правило:</span> Настройку биндов необходимо производить построчно. Не копируй весь блок текста сразу!
+            <span className="font-semibold text-red-400">Важное правило:</span> Настройку биндов необходимо производить построчно. Не копируйте весь блок текста сразу!
           </p>
         </div>
 
@@ -116,7 +116,7 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
             <li className="flex items-start gap-2 text-sm text-foreground">
               <span className="shrink-0 font-medium text-muted-foreground">1.</span>
               <span>
-                Скопируй первую строку бинда (она начинается с{" "}
+                Скопируйте первую строку бинда (она начинается с{" "}
                 <code className="bg-secondary border border-border rounded px-1.5 py-0.5 text-xs font-mono italic">bind</code>
                 );
               </span>
@@ -126,7 +126,7 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
               <div className="flex items-start gap-2">
                 <span className="shrink-0 font-medium text-muted-foreground">2.</span>
                 <span>
-                  Открой игру и нажми клавишу{" "}
+                  Откройте игру и нажмите клавишу{" "}
                   <span className="font-bold text-red-500">F8</span>
                   , чтобы открыть консоль разработчика, как на{" "}
                   <span className="font-semibold text-foreground">скриншоте №2</span>;
@@ -144,7 +144,7 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
               <div className="flex items-start gap-2">
                 <span className="shrink-0 font-medium text-muted-foreground">3.</span>
                 <span>
-                  Вставь скопированную строку в консоль{" "}
+                  Вставьте скопированную строку в консоль{" "}
                   <span className="font-bold">(Ctrl + V)</span>.{" "}
                   <span className="text-red-500 font-semibold inline-flex items-center gap-1">
                     <Icon name="AlertTriangle" size={13} className="shrink-0" />
@@ -155,7 +155,7 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
 
               <p className="text-sm font-semibold text-foreground ml-2 sm:ml-5">Редактирование бинда:</p>
               <p className="text-sm text-foreground ml-2 sm:ml-5">
-                Замени шаблон <span className="font-bold">Имя Фамилия</span> на своё Имя и Фамилию на русском языке (например, Ксения Донская).
+                Замените шаблон <span className="font-bold">Имя Фамилия</span> на Ваше Имя и Фамилию на русском языке (например, Ксения Донская).
               </p>
 
               <div className="ml-2 sm:ml-5 border-l-2 border-red-600/40 pl-2 sm:pl-4">
@@ -168,7 +168,7 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
             <li className="flex items-start gap-2 text-sm text-foreground">
               <span className="shrink-0 font-medium text-muted-foreground">4.</span>
               <span>
-                После того как ты заменил имя и фамилию, нажми <span className="font-bold">Enter</span>.
+                После того как Вы заменили имя и фамилию, нажмите <span className="font-bold">Enter</span>.
               </span>
             </li>
           </ol>
@@ -184,7 +184,7 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
                 * Bound key '1' 'down' to command 'say Здравствуйте, меня зовут [Ваше ИМЯ и ФАМИЛИЯ], я сотрудник ЦГБ города Невский'
               </code>
             </div>
-            <p className="text-sm text-foreground">— ты всё сделал правильно.</p>
+            <p className="text-sm text-foreground">— Вы всё сделали правильно.</p>
           </div>
         </div>
 
@@ -217,18 +217,18 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
             <li className="flex flex-col gap-3 text-sm text-foreground">
               <div className="flex items-start gap-2">
                 <span className="shrink-0 font-medium text-muted-foreground">2.</span>
-                <span>Вставь строку в консоль и отредактируй два поля:</span>
+                <span>Вставьте строку в консоль и отредактируйте два поля:</span>
               </div>
               <div className="ml-2 sm:ml-5 flex flex-col gap-2">
                 <p className="text-sm text-foreground">
-                  Замени{" "}
+                  Замените{" "}
                   <code className="bg-secondary border border-border rounded px-1.5 py-0.5 text-xs font-mono">*Должность*</code>{" "}
                   на <span className="font-bold">Интерн</span>.
                 </p>
                 <p className="text-sm text-foreground">
-                  Замени{" "}
+                  Замените{" "}
                   <code className="bg-secondary border border-border rounded px-1.5 py-0.5 text-xs font-mono">*Имя Фамилия*</code>{" "}
-                  на своё <span className="font-bold">ИМЯ и ФАМИЛИЮ</span> на русском языке.
+                  на Ваше <span className="font-bold">ИМЯ и ФАМИЛИЮ</span> на русском языке.
                 </p>
               </div>
             </li>
@@ -236,11 +236,11 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
             <li className="flex flex-col gap-2 text-sm text-foreground">
               <div className="flex items-start gap-2">
                 <span className="shrink-0 font-medium text-muted-foreground">3.</span>
-                <span>Нажми <span className="font-bold">Enter</span>.</span>
+                <span>Нажмите <span className="font-bold">Enter</span>.</span>
               </div>
               <div className="ml-2 sm:ml-5 border border-border rounded-sm p-4 flex flex-col gap-2 bg-secondary/40">
                 <p className="text-sm font-semibold text-foreground">Проверка:</p>
-                <p className="text-sm text-foreground">Если в консоли появилась строка, содержащая <span className="font-bold">Интерн</span> и твоё имя с фамилией, ты всё сделал верно.</p>
+                <p className="text-sm text-foreground">Если в консоли появилась строка, содержащая <span className="font-bold">Интерн</span> и Ваше имя с фамилией, Вы всё сделали верно.</p>
               </div>
             </li>
           </ol>
@@ -250,10 +250,10 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
         <div className="flex flex-col gap-4 pt-2 border-t border-border">
           <p className="text-base font-semibold text-center text-foreground">Шаг 4: Завершение настройки</p>
           <p className="text-sm text-foreground leading-relaxed">
-            Остальные строки биндов не требуют ручной корректировки твоих данных.
+            Остальные строки биндов не требуют ручной корректировки Ваших данных.
           </p>
           <p className="text-sm text-foreground leading-relaxed">
-            Просто продолжай <span className="font-bold">построчно</span> копировать и вставлять все оставшиеся бинды из списка, нажимая <span className="font-bold">Enter</span> после каждой строки.
+            Просто продолжайте <span className="font-bold">построчно</span> копировать и вставлять все оставшиеся бинды из списка, нажимая <span className="font-bold">Enter</span> после каждой строки.
           </p>
 
           <div className="text-center py-4">

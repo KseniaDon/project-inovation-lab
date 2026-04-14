@@ -44,8 +44,8 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
           </p>
           <ul className="flex flex-col gap-2 ml-4 border-l-2 border-red-600/40 pl-4">
             {[
-              "Приветствие с твоим бейджем;",
-              "Вопрос о том, чем ты можешь помочь пациенту;",
+              "Приветствие с Вашим бейджем;",
+              "Вопрос о том, чем Вы можете помочь пациенту;",
               "Проведение в палату для осмотра;",
               "Сделанный осмотр;",
               "Озвучивание диагноза и название препарата от этого диагноза;",
@@ -96,7 +96,7 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
               <div className="flex items-start gap-2 text-sm text-foreground">
                 <span className="shrink-0 font-medium text-muted-foreground">1.</span>
                 <span>
-                  Нажимаем в игре на <span className="font-bold text-red-500">Esc</span>, у тебя откроется главное меню игры. После того, как открыли, переходим в <span className="font-bold text-red-500">Настройки</span>, как показано на скриншоте №2;
+                  Нажимаем в игре на <span className="font-bold text-red-500">Esc</span>, у Вас откроется главное меню игры. После того, как открыли, переходим в <span className="font-bold text-red-500">Настройки</span>, как показано на скриншоте №2;
                 </span>
               </div>
               <ImageLightbox
@@ -124,7 +124,7 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
               <div className="flex items-start gap-2 text-sm text-foreground">
                 <span className="shrink-0 font-medium text-muted-foreground">3.</span>
                 <span>
-                  Ты нажал на <span className="font-bold text-red-500">Интерфейс</span>, теперь переходим в <span className="font-bold text-red-500">Макет чата</span>, как показано на скриншоте №4;
+                  Вы нажали на <span className="font-bold text-red-500">Интерфейс</span>, теперь переходим в <span className="font-bold text-red-500">Макет чата</span>, как показано на скриншоте №4;
                 </span>
               </div>
               <ImageLightbox
@@ -138,7 +138,7 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
               <div className="flex items-start gap-2 text-sm text-foreground">
                 <span className="shrink-0 font-medium text-muted-foreground">4.</span>
                 <span>
-                  Теперь у тебя открылось нужное окошко, а то есть — <span className="font-bold text-red-500">Макет чата</span>. Ты можешь отредактировать по-своему и для своего удобства, либо взять с примера настроек чата, как на скриншоте №5.
+                  Теперь у Вас открылось нужное окошко, а то есть — <span className="font-bold text-red-500">Макет чата</span>. Вы можете отредактировать по-своему и для Вашего удобства, либо взять с примера настроек чата, как на скриншоте №5.
                 </span>
               </div>
               <ImageLightbox

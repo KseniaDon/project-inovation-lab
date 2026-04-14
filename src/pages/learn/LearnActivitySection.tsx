@@ -55,7 +55,7 @@ export default function LearnActivitySection({ go }: LearnActivitySectionProps) 
       </div>
 
       <p className="text-base text-foreground leading-relaxed">
-        За несоответствие ЖА тебя могут наказать, поэтому внимательно следи за тем, чтобы качественно вести его.
+        За несоответствие ЖА Вас могут наказать, поэтому внимательно следите за тем, чтобы качественно вести его.
       </p>
 
       <div className="flex flex-col gap-3">
