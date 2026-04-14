@@ -24,15 +24,20 @@ export default function LearnOathSection({ go }: LearnOathSectionProps) {
 
   const handleCopy = async (line: string, idx: number) => {
     if (copiedIdx === idx) { setCopiedIdx(null); return; }
-    try {
-      await navigator.clipboard.writeText(line);
-    } catch {
+    const fallback = () => {
       const el = document.createElement("textarea");
       el.value = line;
+      el.style.position = "fixed";
+      el.style.opacity = "0";
       document.body.appendChild(el);
       el.select();
       document.execCommand("copy");
       document.body.removeChild(el);
+    };
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(line).catch(fallback);
+    } else {
+      fallback();
     }
     setCopiedIdx(idx);
   };
