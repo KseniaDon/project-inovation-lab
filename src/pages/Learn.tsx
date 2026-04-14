@@ -117,11 +117,21 @@ export default function Learn() {
                   <Icon name="ExternalLink" size={13} />
                   Бинды для сотрудников
                 </a>
+                <button onClick={() => go("intern-drugs")}
+                  className="inline-flex items-center gap-1.5 text-sm text-red-500 hover:text-red-400 transition-colors font-medium">
+                  <Icon name="ExternalLink" size={13} />
+                  Препараты
+                </button>
                 <a href={internExam.charter_link} target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-sm text-red-500 hover:text-red-400 transition-colors font-medium">
                   <Icon name="ExternalLink" size={13} />
                   Внутренний Устав ЦГБ-Н
                 </a>
+                <button onClick={() => go("intern-oath")}
+                  className="inline-flex items-center gap-1.5 text-sm text-red-500 hover:text-red-400 transition-colors font-medium">
+                  <Icon name="ExternalLink" size={13} />
+                  Клятва врача
+                </button>
               </div>
             </div>
           )}
