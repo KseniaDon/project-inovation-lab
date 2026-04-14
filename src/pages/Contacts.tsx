@@ -70,11 +70,11 @@ export default function Contacts() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
-          className="mt-6 border border-red-500/40 bg-red-500/5 px-5 py-4 flex gap-3 items-start"
+          className="mt-6 border border-red-700/30 bg-red-700/5 px-5 py-4 flex gap-3 items-start"
         >
-          <Icon name="TriangleAlert" size={18} className="text-red-400 shrink-0 mt-0.5" />
-          <p className="text-sm text-red-300/90 leading-relaxed">
-            <span className="font-bold uppercase tracking-wide text-red-400">Внимание:</span>{" "}
+          <Icon name="TriangleAlert" size={18} className="text-red-700 shrink-0 mt-0.5" />
+          <p className="text-sm text-red-900/80 leading-relaxed">
+            <span className="font-bold uppercase tracking-wide text-red-700">Внимание:</span>{" "}
             Соблюдайте иерархию и субординацию при обращении к Вашему руководству отделения. Также, напоминаем, что проверка отчёта производится в течение 24-х часов с момента опубликования заявления.
           </p>
         </motion.div>
