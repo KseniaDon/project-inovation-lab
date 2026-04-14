@@ -102,7 +102,7 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
         </p>
 
         {/* Отыгровки */}
-        <div className="flex flex-col gap-2">
+        <GenderAccordion label="Осмотр пострадавшего на наличие сознания">
           <GenderAccordion label="♂ Мужские отыгровки">
             <CopyBlock text="me осмотрел пострадавшего на наличие сознания и похлопал над ушами" />
             <CopyBlock text="do У пострадавшего есть реакция?" />
@@ -113,7 +113,7 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
             <CopyBlock text="do У пострадавшего есть реакция?" />
             <CopyBlock text="b /do Да. или /do Нет." />
           </GenderAccordion>
-        </div>
+        </GenderAccordion>
 
         {/* Пояснение */}
         <p className="text-sm text-red-700 dark:text-red-400 leading-relaxed">
