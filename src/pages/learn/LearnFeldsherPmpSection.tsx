@@ -324,6 +324,10 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
             <span className="text-red-600 dark:text-red-400 font-semibold">Слежка [ID]</span>!
           </p>
         </div>
+
+        <p className="text-base text-red-600 dark:text-red-400 font-medium text-center leading-relaxed">
+          Вот мы и разобрались, как нужно правильно оказывать начальную ПМП при обработке вызова. О дальнейших ПМП при определенных травмах — мы Вам расскажем в другом разделе.
+        </p>
       </div>
     </div>
   );
