@@ -43,7 +43,7 @@ export default function Contacts() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={playClickSound}
-              className="hover-pulse-outline group block border border-border hover:border-red-600/60 transition-all duration-300 overflow-hidden cursor-pointer"
+              className="hover-pulse-outline group block border border-border hover:border-[hsl(var(--red-border-hover))] transition-all duration-300 overflow-hidden cursor-pointer"
             >
               <div className="flex items-stretch">
                 <div className={`w-1 shrink-0 ${person.badgeColor} group-hover:w-1.5 transition-all duration-300`} />
@@ -70,11 +70,11 @@ export default function Contacts() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
-          className="mt-6 border border-red-700/30 bg-red-700/5 px-5 py-4 flex gap-3 items-start"
+          className="mt-6 border border-[hsl(var(--red-border)/0.4)] bg-[hsl(var(--red-bg-subtle))] px-5 py-4 flex gap-3 items-start"
         >
-          <Icon name="TriangleAlert" size={18} className="text-red-700 shrink-0 mt-0.5" />
-          <p className="text-sm text-red-900/80 leading-relaxed">
-            <span className="font-bold uppercase tracking-wide text-red-700">Внимание:</span>{" "}
+          <Icon name="TriangleAlert" size={18} className="text-[hsl(var(--red-border))] shrink-0 mt-0.5" />
+          <p className="text-sm text-foreground/75 leading-relaxed">
+            <span className="font-bold uppercase tracking-wide text-[hsl(var(--red-border))]">Внимание:</span>{" "}
             Соблюдайте иерархию и субординацию при обращении к Вашему руководству отделения. Также, напоминаем, что проверка отчёта производится в течение 24-х часов с момента опубликования заявления.
           </p>
         </motion.div>

@@ -39,13 +39,13 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
             onClick={() => handleGo(item.id)}
             className={`w-full flex items-center gap-3 px-3 py-3 text-base font-semibold transition-colors text-left rounded-none
               ${isActive
-                ? "bg-red-600/10 text-red-500 border-l-2 border-red-600"
+                ? "bg-[hsl(var(--red-border)/0.1)] text-[hsl(var(--red-border))] border-l-2 border-[hsl(var(--red-border))]"
                 : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
               }`}
           >
             <span className="relative flex shrink-0">
-              {isActive && <span className="absolute inset-0 animate-ping rounded-full bg-red-500 opacity-30" />}
-              <Icon name={item.icon as "Flag"} size={18} className={isActive ? "text-red-500" : ""} />
+              {isActive && <span className="absolute inset-0 animate-ping rounded-full bg-[hsl(var(--red-border))] opacity-30" />}
+              <Icon name={item.icon as "Flag"} size={18} className={isActive ? "text-[hsl(var(--red-border))]" : ""} />
             </span>
             {item.label}
           </button>
@@ -58,14 +58,14 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
           onClick={() => { toggleGroup("intern"); if (!openGroups["intern"]) handleGo("intern"); }}
           className={`w-full flex items-center justify-between gap-3 px-3 py-3 text-base font-semibold transition-colors text-left rounded-none
             ${active === "intern"
-              ? "bg-red-600/10 text-red-500 border-l-2 border-red-600"
+              ? "bg-[hsl(var(--red-border)/0.1)] text-[hsl(var(--red-border))] border-l-2 border-[hsl(var(--red-border))]"
               : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
             }`}
         >
           <span className="flex items-center gap-3">
             <span className="relative flex shrink-0">
-              {active === "intern" && <span className="absolute inset-0 animate-ping rounded-full bg-red-500 opacity-30" />}
-              <Icon name="GraduationCap" size={18} className={active === "intern" ? "text-red-500" : ""} />
+              {active === "intern" && <span className="absolute inset-0 animate-ping rounded-full bg-[hsl(var(--red-border))] opacity-30" />}
+              <Icon name="GraduationCap" size={18} className={active === "intern" ? "text-[hsl(var(--red-border))]" : ""} />
             </span>
             Интерн
           </span>
@@ -91,13 +91,13 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
                     onClick={() => handleGo(item.id)}
                     className={`w-full flex items-center gap-2.5 ml-4 pl-3 pr-3 py-2.5 text-sm font-medium transition-colors text-left rounded-none
                       ${isActive
-                        ? "bg-red-600/10 text-red-500 border-l-2 border-red-600 font-semibold"
+                        ? "bg-[hsl(var(--red-border)/0.1)] text-[hsl(var(--red-border))] border-l-2 border-[hsl(var(--red-border))] font-semibold"
                         : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
                       }`}
                   >
                     <span className="relative flex shrink-0">
-                      {isActive && <span className="absolute inset-0 animate-ping rounded-full bg-red-500 opacity-30" />}
-                      <Icon name={item.icon as "Flag"} size={15} className={isActive ? "text-red-500" : ""} />
+                      {isActive && <span className="absolute inset-0 animate-ping rounded-full bg-[hsl(var(--red-border))] opacity-30" />}
+                      <Icon name={item.icon as "Flag"} size={15} className={isActive ? "text-[hsl(var(--red-border))]" : ""} />
                     </span>
                     {item.label}
                   </button>
@@ -114,14 +114,14 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
           onClick={() => { toggleGroup("feldsher"); if (!openGroups["feldsher"]) handleGo("feldsher"); }}
           className={`w-full flex items-center justify-between gap-3 px-3 py-3 text-base font-semibold transition-colors text-left rounded-none
             ${active === "feldsher"
-              ? "bg-red-600/10 text-red-500 border-l-2 border-red-600"
+              ? "bg-[hsl(var(--red-border)/0.1)] text-[hsl(var(--red-border))] border-l-2 border-[hsl(var(--red-border))]"
               : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
             }`}
         >
           <span className="flex items-center gap-3">
             <span className="relative flex shrink-0">
-              {active === "feldsher" && <span className="absolute inset-0 animate-ping rounded-full bg-red-500 opacity-30" />}
-              <Icon name="Stethoscope" size={18} className={active === "feldsher" ? "text-red-500" : ""} />
+              {active === "feldsher" && <span className="absolute inset-0 animate-ping rounded-full bg-[hsl(var(--red-border))] opacity-30" />}
+              <Icon name="Stethoscope" size={18} className={active === "feldsher" ? "text-[hsl(var(--red-border))]" : ""} />
             </span>
             Фельдшер
           </span>
@@ -142,13 +142,13 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
                   onClick={() => handleGo(item.id)}
                   className={`w-full flex items-center gap-2.5 ml-4 pl-3 pr-3 py-2.5 text-sm font-medium transition-colors text-left rounded-none
                     ${isActive
-                      ? "bg-red-600/10 text-red-500 border-l-2 border-red-600 font-semibold"
+                      ? "bg-[hsl(var(--red-border)/0.1)] text-[hsl(var(--red-border))] border-l-2 border-[hsl(var(--red-border))] font-semibold"
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
                     }`}
                 >
                   <span className="relative flex shrink-0">
-                    {isActive && <span className="absolute inset-0 animate-ping rounded-full bg-red-500 opacity-30" />}
-                    <Icon name={item.icon as "Flag"} size={15} className={isActive ? "text-red-500" : ""} />
+                    {isActive && <span className="absolute inset-0 animate-ping rounded-full bg-[hsl(var(--red-border))] opacity-30" />}
+                    <Icon name={item.icon as "Flag"} size={15} className={isActive ? "text-[hsl(var(--red-border))]" : ""} />
                   </span>
                   {item.label}
                 </button>
