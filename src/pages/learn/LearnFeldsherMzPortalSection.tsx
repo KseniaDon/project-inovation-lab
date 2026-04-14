@@ -113,7 +113,7 @@ export default function LearnFeldsherMzPortalSection({ go }: Props) {
       </p>
 
       <p className="text-sm text-muted-foreground">
-        Официальный сборник RP-отыгровок МЗ:{" "}
+        Официальный сборник RP-отыгровок МЗ на госпортале:{" "}
         <a
           href="https://forum.gtaprovince.ru/topic/853770-mz-obschiy-sbornik-rp-otygrovok-ministerstva-zdravoohraneniya/"
           target="_blank"
