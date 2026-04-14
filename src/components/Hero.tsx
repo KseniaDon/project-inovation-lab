@@ -37,7 +37,6 @@ export default function Hero() {
       </motion.div>
 
       <div className="absolute bottom-6 left-6 z-10 flex items-center gap-2 text-white/80">
-        <span className="text-2xl">🚃</span>
         <span className="text-xs font-bold uppercase tracking-widest text-red-400">#1 MTA PROVINCE</span>
       </div>
 
