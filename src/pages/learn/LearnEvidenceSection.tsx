@@ -1,12 +1,17 @@
 import Icon from "@/components/ui/icon";
 import ImageLightbox from "@/components/ui/image-lightbox";
 import { SectionId } from "./learnConfig";
+import { useSiteData } from "@/hooks/useSiteData";
+import { defaultEvidencePage, SimplePageData } from "@/pages/admin/adminTypes";
+import RichContent from "@/components/ui/rich-content";
 
 interface LearnEvidenceSectionProps {
   go: (id: SectionId) => void;
 }
 
 export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) {
+  const data = useSiteData<SimplePageData>("evidence_page", defaultEvidencePage);
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -18,14 +23,14 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
           Назад к «Что дальше?»
         </button>
         <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Шаг 4: Отчет на повышение</p>
-        <h1 className="text-3xl font-bold">Фиксация доказательств</h1>
+        <h1 className="text-3xl font-bold">{data.title}</h1>
       </div>
 
       <p className="text-base font-semibold text-muted-foreground">4.2. Фиксация доказательств</p>
 
-      <p className="text-base text-foreground leading-relaxed">
-        Первым делом, чтобы подать отчет на повышение, давай научимся фиксировать твою работу.
-      </p>
+      <div className="text-base text-foreground leading-relaxed rich-content">
+        <RichContent html={data.content} />
+      </div>
 
       {/* Пошаговая инструкция */}
       <div className="border border-border rounded-sm p-4 sm:p-6 flex flex-col gap-5">

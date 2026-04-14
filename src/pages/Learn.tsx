@@ -6,7 +6,7 @@ import Icon from "@/components/ui/icon";
 import { playClickSound } from "@/hooks/useSound";
 import { SectionId, NAV } from "./learn/learnConfig";
 import { useSiteData } from "@/hooks/useSiteData";
-import { defaultIntroData, defaultInternExam } from "@/pages/admin/adminTypes";
+import { defaultIntroData, defaultInternExam, defaultFeldsherPage, SimplePageData } from "@/pages/admin/adminTypes";
 import LearnSidebar from "./learn/LearnSidebar";
 import LearnBindsSection from "./learn/LearnBindsSection";
 import LearnRadioSection from "./learn/LearnRadioSection";
@@ -49,6 +49,7 @@ export default function Learn() {
   const go = (id: SectionId) => { playClickSound(); setActive(id); };
   const introData = useSiteData("intro_data", defaultIntroData);
   const internExam = useSiteData("intern_exam", defaultInternExam);
+  const feldsherPage = useSiteData<SimplePageData>("feldsher_page", defaultFeldsherPage);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -174,23 +175,11 @@ export default function Learn() {
             <div className="flex flex-col gap-5">
               <div>
                 <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Раздел</p>
-                <h1 className="text-3xl font-bold">Фельдшер</h1>
+                <h1 className="text-3xl font-bold">{feldsherPage.title}</h1>
               </div>
-              <ul className="flex flex-col gap-3">
-                {[
-                  "Протоколы первичной диагностики пациентов",
-                  "Алгоритмы оказания неотложной помощи",
-                  "Ведение сестринской документации и карт наблюдения",
-                  "Правила хранения и выдачи лекарственных средств",
-                  "Взаимодействие с дежурным врачом и старшим медперсоналом",
-                  "Инфекционная безопасность и работа с биоматериалом",
-                ].map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-3 text-base text-foreground">
-                    <span className="mt-1.5 w-2 h-2 rounded-full bg-red-600 shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
+              <div className="text-base text-foreground leading-relaxed rich-content">
+                <RichContent html={feldsherPage.content} />
+              </div>
             </div>
           )}
 

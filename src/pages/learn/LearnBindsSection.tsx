@@ -2,6 +2,9 @@ import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import ImageLightbox from "@/components/ui/image-lightbox";
 import { SectionId } from "./learnConfig";
+import { useSiteData } from "@/hooks/useSiteData";
+import { defaultBindsPage, SimplePageData } from "@/pages/admin/adminTypes";
+import RichContent from "@/components/ui/rich-content";
 
 interface LearnBindsSectionProps {
   go: (id: SectionId) => void;
@@ -9,6 +12,7 @@ interface LearnBindsSectionProps {
 
 export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
   const [copied, setCopied] = useState(false);
+  const data = useSiteData<SimplePageData>("binds_page", defaultBindsPage);
 
   const handleCopy = async (text: string) => {
     try {
@@ -38,18 +42,14 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
           Назад к Интерну
         </button>
         <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Шаг 1: Подготовка</p>
-        <h1 className="text-3xl font-bold">Настройка биндов</h1>
+        <h1 className="text-3xl font-bold">{data.title}</h1>
       </div>
 
       <p className="text-base font-semibold text-muted-foreground">1.1 Настройка биндов.</p>
 
-      <p className="text-base text-foreground leading-relaxed">
-        Как и говорилось ранее, устная речь — это бинды. Слово «Бинд» в РП мы не используем!
-      </p>
-
-      <p className="text-base text-foreground leading-relaxed">
-        Бинды — это твой главный рабочий инструмент. Они экономят время и обеспечивают качественную РП-отыгровку.
-      </p>
+      <div className="text-base text-foreground leading-relaxed rich-content">
+        <RichContent html={data.content} />
+      </div>
 
       <div className="flex flex-col gap-2">
         <p className="text-sm text-muted-foreground">Официальная тема на госпортале с биндами:</p>

@@ -1,11 +1,11 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import Placeholder from "@tiptap/extension-placeholder";
 import Color from "@tiptap/extension-color";
 import { TextStyle } from "@tiptap/extension-text-style";
-import { useEffect, useRef } from "react";
+import { Underline } from "@tiptap/extension-underline";
+import { useRef } from "react";
 
 interface RichEditorProps {
   value: string;
@@ -58,7 +58,7 @@ function ColorPicker({ editor }: { editor: ReturnType<typeof useEditor> }) {
             }
           }}
           className="w-4 h-4 rounded-sm border border-zinc-600 transition-all hover:scale-110"
-          style={{ background: c.value, outline: currentColor === c.value ? `2px solid white` : "none", outlineOffset: "1px" }}
+          style={{ background: c.value, outline: currentColor === c.value ? "2px solid white" : "none", outlineOffset: "1px" }}
         />
       ))}
       <div className="relative">
@@ -87,7 +87,7 @@ function ColorPicker({ editor }: { editor: ReturnType<typeof useEditor> }) {
 export default function RichEditor({ value, onChange, placeholder = "Введите текст...", minHeight = 100 }: RichEditorProps) {
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({ underline: false }),
       Underline,
       TextStyle,
       Color,
@@ -106,18 +106,10 @@ export default function RichEditor({ value, onChange, placeholder = "Введи�
     },
   });
 
-  useEffect(() => {
-    if (!editor) return;
-    if (editor.getHTML() !== value) {
-      editor.commands.setContent(value || "", false);
-    }
-  }, [value]);
-
   if (!editor) return null;
 
   return (
     <div className="border border-zinc-700 focus-within:border-red-600 transition-colors bg-zinc-900">
-      {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-0.5 px-2 py-1.5 border-b border-zinc-700 bg-zinc-800">
         <ToolbarBtn active={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()} title="Жирный">
           <strong>Б</strong>
@@ -152,7 +144,6 @@ export default function RichEditor({ value, onChange, placeholder = "Введи�
         <ToolbarBtn active={false} onClick={() => editor.chain().focus().undo().run()} title="Отменить">↩</ToolbarBtn>
         <ToolbarBtn active={false} onClick={() => editor.chain().focus().redo().run()} title="Повторить">↪</ToolbarBtn>
       </div>
-      {/* Content */}
       <div style={{ minHeight }} className="px-3 py-2.5">
         <EditorContent editor={editor} />
       </div>

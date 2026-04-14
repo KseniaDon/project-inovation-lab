@@ -7,11 +7,12 @@ import { toast } from "sonner";
 import {
   Role, Tab, AccessUser,
   Section, StaffMember, Command, Floor, Department, CharterDoc, Report,
-  HeroData, AbbrItem, RadioCommand, RadioRule, IntroData, InternExam,
+  HeroData, AbbrItem, RadioCommand, RadioRule, IntroData, InternExam, SimplePageData,
   defaultHero, defaultSections, defaultStaff, defaultCommands, defaultFloors,
   defaultDepartments, defaultCharter, defaultOathLines, defaultMaleReports,
   defaultFemaleReports, defaultSchedule, defaultAbbr, defaultRadioCommands,
   defaultRadioRules, defaultActivityData, defaultIntroData, defaultInternExam,
+  defaultBindsPage, defaultReportPage, defaultMisPage, defaultEvidencePage, defaultFeldsherPage,
 } from "./admin/adminTypes";
 import AdminSiteContent from "./admin/AdminSiteContent";
 import AdminAccessPassword from "./admin/AdminAccessPassword";
@@ -19,23 +20,28 @@ import AdminAccessPassword from "./admin/AdminAccessPassword";
 const API = "https://functions.poehali.dev/ee0c9d49-3da0-4e2e-a2ab-1f68f29a1405";
 
 const ALL_TABS: { id: Tab; label: string; icon: string; superOnly?: boolean }[] = [
-  { id: "hero",        label: "Главная",     icon: "Home",          superOnly: true },
-  { id: "staff",       label: "Состав",      icon: "Users",         superOnly: true },
-  { id: "intro",       label: "Вступление",  icon: "Flag",          superOnly: true },
-  { id: "intern_exam", label: "Интерн",      icon: "GraduationCap", superOnly: true },
-  { id: "sections",    label: "Обучение",    icon: "BookOpen" },
-  { id: "commands",    label: "Команды",     icon: "Terminal",      superOnly: true },
-  { id: "radio",       label: "Рация",       icon: "Radio",         superOnly: true },
-  { id: "reports",     label: "Доклады",     icon: "Megaphone",     superOnly: true },
-  { id: "abbr",        label: "Аббревиат.",  icon: "BookOpen",      superOnly: true },
-  { id: "schedule",    label: "Расписание",  icon: "Calendar",      superOnly: true },
-  { id: "floors",      label: "Этажи",       icon: "Building2",     superOnly: true },
-  { id: "activity",    label: "ЖА",          icon: "ClipboardList", superOnly: true },
-  { id: "departments", label: "Отделения",   icon: "Network",       superOnly: true },
-  { id: "charter",     label: "Уставы",      icon: "ScrollText",    superOnly: true },
-  { id: "oath",        label: "Клятва",      icon: "Star",          superOnly: true },
-  { id: "access",      label: "Доступы",     icon: "Shield",        superOnly: true },
-  { id: "password",    label: "Мой пароль",  icon: "KeyRound" },
+  { id: "hero",           label: "Главная",      icon: "Home",          superOnly: true },
+  { id: "staff",          label: "Состав",       icon: "Users",         superOnly: true },
+  { id: "intro",          label: "Вступление",   icon: "Flag",          superOnly: true },
+  { id: "intern_exam",    label: "Интерн",       icon: "GraduationCap", superOnly: true },
+  { id: "binds_page",     label: "Бинды",        icon: "Keyboard",      superOnly: true },
+  { id: "report_page",    label: "Что дальше?",  icon: "ArrowRight",    superOnly: true },
+  { id: "evidence_page",  label: "Доказат.",     icon: "Camera",        superOnly: true },
+  { id: "mis_page",       label: "МИС",          icon: "MonitorCheck",  superOnly: true },
+  { id: "feldsher_page",  label: "Фельдшер",     icon: "Stethoscope",   superOnly: true },
+  { id: "sections",       label: "Обучение",     icon: "BookOpen" },
+  { id: "commands",       label: "Команды",      icon: "Terminal",      superOnly: true },
+  { id: "radio",          label: "Рация",        icon: "Radio",         superOnly: true },
+  { id: "reports",        label: "Доклады",      icon: "Megaphone",     superOnly: true },
+  { id: "abbr",           label: "Аббревиат.",   icon: "BookOpen",      superOnly: true },
+  { id: "schedule",       label: "Расписание",   icon: "Calendar",      superOnly: true },
+  { id: "floors",         label: "Этажи",        icon: "Building2",     superOnly: true },
+  { id: "activity",       label: "ЖА",           icon: "ClipboardList", superOnly: true },
+  { id: "departments",    label: "Отделения",    icon: "Network",       superOnly: true },
+  { id: "charter",        label: "Уставы",       icon: "ScrollText",    superOnly: true },
+  { id: "oath",           label: "Клятва",       icon: "Star",          superOnly: true },
+  { id: "access",         label: "Доступы",      icon: "Shield",        superOnly: true },
+  { id: "password",       label: "Мой пароль",   icon: "KeyRound" },
 ];
 
 export default function AdminPanel() {
@@ -68,6 +74,11 @@ export default function AdminPanel() {
   const [activityData, setActivityData] = useState(defaultActivityData);
   const [introData, setIntroData] = useState<IntroData>(defaultIntroData);
   const [internExam, setInternExam] = useState<InternExam>(defaultInternExam);
+  const [bindsPage, setBindsPage] = useState<SimplePageData>(defaultBindsPage);
+  const [reportPage, setReportPage] = useState<SimplePageData>(defaultReportPage);
+  const [misPage, setMisPage] = useState<SimplePageData>(defaultMisPage);
+  const [evidencePage, setEvidencePage] = useState<SimplePageData>(defaultEvidencePage);
+  const [feldsherPage, setFeldsherPage] = useState<SimplePageData>(defaultFeldsherPage);
 
   // Access state
   const [accessUsers, setAccessUsers] = useState<AccessUser[]>([]);
@@ -102,7 +113,8 @@ export default function AdminPanel() {
     if (t === "hero" || t === "staff") return "/";
     if (t === "sections" || t === "intro" || t === "intern_exam" || t === "commands" ||
         t === "radio" || t === "reports" || t === "abbr" || t === "schedule" ||
-        t === "floors" || t === "activity" || t === "departments" || t === "charter" || t === "oath") return "/learn";
+        t === "floors" || t === "activity" || t === "departments" || t === "charter" || t === "oath" ||
+        t === "binds_page" || t === "report_page" || t === "mis_page" || t === "evidence_page" || t === "feldsher_page") return "/learn";
     return "/";
   };
 
@@ -135,6 +147,11 @@ export default function AdminPanel() {
       if (d.data.activity) setActivityData(d.data.activity);
       if (d.data.intro_data) setIntroData(d.data.intro_data);
       if (d.data.intern_exam) setInternExam(d.data.intern_exam);
+      if (d.data.binds_page) setBindsPage(d.data.binds_page);
+      if (d.data.report_page) setReportPage(d.data.report_page);
+      if (d.data.mis_page) setMisPage(d.data.mis_page);
+      if (d.data.evidence_page) setEvidencePage(d.data.evidence_page);
+      if (d.data.feldsher_page) setFeldsherPage(d.data.feldsher_page);
     });
   }, [me, authFetch]);
 
@@ -237,6 +254,11 @@ export default function AdminPanel() {
             activityData={activityData} setActivityData={setActivityData}
             introData={introData} setIntroData={setIntroData}
             internExam={internExam} setInternExam={setInternExam}
+            bindsPage={bindsPage} setBindsPage={setBindsPage}
+            reportPage={reportPage} setReportPage={setReportPage}
+            misPage={misPage} setMisPage={setMisPage}
+            evidencePage={evidencePage} setEvidencePage={setEvidencePage}
+            feldsherPage={feldsherPage} setFeldsherPage={setFeldsherPage}
           />
           <AdminAccessPassword
             tab={tab}

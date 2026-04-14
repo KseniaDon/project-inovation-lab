@@ -1,4 +1,4 @@
-import { HeroData, Section, StaffMember, Command, Floor, Department, CharterDoc, Report, AbbrItem, RadioCommand, RadioRule, IntroData, InternExam } from "./adminTypes";
+import { HeroData, Section, StaffMember, Command, Floor, Department, CharterDoc, Report, AbbrItem, RadioCommand, RadioRule, IntroData, InternExam, SimplePageData } from "./adminTypes";
 import AdminTabsSiteBasic from "./AdminTabsSiteBasic";
 import AdminTabsLearning from "./AdminTabsLearning";
 import AdminTabsInfrastructure from "./AdminTabsInfrastructure";
@@ -59,6 +59,16 @@ interface Props {
   setIntroData: React.Dispatch<React.SetStateAction<IntroData>>;
   internExam: InternExam;
   setInternExam: React.Dispatch<React.SetStateAction<InternExam>>;
+  bindsPage: SimplePageData;
+  setBindsPage: React.Dispatch<React.SetStateAction<SimplePageData>>;
+  reportPage: SimplePageData;
+  setReportPage: React.Dispatch<React.SetStateAction<SimplePageData>>;
+  misPage: SimplePageData;
+  setMisPage: React.Dispatch<React.SetStateAction<SimplePageData>>;
+  evidencePage: SimplePageData;
+  setEvidencePage: React.Dispatch<React.SetStateAction<SimplePageData>>;
+  feldsherPage: SimplePageData;
+  setFeldsherPage: React.Dispatch<React.SetStateAction<SimplePageData>>;
 }
 
 export default function AdminSiteContent(props: Props) {
@@ -71,6 +81,11 @@ export default function AdminSiteContent(props: Props) {
         staff={props.staff} setStaff={props.setStaff}
         introData={props.introData} setIntroData={props.setIntroData}
         internExam={props.internExam} setInternExam={props.setInternExam}
+        bindsPage={props.bindsPage} setBindsPage={props.setBindsPage}
+        reportPage={props.reportPage} setReportPage={props.setReportPage}
+        misPage={props.misPage} setMisPage={props.setMisPage}
+        evidencePage={props.evidencePage} setEvidencePage={props.setEvidencePage}
+        feldsherPage={props.feldsherPage} setFeldsherPage={props.setFeldsherPage}
       />
       <AdminTabsLearning
         tab={tab} saved={saved} saving={saving} saveBlock={saveBlock}

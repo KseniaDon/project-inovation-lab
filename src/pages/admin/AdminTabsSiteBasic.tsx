@@ -1,7 +1,7 @@
 import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
 import { SaveBtn, Field, Inp, SectionHeader } from "./adminHelpers";
-import { BADGE_COLORS, HeroData, StaffMember, IntroData, InternExam } from "./adminTypes";
+import { BADGE_COLORS, HeroData, StaffMember, IntroData, InternExam, SimplePageData } from "./adminTypes";
 import RichEditor from "@/components/ui/rich-editor";
 
 interface Props {
@@ -23,6 +23,16 @@ interface Props {
 
   internExam: InternExam;
   setInternExam: React.Dispatch<React.SetStateAction<InternExam>>;
+  bindsPage: SimplePageData;
+  setBindsPage: React.Dispatch<React.SetStateAction<SimplePageData>>;
+  reportPage: SimplePageData;
+  setReportPage: React.Dispatch<React.SetStateAction<SimplePageData>>;
+  misPage: SimplePageData;
+  setMisPage: React.Dispatch<React.SetStateAction<SimplePageData>>;
+  evidencePage: SimplePageData;
+  setEvidencePage: React.Dispatch<React.SetStateAction<SimplePageData>>;
+  feldsherPage: SimplePageData;
+  setFeldsherPage: React.Dispatch<React.SetStateAction<SimplePageData>>;
 }
 
 export default function AdminTabsSiteBasic({
@@ -31,6 +41,11 @@ export default function AdminTabsSiteBasic({
   staff, setStaff,
   introData, setIntroData,
   internExam, setInternExam,
+  bindsPage, setBindsPage,
+  reportPage, setReportPage,
+  misPage, setMisPage,
+  evidencePage, setEvidencePage,
+  feldsherPage, setFeldsherPage,
 }: Props) {
 
   const upd = (idx: number, patch: Partial<StaffMember>) =>
@@ -176,6 +191,30 @@ export default function AdminTabsSiteBasic({
           </div>
         </div>
       )}
+
+      {/* ── SIMPLE PAGES ───────────────────────────────────────────────── */}
+      {(["binds_page", "report_page", "mis_page", "evidence_page", "feldsher_page"] as const).map(key => {
+        const dataMap = { binds_page: bindsPage, report_page: reportPage, mis_page: misPage, evidence_page: evidencePage, feldsher_page: feldsherPage };
+        const setMap = { binds_page: setBindsPage, report_page: setReportPage, mis_page: setMisPage, evidence_page: setEvidencePage, feldsher_page: setFeldsherPage };
+        const labelMap = { binds_page: "Настройка биндов", report_page: "Что дальше?", mis_page: "МИС «Здоровье»", evidence_page: "Фиксация доказательств", feldsher_page: "Фельдшер" };
+        if (tab !== key) return null;
+        const data = dataMap[key];
+        const setData = setMap[key];
+        return (
+          <div key={key} className="max-w-3xl">
+            <SectionHeader title={labelMap[key]} desc="Заголовок и содержимое раздела на сайте" />
+            <div className="flex flex-col gap-4">
+              <Field label="Заголовок раздела">
+                <Inp value={data.title} onChange={v => setData(d => ({ ...d, title: v }))} placeholder="Заголовок..." />
+              </Field>
+              <Field label="Содержимое раздела">
+                <RichEditor value={data.content} onChange={v => setData(d => ({ ...d, content: v }))} placeholder="Текст раздела..." minHeight={250} />
+              </Field>
+              <SaveBtn onClick={() => saveBlock(key, data)} saved={saved} loading={saving} />
+            </div>
+          </div>
+        );
+      })}
 
       {/* ── INTERN EXAM ────────────────────────────────────────────────── */}
       {tab === "intern_exam" && (
