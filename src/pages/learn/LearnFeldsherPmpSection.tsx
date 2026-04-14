@@ -107,7 +107,7 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
 
       <p className="text-base text-foreground leading-relaxed">
         ПМП — расшифровывается как Первая Медицинская Помощь. Прежде, чем начать оказывать ПМП, Вам нужно убедиться,
-        что человек в системном сознании или системно без сознания, от этого зависят Ваши дальнейшие действия.
+        что человек без сознания системно или не системно, от этого зависят Ваши дальнейшие действия.
       </p>
 
       <p className="text-base text-foreground leading-relaxed">
