@@ -18,19 +18,13 @@ function PulsingHeart() {
 
   return (
     <span
-      className="inline-flex items-center justify-center relative"
-      style={{ width: 28, height: 28 }}
+      className="transition-transform duration-300 select-none inline-block"
+      style={{
+        fontSize: 18,
+        transform: beat ? "scale(1.3)" : "scale(1)",
+      }}
     >
-      <span
-        className="text-red-500 transition-transform duration-300 select-none"
-        style={{
-          fontSize: 24,
-          display: "inline-block",
-          transform: beat ? "scale(1.25)" : "scale(1)",
-        }}
-      >
-        ❤️‍🩹
-      </span>
+      ❤️
     </span>
   );
 }
@@ -96,7 +90,20 @@ export default function LearnFeldsherMzPortalSection({ go }: Props) {
         Бывают ситуации, когда помощь пациенту приходится импровизировать и на МЗ Портале таких отыгровок не найти. В этом случае — Вам поможет Ваше знание РП-мануала и пользование интернетом. Но не переживайте, Вы всему научитесь, а старшие коллеги помогут Вам не растеряться.
       </p>
 
-      <p className="text-xs text-muted-foreground leading-relaxed mt-4 flex items-center gap-1.5 flex-wrap">
+      <p className="text-sm text-muted-foreground">
+        Официальный сборник RP-отыгровок МЗ:{" "}
+        <a
+          href="https://forum.gtaprovince.ru/topic/853770-mz-obschiy-sbornik-rp-otygrovok-ministerstva-zdravoohraneniya/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+        >
+          [МЗ] Общий сборник RP-отыгровок министерства здравоохранения
+          <Icon name="ExternalLink" size={13} />
+        </a>
+      </p>
+
+      <p className="text-xs text-muted-foreground leading-relaxed mt-2 flex items-center gap-1 flex-wrap">
         Огромная благодарность за создание этого сайта —{" "}
         <a
           href="https://vk.ru/gizuzu"
@@ -114,8 +121,8 @@ export default function LearnFeldsherMzPortalSection({ go }: Props) {
           className="hover:underline text-foreground font-medium"
         >
           Matvey Slyusarenko
-        </a>{" "}
-        <PulsingHeart />
+        </a>
+        {" "}<PulsingHeart />
       </p>
     </div>
   );
