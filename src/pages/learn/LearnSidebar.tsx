@@ -37,13 +37,13 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
           <button
             key={item.id}
             onClick={() => handleGo(item.id)}
-            className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-sm transition-colors text-left rounded-none
+            className={`w-full flex items-center gap-3 px-3 py-3 text-base font-semibold transition-colors text-left rounded-none
               ${isActive
                 ? "bg-red-600/10 text-red-500 border-l-2 border-red-600"
                 : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
               }`}
           >
-            <Icon name={item.icon as "Flag"} size={16} className={isActive ? "text-red-500" : ""} />
+            <Icon name={item.icon as "Flag"} size={18} className={isActive ? "text-red-500 font-bold" : ""} />
             {item.label}
           </button>
         );
@@ -53,14 +53,14 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
       <div className="flex flex-col">
         <button
           onClick={() => { toggleGroup("intern"); if (!openGroups["intern"]) handleGo("intern"); }}
-          className={`w-full flex items-center justify-between gap-2.5 px-3 py-2.5 text-sm transition-colors text-left rounded-none
+          className={`w-full flex items-center justify-between gap-3 px-3 py-3 text-base font-semibold transition-colors text-left rounded-none
             ${active === "intern"
               ? "bg-red-600/10 text-red-500 border-l-2 border-red-600"
               : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
             }`}
         >
-          <span className="flex items-center gap-2.5">
-            <Icon name="GraduationCap" size={16} className={active === "intern" ? "text-red-500" : ""} />
+          <span className="flex items-center gap-3">
+            <Icon name="GraduationCap" size={18} className={active === "intern" ? "text-red-500" : ""} />
             Интерн
           </span>
           <Icon
@@ -83,13 +83,13 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
                   )}
                   <button
                     onClick={() => handleGo(item.id)}
-                    className={`w-full flex items-center gap-2.5 ml-4 pl-3 pr-3 py-2.5 text-xs transition-colors text-left rounded-none
+                    className={`w-full flex items-center gap-2.5 ml-4 pl-3 pr-3 py-2.5 text-sm font-medium transition-colors text-left rounded-none
                       ${isActive
-                        ? "bg-red-600/10 text-red-500 border-l-2 border-red-600"
+                        ? "bg-red-600/10 text-red-500 border-l-2 border-red-600 font-semibold"
                         : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
                       }`}
                   >
-                    <Icon name={item.icon as "Flag"} size={14} className={isActive ? "text-red-500" : ""} />
+                    <Icon name={item.icon as "Flag"} size={15} className={isActive ? "text-red-500" : ""} />
                     {item.label}
                   </button>
                 </div>
@@ -103,14 +103,14 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
       <div className="flex flex-col">
         <button
           onClick={() => { toggleGroup("feldsher"); if (!openGroups["feldsher"]) handleGo("feldsher"); }}
-          className={`w-full flex items-center justify-between gap-2.5 px-3 py-2.5 text-sm transition-colors text-left rounded-none
+          className={`w-full flex items-center justify-between gap-3 px-3 py-3 text-base font-semibold transition-colors text-left rounded-none
             ${active === "feldsher"
               ? "bg-red-600/10 text-red-500 border-l-2 border-red-600"
               : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
             }`}
         >
-          <span className="flex items-center gap-2.5">
-            <Icon name="Stethoscope" size={16} className={active === "feldsher" ? "text-red-500" : ""} />
+          <span className="flex items-center gap-3">
+            <Icon name="Stethoscope" size={18} className={active === "feldsher" ? "text-red-500" : ""} />
             Фельдшер
           </span>
           <Icon
@@ -128,13 +128,13 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
                 <button
                   key={item.id}
                   onClick={() => handleGo(item.id)}
-                  className={`w-full flex items-center gap-2.5 ml-4 pl-3 pr-3 py-2.5 text-xs transition-colors text-left rounded-none
+                  className={`w-full flex items-center gap-2.5 ml-4 pl-3 pr-3 py-2.5 text-sm font-medium transition-colors text-left rounded-none
                     ${isActive
-                      ? "bg-red-600/10 text-red-500 border-l-2 border-red-600"
+                      ? "bg-red-600/10 text-red-500 border-l-2 border-red-600 font-semibold"
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
                     }`}
                 >
-                  <Icon name={item.icon as "Flag"} size={14} className={isActive ? "text-red-500" : ""} />
+                  <Icon name={item.icon as "Flag"} size={15} className={isActive ? "text-red-500" : ""} />
                   {item.label}
                 </button>
               );
