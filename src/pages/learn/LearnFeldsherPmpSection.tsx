@@ -90,8 +90,9 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
       </p>
 
       <p className="text-base text-foreground leading-relaxed">
-        1. Разберем ситуацию, когда человек системно в сознании и лежит через анимацию на{" "}
-        <strong>F1</strong>.
+        1. Разберем ситуацию, когда человек без сознания{" "}
+        <span className="text-red-600 dark:text-red-400 font-semibold">не системно</span>{" "}
+        и лежит через анимацию на <strong>F1</strong>.
       </p>
 
       {/* Шаг 1 */}
