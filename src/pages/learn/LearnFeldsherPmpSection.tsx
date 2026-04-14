@@ -117,8 +117,8 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
 
         {/* Пояснение */}
         <p className="text-sm text-red-700 dark:text-red-400 leading-relaxed">
-          Если <strong>Да</strong>, то мы спрашиваем у человека, что с ним произошло.{" "}
-          Если <strong>Нет</strong>, то мы приводим его в сознание.
+          Если <strong>/do Да.</strong>, то мы спрашиваем у человека, что с ним произошло.{" "}
+          Если <strong>/do Нет.</strong>, то мы приводим его в сознание.
         </p>
 
         {/* Важно */}
