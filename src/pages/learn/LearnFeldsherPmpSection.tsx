@@ -282,6 +282,31 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
           <span className="text-red-600 dark:text-red-400 font-semibold">/do Да.</span>
           ), то приступаем к осмотру, чтобы выявить видимые травмы и повреждения на теле.
         </p>
+
+        {/* Осмотр на травмы */}
+        <GenderAccordion label="Осмотр пострадавшего на наличие видимых травм">
+          <GenderAccordion label="♂ Мужские отыгровки">
+            <CopyBlock text="me осмотрел пострадавшего на наличие видимых травм" />
+            <CopyBlock text="do Какие травмы при осмотре обнаружил врач?" />
+            <CopyBlock text="b Перечислите все возможные травмы в /do с большой буквы и точкой в конце. Например: /do Закрытый перелом правой ноги." />
+          </GenderAccordion>
+          <GenderAccordion label="♀ Женские отыгровки">
+            <CopyBlock text="me осмотрела пострадавшего на наличие видимых травм" />
+            <CopyBlock text="do Какие травмы при осмотре обнаружила врач?" />
+            <CopyBlock text="b Перечислите все возможные травмы в /do с большой буквы и точкой в конце. Например: /do Закрытый перелом правой ноги." />
+          </GenderAccordion>
+        </GenderAccordion>
+
+        {/* Важное предупреждение */}
+        <div className="flex items-start gap-3 bg-red-50 dark:bg-red-950/30 border border-red-300 dark:border-red-800 rounded-sm px-4 py-3">
+          <Icon name="AlertTriangle" size={18} className="text-red-500 shrink-0 mt-0.5" />
+          <p className="text-sm text-red-800 dark:text-red-200 leading-relaxed">
+            <strong>ВНИМАНИЕ:</strong> Ни в коем случае не продолжайте РП, если Вы видите, что человек неправильно отыгрывает. Добейтесь от него верной отыгровки или отправьте жалобу в{" "}
+            <span className="text-red-600 dark:text-red-400 font-semibold">/report</span>{" "}
+            с пометкой{" "}
+            <span className="text-red-600 dark:text-red-400 font-semibold">Слежка [ID]</span>!
+          </p>
+        </div>
       </div>
     </div>
   );
