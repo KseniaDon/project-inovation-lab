@@ -15,20 +15,20 @@ export default function LearnBindsSection({ go }: LearnBindsSectionProps) {
   const data = useSiteData<SimplePageData>("binds_page", defaultBindsPage);
 
   const handleCopy = async (text: string) => {
+    if (copied) { setCopied(false); return; }
     try {
       await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     } catch {
       const el = document.createElement("textarea");
       el.value = text;
+      el.style.position = "fixed";
+      el.style.opacity = "0";
       document.body.appendChild(el);
       el.select();
       document.execCommand("copy");
       document.body.removeChild(el);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     }
+    setCopied(true);
   };
 
   return (

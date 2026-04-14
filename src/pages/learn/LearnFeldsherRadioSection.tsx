@@ -108,7 +108,24 @@ function CopyRow({ text }: { text: string }) {
 
   const handleCopy = () => {
     if (copied) { setCopied(false); return; }
-    navigator.clipboard.writeText(text).then(() => setCopied(true));
+    const write = () => {
+      try {
+        const el = document.createElement("textarea");
+        el.value = text;
+        el.style.position = "fixed";
+        el.style.opacity = "0";
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+      } catch (e) { void e; }
+    };
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).catch(write);
+    } else {
+      write();
+    }
+    setCopied(true);
   };
 
   return (
