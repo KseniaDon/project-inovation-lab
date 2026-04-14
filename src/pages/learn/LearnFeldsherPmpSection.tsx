@@ -85,19 +85,19 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
       </div>
 
       <p className="text-base text-foreground leading-relaxed">
-        ПМП расшифровывается как Первая Медицинская Помощь. Прежде, чем начать оказывать ПМП, Вам нужно убедиться,
+        ПМП — расшифровывается как Первая Медицинская Помощь. Прежде, чем начать оказывать ПМП, Вам нужно убедиться,
         что человек в системном сознании или системно без сознания, от этого зависят Ваши дальнейшие действия.
       </p>
 
       <p className="text-base text-foreground leading-relaxed">
-        Разберем ситуацию, когда человек системно в сознании и лежит через анимацию на{" "}
+        1. Разберем ситуацию, когда человек системно в сознании и лежит через анимацию на{" "}
         <strong>F1</strong>.
       </p>
 
       {/* Шаг 1 */}
       <div className="flex flex-col gap-3">
         <p className="text-base text-foreground leading-relaxed">
-          1. Подходим к лежащему человеку и осматриваем его на наличие сознания;
+          Подходим к лежащему человеку и наклонившись осматриваем его на наличие сознания.
         </p>
 
         {/* Отыгровки */}
@@ -187,6 +187,13 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
             </div>
           )}
         </div>
+
+        {/* Блок 2: без сознания */}
+        <p className="text-base text-foreground leading-relaxed">
+          2. Теперь разберём с Вами ситуацию, когда человек без сознания{" "}
+          <span className="text-red-600 dark:text-red-400 font-semibold">системно</span>.
+          {" "}Это легко понять по его лежачему положению и беспомощности. Он не сможет с Вами разговаривать, кроме как отыгровками и в <strong>/b</strong> чате.
+        </p>
       </div>
     </div>
   );
