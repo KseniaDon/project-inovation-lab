@@ -29,7 +29,7 @@ export default function LearnMisSection({ go }: LearnMisSectionProps) {
 
       {/* Первый абзац — вводный текст (только первый параграф из content) */}
       <p className="text-base text-foreground leading-relaxed">
-        МИС «Здоровье» — это медицинская информационная система, куда ты загружаешь доказательства своей работы в больнице перед подачей заявки на повышение. Без этого шага заявка не рассматривается.
+        МИС «Здоровье» — это медицинская информационная система, куда Вы загружаете доказательства своей работы в больнице перед подачей заявки на повышение. Без этого шага заявка не рассматривается.
       </p>
 
       {/* Кнопка открыть МИС — перемещена сюда */}
@@ -85,14 +85,14 @@ export default function LearnMisSection({ go }: LearnMisSectionProps) {
         <div className="flex flex-col gap-1.5">
           <p className="text-sm font-bold text-orange-300">ВАЖНО:</p>
           <ol className="flex flex-col gap-1.5 text-sm text-orange-200 leading-relaxed list-decimal list-inside">
-            <li>Для повышения у тебя должны отсутствовать любые дисциплинарные взыскания (Исключение: Сотрудникам отделения интернатуры разрешено повышаться при наличии предупреждений);</li>
+            <li>Для повышения у Вас должны отсутствовать любые дисциплинарные взыскания (Исключение: Сотрудникам отделения интернатуры разрешено повышаться при наличии предупреждений);</li>
             <li>Доказательства должны быть расположены по порядку;</li>
             <li>
-              Используй нейтральные хостинги по типу{" "}
+              Используйте нейтральные хостинги по типу{" "}
               <a href="https://disk.yandex.ru" target="_blank" rel="noopener noreferrer" className="text-red-400 font-semibold hover:text-red-300 underline underline-offset-2 transition-colors">Яндекс Диск</a>{" "}
               и{" "}
               <a href="https://drive.google.com" target="_blank" rel="noopener noreferrer" className="text-red-400 font-semibold hover:text-red-300 underline underline-offset-2 transition-colors">Google Диск</a>,{" "}
-              чтобы проверяющий смог с легкостью проверить твой отчет.
+              чтобы проверяющий смог с лёгкостью проверить Ваш отчёт.
             </li>
           </ol>
         </div>
@@ -100,7 +100,7 @@ export default function LearnMisSection({ go }: LearnMisSectionProps) {
 
       {/* Серая рамка — финальный шаг */}
       <div className="border border-zinc-600/50 rounded-sm px-4 py-3 bg-zinc-800/30 text-sm text-foreground leading-relaxed">
-        Как будет все заполнено, можешь смело нажимать{" "}
+        Как будет всё заполнено, нажимайте{" "}
         <span className="text-green-400 font-semibold">Отправить</span>.
       </div>
 
@@ -108,7 +108,7 @@ export default function LearnMisSection({ go }: LearnMisSectionProps) {
       <div className="flex items-start gap-3 bg-sky-500/10 border border-sky-500/40 rounded-sm px-4 py-3.5">
         <span className="text-sky-400 text-base shrink-0 mt-0.5">💡</span>
         <p className="text-sm text-sky-200 leading-relaxed">
-          <strong>Совет:</strong> чтобы улучшить проверку твоего отчета и получить одобрение, сортируй все свои доказательства по папкам. Например: лечения в одну папку с лечениями, строи в папку со строями, чтобы каждый строй был в отдельных папках. Пока что учись и повышайся, всему остальному мы тебя научим ❤️
+          <strong>Совет:</strong> чтобы улучшить проверку Вашего отчёта и получить одобрение, сортируйте все свои доказательства по папкам. Например: лечения в одну папку с лечениями, строи в папку со строями, чтобы каждый строй был в отдельных папках. Пока что учитесь и повышайтесь, всему остальному мы Вас научим ❤️
         </p>
       </div>
 

@@ -38,7 +38,7 @@ export default function LearnCommandsSection({ go }: LearnCommandsSectionProps) 
       <p className="text-base font-semibold text-muted-foreground">1.4. Основные команды</p>
 
       <p className="text-base text-foreground leading-relaxed">
-        Это список основных команд, которые понадобятся тебе на смене.
+        Это список основных команд, которые понадобятся Вам на смене.
       </p>
 
       <div className="flex flex-col gap-2">

@@ -47,7 +47,7 @@ export default function LearnDepartmentsSection({ go }: LearnDepartmentsSectionP
       <p className="text-base font-semibold text-muted-foreground">3.1. Отделения ЦГБ</p>
 
       <p className="text-base text-foreground leading-relaxed">
-        Ты должен понимать структуру нашей больницы. Всего в нашей больнице{" "}
+        Вы должны понимать структуру нашей больницы. Всего в нашей больнице{" "}
         <span className="font-bold underline">5 отделений</span>.
       </p>
 
