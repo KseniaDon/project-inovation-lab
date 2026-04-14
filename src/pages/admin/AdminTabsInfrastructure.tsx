@@ -2,6 +2,7 @@ import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
 import { SaveBtn, Field, Inp, SectionHeader } from "./adminHelpers";
 import { DEPT_COLORS, Floor, Department, CharterDoc } from "./adminTypes";
+import RichEditor from "@/components/ui/rich-editor";
 
 type Schedule = {
   weekdays: string; saturday: string; break: string; sunday: string; note: string;
@@ -53,8 +54,7 @@ export default function AdminTabsInfrastructure({
             <Field label="Перерыв (ежедневно)"><Inp value={schedule.break} onChange={v => setSchedule(s => ({ ...s, break: v }))} /></Field>
             <Field label="Воскресенье"><Inp value={schedule.sunday} onChange={v => setSchedule(s => ({ ...s, sunday: v }))} /></Field>
             <Field label="Примечание">
-              <textarea rows={2} value={schedule.note} onChange={e => setSchedule(s => ({ ...s, note: e.target.value }))}
-                className="w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors resize-none" />
+              <RichEditor value={schedule.note} onChange={v => setSchedule(s => ({ ...s, note: v }))} placeholder="Примечание к расписанию..." minHeight={80} />
             </Field>
             <SaveBtn onClick={() => saveBlock("schedule", schedule)} saved={saved} loading={saving} />
           </div>
@@ -112,12 +112,11 @@ export default function AdminTabsInfrastructure({
                   <button onClick={() => { playClickSound(); setDepartments(d => d.filter((_, i) => i !== idx)); }}
                     className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 shrink-0"><Icon name="X" size={14} /></button>
                 </div>
-                <textarea
+                <RichEditor
                   value={dept.desc || ""}
-                  onChange={e => setDepartments(d => d.map((x, i) => i === idx ? { ...x, desc: e.target.value } : x))}
-                  rows={2}
+                  onChange={v => setDepartments(d => d.map((x, i) => i === idx ? { ...x, desc: v } : x))}
                   placeholder="Описание отделения..."
-                  className="w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-sm outline-none focus:border-red-600 transition-colors resize-none"
+                  minHeight={80}
                 />
               </div>
             ))}

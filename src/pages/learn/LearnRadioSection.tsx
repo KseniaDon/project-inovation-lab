@@ -2,6 +2,7 @@ import Icon from "@/components/ui/icon";
 import { SectionId } from "./learnConfig";
 import { useSiteData } from "@/hooks/useSiteData";
 import { defaultRadioCommands, defaultRadioRules, RadioCommand, RadioRule } from "@/pages/admin/adminTypes";
+import RichContent from "@/components/ui/rich-content";
 
 interface LearnRadioSectionProps {
   go: (id: SectionId) => void;
@@ -49,7 +50,7 @@ export default function LearnRadioSection({ go }: LearnRadioSectionProps) {
           {radioRules.map(({ text }, idx) => (
             <li key={idx} className="flex items-start gap-2 text-sm text-foreground">
               <span className="shrink-0 font-medium text-muted-foreground">{idx + 1}.</span>
-              <span>{text}</span>
+              <div><RichContent html={text} /></div>
             </li>
           ))}
         </ol>

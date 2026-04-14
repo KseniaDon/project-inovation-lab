@@ -2,6 +2,7 @@ import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
 import { SaveBtn, Field, Inp, SectionHeader } from "./adminHelpers";
 import { BADGE_COLORS, HeroData, StaffMember } from "./adminTypes";
+import RichEditor from "@/components/ui/rich-editor";
 
 interface Props {
   tab: string;
@@ -43,8 +44,7 @@ export default function AdminTabsSiteBasic({
           <SectionHeader title="Главная страница" desc="Заголовок и кнопка на экране-приветствии" />
           <div className="flex flex-col gap-4">
             <Field label="Подзаголовок">
-              <textarea rows={3} value={hero.subtitle} onChange={e => setHero({ ...hero, subtitle: e.target.value })}
-                className="w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors resize-none" />
+              <RichEditor value={hero.subtitle} onChange={v => setHero({ ...hero, subtitle: v })} placeholder="Подзаголовок на главной..." minHeight={80} />
             </Field>
             <Field label="Текст кнопки">
               <Inp value={hero.buttonText} onChange={v => setHero({ ...hero, buttonText: v })} />
@@ -167,12 +167,10 @@ export default function AdminTabsSiteBasic({
               <Inp value={introData.welcome} onChange={v => setIntroData(d => ({ ...d, welcome: v }))} />
             </Field>
             <Field label="Строка 1 — Вы являетесь сотрудником...">
-              <textarea rows={2} value={introData.line1} onChange={e => setIntroData(d => ({ ...d, line1: e.target.value }))}
-                className="w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors resize-none" />
+              <RichEditor value={introData.line1} onChange={v => setIntroData(d => ({ ...d, line1: v }))} placeholder="Первый абзац вступления..." minHeight={70} />
             </Field>
             <Field label="Строка 2 — На выход из ОИ вам дается...">
-              <textarea rows={2} value={introData.line2} onChange={e => setIntroData(d => ({ ...d, line2: e.target.value }))}
-                className="w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors resize-none" />
+              <RichEditor value={introData.line2} onChange={v => setIntroData(d => ({ ...d, line2: v }))} placeholder="Второй абзац вступления..." minHeight={70} />
             </Field>
             <div className="grid grid-cols-2 gap-4">
               <Field label="Число дней (всего в ОИ)">
@@ -216,8 +214,7 @@ export default function AdminTabsSiteBasic({
               <Inp value={internExam.title} onChange={v => setInternExam(d => ({ ...d, title: v }))} />
             </Field>
             <Field label="Описание">
-              <textarea rows={3} value={internExam.desc} onChange={e => setInternExam(d => ({ ...d, desc: e.target.value }))}
-                className="w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors resize-none" />
+              <RichEditor value={internExam.desc} onChange={v => setInternExam(d => ({ ...d, desc: v }))} placeholder="Описание раздела Интерн..." minHeight={90} />
             </Field>
             <Field label="Ссылка на бинды">
               <Inp value={internExam.binds_link} onChange={v => setInternExam(d => ({ ...d, binds_link: v }))} />

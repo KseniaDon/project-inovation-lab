@@ -1,6 +1,7 @@
 import Icon from "@/components/ui/icon";
 import { SectionId } from "./learnConfig";
 import { useSiteData } from "@/hooks/useSiteData";
+import RichContent from "@/components/ui/rich-content";
 
 interface LearnScheduleSectionProps {
   go: (id: SectionId) => void;
@@ -59,9 +60,9 @@ export default function LearnScheduleSection({ go }: LearnScheduleSectionProps) 
           <p className="text-sm text-foreground leading-relaxed">
             Время указано московское!
           </p>
-          <p className="text-sm text-foreground leading-relaxed">
-            {schedule.note}
-          </p>
+          <div className="text-sm text-foreground leading-relaxed">
+            <RichContent html={schedule.note} />
+          </div>
           <p className="text-sm text-foreground leading-relaxed">
             Отсутствие сотрудника на рабочем месте без уважительной причины (перерыва, отпуска или отгула) в рабочее время автоматически расценивается как прогул смены.
           </p>

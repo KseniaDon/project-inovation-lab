@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import RichContent from "@/components/ui/rich-content";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Icon from "@/components/ui/icon";
@@ -91,11 +92,11 @@ export default function Learn() {
                 <h1 className="text-3xl font-bold">Вступление</h1>
               </div>
               <p className="text-2xl font-bold text-foreground">{introData.welcome}</p>
-              <p className="text-base text-foreground leading-relaxed">{introData.line1}</p>
-              <p className="text-base text-foreground leading-relaxed">
-                {introData.line2}{" "}
+              <div className="text-base text-foreground leading-relaxed"><RichContent html={introData.line1} /></div>
+              <div className="text-base text-foreground leading-relaxed">
+                <RichContent html={introData.line2} />{" "}
                 <span className="text-red-600 font-semibold">{introData.days_total} дней</span>.
-              </p>
+              </div>
               <p className="text-base text-foreground leading-relaxed">
                 {introData.line3} <span className="text-red-600 font-bold">{introData.days_feldsher} дней</span> — {introData.line4}
               </p>
@@ -114,7 +115,7 @@ export default function Learn() {
               </div>
 
               <p className="text-xl font-bold text-red-400">{internExam.title}</p>
-              <p className="text-base text-foreground leading-relaxed">{internExam.desc}</p>
+              <div className="text-base text-foreground leading-relaxed"><RichContent html={internExam.desc} /></div>
 
               <p className="text-base text-foreground font-medium">Чтобы получить допуск, вам нужно сдать:</p>
 

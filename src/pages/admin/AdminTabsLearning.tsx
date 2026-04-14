@@ -2,6 +2,7 @@ import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
 import { SaveBtn, Inp, SectionHeader } from "./adminHelpers";
 import { Section, Command, Report, AbbrItem, RadioCommand, RadioRule } from "./adminTypes";
+import RichEditor from "@/components/ui/rich-editor";
 
 interface Props {
   tab: string;
@@ -154,9 +155,9 @@ export default function AdminTabsLearning({
               {radioRules.map((item, idx) => (
                 <div key={idx} className="flex items-start gap-2 group">
                   <span className="text-zinc-500 text-xs shrink-0 pt-2.5">{idx + 1}.</span>
-                  <textarea value={item.text} onChange={e => setRadioRules(r => r.map((x, i) => i === idx ? { ...x, text: e.target.value } : x))}
-                    rows={2}
-                    className="flex-1 bg-zinc-900 border border-zinc-700 text-white px-2 py-2 text-sm outline-none focus:border-red-600 transition-colors resize-none" />
+                  <div className="flex-1">
+                    <RichEditor value={item.text} onChange={v => setRadioRules(r => r.map((x, i) => i === idx ? { ...x, text: v } : x))} placeholder="Правило использования рации..." minHeight={60} />
+                  </div>
                   <button onClick={() => { playClickSound(); setRadioRules(r => r.filter((_, i) => i !== idx)); }}
                     className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 shrink-0 mt-2"><Icon name="X" size={13} /></button>
                 </div>

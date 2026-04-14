@@ -1,6 +1,7 @@
 import Icon from "@/components/ui/icon";
 import { SectionId } from "./learnConfig";
 import { useSiteData } from "@/hooks/useSiteData";
+import RichContent from "@/components/ui/rich-content";
 
 interface LearnDepartmentsSectionProps {
   go: (id: SectionId) => void;
@@ -60,9 +61,9 @@ export default function LearnDepartmentsSection({ go }: LearnDepartmentsSectionP
                   {idx + 1}. {dept.full} ({dept.abbr})
                 </p>
                 {dept.desc && (
-                  <p className="text-sm text-foreground leading-relaxed">
-                    — {dept.desc}
-                  </p>
+                  <div className="text-sm text-foreground leading-relaxed">
+                    <RichContent html={dept.desc} />
+                  </div>
                 )}
               </div>
             </li>
