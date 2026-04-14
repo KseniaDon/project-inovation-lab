@@ -43,20 +43,14 @@ export default function Contacts() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={playClickSound}
-              className="group block border border-border hover:border-red-600/60 transition-all duration-300 overflow-hidden cursor-pointer"
+              className="hover-pulse-outline group block border border-border hover:border-red-600/60 transition-all duration-300 overflow-hidden cursor-pointer"
             >
               <div className="flex items-stretch">
                 <div className={`w-1 shrink-0 ${person.badgeColor} group-hover:w-1.5 transition-all duration-300`} />
                 <div className="flex-1 px-6 py-5 flex flex-col gap-2">
-                  <div className="flex items-center gap-2">
-                    <p className="text-xs uppercase tracking-widest text-muted-foreground">
-                      {person.role}
-                    </p>
-                    <span className="relative flex h-1.5 w-1.5 shrink-0">
-                      <span className="group-hover:animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-60" />
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-600" />
-                    </span>
-                  </div>
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">
+                    {person.role}
+                  </p>
                   <p className="text-xl md:text-2xl font-bold text-foreground group-hover:text-red-500 transition-colors duration-300">
                     {person.name}
                   </p>
