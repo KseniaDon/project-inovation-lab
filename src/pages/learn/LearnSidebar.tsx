@@ -43,7 +43,10 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
                 : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
               }`}
           >
-            <Icon name={item.icon as "Flag"} size={18} className={isActive ? "text-red-500 font-bold" : ""} />
+            <span className="relative flex shrink-0">
+              {isActive && <span className="absolute inset-0 animate-ping rounded-full bg-red-500 opacity-30" />}
+              <Icon name={item.icon as "Flag"} size={18} className={isActive ? "text-red-500" : ""} />
+            </span>
             {item.label}
           </button>
         );
@@ -60,7 +63,10 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
             }`}
         >
           <span className="flex items-center gap-3">
-            <Icon name="GraduationCap" size={18} className={active === "intern" ? "text-red-500" : ""} />
+            <span className="relative flex shrink-0">
+              {active === "intern" && <span className="absolute inset-0 animate-ping rounded-full bg-red-500 opacity-30" />}
+              <Icon name="GraduationCap" size={18} className={active === "intern" ? "text-red-500" : ""} />
+            </span>
             Интерн
           </span>
           <Icon
@@ -110,7 +116,10 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
             }`}
         >
           <span className="flex items-center gap-3">
-            <Icon name="Stethoscope" size={18} className={active === "feldsher" ? "text-red-500" : ""} />
+            <span className="relative flex shrink-0">
+              {active === "feldsher" && <span className="absolute inset-0 animate-ping rounded-full bg-red-500 opacity-30" />}
+              <Icon name="Stethoscope" size={18} className={active === "feldsher" ? "text-red-500" : ""} />
+            </span>
             Фельдшер
           </span>
           <Icon
