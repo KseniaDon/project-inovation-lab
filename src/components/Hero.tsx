@@ -63,7 +63,7 @@ export default function Hero() {
             onClick={() => { playClickSound(); navigate("/admin/login"); }}
             className="border border-white/30 hover:border-white/60 text-white/60 hover:text-white px-6 py-3 text-xs uppercase tracking-widest font-medium transition-all duration-300"
           >
-            <Icon name="UserCog" size={14} className="mr-1.5" />Для РС ОИ
+            <Icon name="UserCog" size={18} className="mr-1.5" />Для РС ОИ
           </button>
         </div>
       </div>
