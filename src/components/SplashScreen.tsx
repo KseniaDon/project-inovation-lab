@@ -119,19 +119,9 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
       });
     };
 
-    if (ac.state === "suspended") {
-      const unlock = () => {
-        ac.resume().then(() => {
-          scheduleBeats();
-          document.removeEventListener("touchstart", unlock);
-          document.removeEventListener("click", unlock);
-        });
-      };
-      document.addEventListener("touchstart", unlock, { once: true });
-      document.addEventListener("click", unlock, { once: true });
-    } else {
+    ac.resume().then(() => {
       scheduleBeats();
-    }
+    });
 
     return () => { ac.close(); };
   }, []);
