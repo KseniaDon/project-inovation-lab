@@ -83,7 +83,7 @@ export default function Learn() {
         <LearnSidebar active={active} go={go} />
 
         {/* ── Content ── */}
-        <main className={`flex-1 px-4 md:px-8 py-6 md:py-10 min-w-0 mx-auto w-full ${active === "intern-binds" || active === "intern-evidence" || active === "intern-mis" || active === "intern-gov" ? "max-w-4xl" : "max-w-2xl"}`}>
+        <main className={`flex-1 px-4 md:px-8 py-6 md:py-10 min-w-0 mx-auto w-full ${active === "intern-binds" || active === "intern-evidence" || active === "intern-mis" || active === "intern-gov" ? "max-w-5xl" : "max-w-3xl"}`}>
 
 
         <AnimatePresence mode="wait">

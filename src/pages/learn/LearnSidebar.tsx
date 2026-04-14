@@ -232,7 +232,7 @@ export default function LearnSidebar({ active, go }: LearnSidebarProps) {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-64 shrink-0 border-r border-border flex-col py-6 sticky top-0 h-screen overflow-y-auto">
+      <aside className="hidden md:flex w-72 shrink-0 border-r border-border flex-col py-6 sticky top-0 h-screen overflow-y-auto">
         <p className="px-5 text-xs uppercase tracking-widest text-muted-foreground mb-3">Разделы</p>
         <SidebarSearch go={go} />
         <SidebarContent active={active} go={go} />
