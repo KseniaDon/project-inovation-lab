@@ -1,0 +1,3 @@
+UPDATE t_p7851806_project_inovation_la.site_content
+SET value = '{"welcome": "Добро пожаловать в ЦГБ города Невский!", "content": "<p>С этого момента Вы являетесь сотрудником Отделения Интернатуры.</p><p>На выход из Отделения Интернатуры и повышения до лаборанта вам дается <strong><span style=\"color:#dc2626\">14 дней</span></strong>.</p><p>За <strong><span style=\"color:#dc2626\">7 дней</span></strong> — повыситься до Фельдшера.</p><p>Остаточные дни после повышения — выйти из ОИ.</p>"}'
+WHERE key = 'intro_data';

@@ -29,7 +29,7 @@ export type InternExam = { title: string; content: string; binds_link: string; c
 
 export const defaultIntroData: IntroData = {
   welcome: "Добро пожаловать в ЦГБ города Невский!",
-  content: `<p>С этого момента Вы являетесь сотрудником Отделения Интернатуры.</p><p>На выход из Отделения Интернатуры и повышения до лаборанта вам дается <strong><span style="color:#dc2626">14 дней</span></strong>.</p><p>За <strong><span style="color:#dc2626">7 дней</span></strong> — повыситься до Фельдшера.</p><p>После повышения ещё <strong><span style="color:#dc2626">7 дней</span></strong> — выйти из ОИ.</p>`,
+  content: `<p>С этого момента Вы являетесь сотрудником Отделения Интернатуры.</p><p>На выход из Отделения Интернатуры и повышения до лаборанта вам дается <strong><span style="color:#dc2626">14 дней</span></strong>.</p><p>За <strong><span style="color:#dc2626">7 дней</span></strong> — повыситься до Фельдшера.</p><p>Остаточные дни после повышения — выйти из ОИ.</p>`,
 };
 
 export const defaultInternExam: InternExam = {
