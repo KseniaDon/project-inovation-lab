@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { ReactNode } from "react";
 import Icon from "@/components/ui/icon";
 import { SectionId } from "./learnConfig";
 
@@ -39,6 +40,30 @@ function CopyBlock({ text, red }: { text: string; red?: boolean }) {
         className="shrink-0 text-muted-foreground group-hover:text-foreground transition-colors"
       />
     </button>
+  );
+}
+
+function GenderAccordion({ label, children }: { label: string; children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border border-border rounded-sm overflow-hidden">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium text-foreground hover:bg-secondary transition-colors"
+      >
+        <span>{label}</span>
+        <Icon
+          name="ChevronDown"
+          size={14}
+          className={`text-muted-foreground transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && (
+        <div className="flex flex-col gap-2 px-3 pb-3 pt-2 border-t border-border">
+          {children}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -113,28 +138,45 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
           </button>
           {consciousOpen && (
             <div className="flex flex-col gap-2 px-4 pb-4 pt-3 border-t border-border">
-              <CopyBlock text="do В медицинской сумке лежат нашатырный спирт и ватка." />
-              <CopyBlock text="me достал нашатырный спирт и ватку из медицинской сумки" />
-              <CopyBlock text="me смочил ватку нашатырным спиртом" />
-              <CopyBlock text="me поднес ватку к носу пострадавшего" />
-              <CopyBlock text="do Человек пришел в чувство?" />
-              <CopyBlock text="b /do Да. или /do Нет." />
+              <GenderAccordion label="♂ Мужские отыгровки">
+                <CopyBlock text="do В медицинской сумке лежат нашатырный спирт и ватка." />
+                <CopyBlock text="me достал нашатырный спирт и ватку из медицинской сумки" />
+                <CopyBlock text="me смочил ватку нашатырным спиртом" />
+                <CopyBlock text="me поднес ватку к носу пострадавшего" />
+                <CopyBlock text="do Человек пришел в чувство?" />
+                <CopyBlock text="b /do Да. или /do Нет." />
+                <p className="text-sm text-red-600 dark:text-red-400 font-medium mt-1">
+                  Если <span className="font-bold">/do Нет.</span>
+                </p>
+                <CopyBlock text="me отодвинул ватку от носа" />
+                <CopyBlock text="me повторно поднес ватку к носу пострадавшего и водит ей вокруг носа" />
+                <CopyBlock text="do Пострадавший пришел в чувство?" />
+                <CopyBlock text="b /do Да. или /do Нет." />
+                <p className="text-sm text-red-600 dark:text-red-400 leading-relaxed mt-1">
+                  Итак до тех пор, пока не будет <strong>/do Да.</strong> Всего попыток привести чувства человека через данные отыгровки можно 3 раза.
+                  Если все 3 раза <strong>/do Нет.</strong>, то дело серьезное и требует других действий.
+                </p>
+              </GenderAccordion>
 
-              {/* Если /do Нет */}
-              <p className="text-sm text-red-600 dark:text-red-400 font-medium mt-1">
-                Если <span className="font-bold">/do Нет.</span>
-              </p>
-
-              <CopyBlock text="me отодвинул ватку от носа" />
-              <CopyBlock text="me повторно поднес ватку к носу пострадавшего и водит ей вокруг носа" />
-              <CopyBlock text="do Пострадавший пришел в чувство?" />
-              <CopyBlock text="b /do Да. или /do Нет." />
-
-              <p className="text-sm text-red-600 dark:text-red-400 leading-relaxed mt-1">
-                Итак до тех пор, пока не будет{" "}
-                <strong>/do Да.</strong> Всего попыток привести чувства человека через данные отыгровки можно 3 раза.
-                Если все 3 раза <strong>/do Нет.</strong>, то дело серьезное и требует других действий.
-              </p>
+              <GenderAccordion label="♀ Женские отыгровки">
+                <CopyBlock text="do В медицинской сумке лежат нашатырный спирт и ватка." />
+                <CopyBlock text="me достала нашатырный спирт и ватку из медицинской сумки" />
+                <CopyBlock text="me смочила ватку нашатырным спиртом" />
+                <CopyBlock text="me поднесла ватку к носу пострадавшего" />
+                <CopyBlock text="do Человек пришел в чувство?" />
+                <CopyBlock text="b /do Да. или /do Нет." />
+                <p className="text-sm text-red-600 dark:text-red-400 font-medium mt-1">
+                  Если <span className="font-bold">/do Нет.</span>
+                </p>
+                <CopyBlock text="me отодвинула ватку от носа" />
+                <CopyBlock text="me повторно поднесла ватку к носу пострадавшего и водит ей вокруг носа" />
+                <CopyBlock text="do Пострадавший пришел в чувство?" />
+                <CopyBlock text="b /do Да. или /do Нет." />
+                <p className="text-sm text-red-600 dark:text-red-400 leading-relaxed mt-1">
+                  Итак до тех пор, пока не будет <strong>/do Да.</strong> Всего попыток привести чувства человека через данные отыгровки можно 3 раза.
+                  Если все 3 раза <strong>/do Нет.</strong>, то дело серьезное и требует других действий.
+                </p>
+              </GenderAccordion>
             </div>
           )}
         </div>
