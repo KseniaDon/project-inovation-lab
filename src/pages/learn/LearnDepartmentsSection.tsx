@@ -6,7 +6,7 @@ interface LearnDepartmentsSectionProps {
   go: (id: SectionId) => void;
 }
 
-type Dept = { abbr: string; full: string; color: string };
+type Dept = { abbr: string; full: string; color: string; desc?: string };
 
 const COLOR_MAP: Record<string, { border: string; bg: string; text: string }> = {
   "text-green-400":  { border: "border-green-700/50",  bg: "bg-green-950/30",  text: "text-green-300"  },
@@ -20,11 +20,11 @@ const COLOR_MAP: Record<string, { border: string; bg: string; text: string }> = 
 };
 
 const DEFAULT_DEPARTMENTS: Dept[] = [
-  { abbr: "ОИ",   full: "Отделение Интернатуры",                    color: "text-green-400"  },
-  { abbr: "ОДС",  full: "Отделение Дневного Стационара",            color: "text-sky-400"    },
-  { abbr: "ОИК",  full: "Отделение Инфекционного Контроля",         color: "text-red-400"    },
-  { abbr: "СОП",  full: "Стоматологическое Отделение Поликлиники",  color: "text-pink-400"   },
-  { abbr: "ОПРС", full: "Отделение Подготовки Руководящего Состава",color: "text-orange-400" },
+  { abbr: "ОИ",   full: "Отделение Интернатуры",                     color: "text-green-400",  desc: "Это одно из отделений ЦГБ города Невский, сотрудники которого обучаются работе в нашей больнице. Самое первое отделение каждого сотрудника." },
+  { abbr: "ОДС",  full: "Отделение Дневного Стационара",             color: "text-sky-400",    desc: "Сотрудники занимаются основной работой больницы, а также оказанием услуг на базе Травматолого-ортопедического центра, проведением проверок аптек и травматологических рейдов." },
+  { abbr: "ОИК",  full: "Отделение Инфекционного Контроля",          color: "text-red-400",    desc: "Сотрудники занимаются основной работой больницы, а также оказанием услуг на базе НИИ Эпидемиологии, проведением санитарных проверок и инфекционных рейдов." },
+  { abbr: "СОП",  full: "Стоматологическое Отделение Поликлиники",   color: "text-pink-400",   desc: "Сотрудники занимаются основной работой больницы, а также оказанием услуг на базе Стоматологической поликлиники «Дентист» и проведением стоматологических рейдов." },
+  { abbr: "ОПРС", full: "Отделение Подготовки Руководящего Состава", color: "text-orange-400", desc: "Сотрудники проходят курсы повышения квалификации для дальнейшей работы в Руководящем составе больницы." },
 ];
 
 export default function LearnDepartmentsSection({ go }: LearnDepartmentsSectionProps) {
