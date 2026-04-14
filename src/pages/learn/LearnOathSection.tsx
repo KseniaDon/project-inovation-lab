@@ -23,6 +23,7 @@ export default function LearnOathSection({ go }: LearnOathSectionProps) {
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
 
   const handleCopy = async (line: string, idx: number) => {
+    if (copiedIdx === idx) { setCopiedIdx(null); return; }
     try {
       await navigator.clipboard.writeText(line);
     } catch {
@@ -34,7 +35,6 @@ export default function LearnOathSection({ go }: LearnOathSectionProps) {
       document.body.removeChild(el);
     }
     setCopiedIdx(idx);
-    setTimeout(() => setCopiedIdx(null), 2000);
   };
 
   return (

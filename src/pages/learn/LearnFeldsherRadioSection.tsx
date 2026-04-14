@@ -107,10 +107,8 @@ function CopyRow({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    });
+    if (copied) { setCopied(false); return; }
+    navigator.clipboard.writeText(text).then(() => setCopied(true));
   };
 
   return (
