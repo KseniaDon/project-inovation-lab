@@ -95,10 +95,12 @@ export default function LearnGovSection({ go }: LearnGovSectionProps) {
             <span className="text-red-400 font-semibold">Фельдшер</span>
             . На скриншоте №2 можно ознакомиться с этими критериями.
           </p>
-          <div className="w-full max-w-3xl rounded-sm border border-border bg-secondary/20 flex items-center justify-center py-12 text-sm text-muted-foreground">
-            Скриншот №2
-          </div>
-          <p className="text-xs text-muted-foreground text-center">Скриншот №2: Критерии для повышения.</p>
+          <ImageLightbox
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/2283c700-7904-49a4-8eeb-0145f62c3dfe.png"
+            alt="Скриншот №2"
+            className="w-full max-w-3xl rounded-sm border border-border"
+            caption="Скриншот №2: Критерии для повышения."
+          />
         </div>
 
         {/* Шаг 3 */}
