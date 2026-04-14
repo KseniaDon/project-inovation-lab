@@ -101,10 +101,17 @@ export default function LearnFeldsherPmpSection({ go }: Props) {
         </p>
 
         {/* Отыгровки */}
-        <div className="flex flex-col gap-2 border border-border rounded-sm px-4 py-3">
-          <CopyBlock text="me осмотрел пострадавшего на наличие сознания и похлопал над ушами" />
-          <CopyBlock text="do У пострадавшего есть реакция?" />
-          <CopyBlock text="b /do Да. или /do Нет." />
+        <div className="flex flex-col gap-2">
+          <GenderAccordion label="♂ Мужские отыгровки">
+            <CopyBlock text="me осмотрел пострадавшего на наличие сознания и похлопал над ушами" />
+            <CopyBlock text="do У пострадавшего есть реакция?" />
+            <CopyBlock text="b /do Да. или /do Нет." />
+          </GenderAccordion>
+          <GenderAccordion label="♀ Женские отыгровки">
+            <CopyBlock text="me осмотрела пострадавшего на наличие сознания и похлопала над ушами" />
+            <CopyBlock text="do У пострадавшего есть реакция?" />
+            <CopyBlock text="b /do Да. или /do Нет." />
+          </GenderAccordion>
         </div>
 
         {/* Пояснение */}
