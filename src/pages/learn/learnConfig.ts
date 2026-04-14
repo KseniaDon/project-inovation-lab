@@ -26,6 +26,6 @@ export const NAV: { id: SectionId; label: string; icon: string; parent?: string;
   { id: "feldsher-mzportal",   label: "МЗ Портал",               icon: "LayoutDashboard", parent: "feldsher" },
   { id: "feldsher-patrol",     label: "Пост и патрулирование",   icon: "ShieldCheck",   parent: "feldsher" },
   { id: "feldsher-prmo",       label: "ПРМО",                    icon: "ClipboardPlus", parent: "feldsher" },
-  { id: "feldsher-medhelp",    label: "Оказание врачебной помощи", icon: "Stethoscope", parent: "feldsher" },
-  { id: "feldsher-wards",      label: "Работа отделений",        icon: "Building2",     parent: "feldsher" },
+  { id: "feldsher-medhelp",    label: "Оказание врачебной помощи", icon: "Syringe",   parent: "feldsher" },
+  { id: "feldsher-wards",      label: "Работа отделений",        icon: "LayoutGrid",    parent: "feldsher" },
 ];
