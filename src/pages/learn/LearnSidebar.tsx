@@ -95,7 +95,10 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
                         : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
                       }`}
                   >
-                    <Icon name={item.icon as "Flag"} size={15} className={isActive ? "text-red-500" : ""} />
+                    <span className="relative flex shrink-0">
+                      {isActive && <span className="absolute inset-0 animate-ping rounded-full bg-red-500 opacity-30" />}
+                      <Icon name={item.icon as "Flag"} size={15} className={isActive ? "text-red-500" : ""} />
+                    </span>
                     {item.label}
                   </button>
                 </div>
@@ -143,7 +146,10 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
                     }`}
                 >
-                  <Icon name={item.icon as "Flag"} size={15} className={isActive ? "text-red-500" : ""} />
+                  <span className="relative flex shrink-0">
+                    {isActive && <span className="absolute inset-0 animate-ping rounded-full bg-red-500 opacity-30" />}
+                    <Icon name={item.icon as "Flag"} size={15} className={isActive ? "text-red-500" : ""} />
+                  </span>
                   {item.label}
                 </button>
               );

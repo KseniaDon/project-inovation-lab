@@ -53,7 +53,7 @@ export default function Contacts() {
                       {person.role}
                     </p>
                     <span className="relative flex h-1.5 w-1.5 shrink-0">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-60" />
+                      <span className="group-hover:animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-60" />
                       <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-600" />
                     </span>
                   </div>

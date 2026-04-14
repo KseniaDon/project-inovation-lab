@@ -39,10 +39,6 @@ export default function Hero() {
       </motion.div>
 
       <div className="absolute bottom-6 left-6 z-10 flex items-center gap-2 text-white/80">
-        <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600" />
-        </span>
         <span className="text-xs font-bold uppercase tracking-widest text-red-400">#1 MTA PROVINCE</span>
       </div>
 
@@ -57,17 +53,15 @@ export default function Hero() {
           <RichContent html={heroData.subtitle} />
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-3 mt-2">
-          <div className="relative">
-            <span className="absolute inset-0 rounded-none animate-ping bg-red-600 opacity-20 scale-110" />
-            <button
-              onClick={() => { playClickSound(); navigate("/learn"); }}
-              className="group relative flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white px-10 py-4 text-sm uppercase tracking-widest font-bold transition-all duration-300 shadow-lg shadow-red-900/40 hover:shadow-red-700/60 hover:scale-105"
-            >
-              <Icon name="BookOpen" size={18} className="transition-transform duration-300 group-hover:-translate-y-0.5" />
-              {heroData.buttonText}
-              <Icon name="ArrowRight" size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-            </button>
-          </div>
+          <button
+            onClick={() => { playClickSound(); navigate("/learn"); }}
+            className="group relative flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white px-10 py-4 text-sm uppercase tracking-widest font-bold transition-all duration-300 shadow-lg shadow-red-900/40 hover:shadow-red-700/60 hover:scale-105"
+          >
+            <span className="absolute inset-0 opacity-0 group-hover:opacity-100 animate-ping bg-red-600 scale-105 transition-opacity duration-200 pointer-events-none" />
+            <Icon name="BookOpen" size={18} className="relative transition-transform duration-300 group-hover:-translate-y-0.5" />
+            <span className="relative">{heroData.buttonText}</span>
+            <Icon name="ArrowRight" size={16} className="relative transition-transform duration-300 group-hover:translate-x-1" />
+          </button>
           <button
             onClick={() => { playClickSound(); navigate("/admin/login"); }}
             className="flex items-center gap-2 border border-white/30 hover:border-white/60 text-white/60 hover:text-white px-6 py-4 text-xs uppercase tracking-widest font-medium transition-all duration-300"
