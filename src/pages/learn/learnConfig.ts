@@ -1,4 +1,4 @@
-export type SectionId = "intro" | "intern" | "intern-binds" | "intern-radio" | "intern-reports" | "intern-commands" | "intern-abbr" | "intern-schedule" | "intern-floors" | "intern-activity" | "intern-charter" | "intern-departments" | "intern-drugs" | "intern-oath" | "intern-report" | "intern-mis" | "intern-evidence" | "intern-gov" | "feldsher" | "feldsher-ksmp" | "feldsher-radio" | "feldsher-pmp" | "feldsher-mzportal" | "feldsher-patrol" | "feldsher-prmo";
+export type SectionId = "intro" | "intern" | "intern-binds" | "intern-radio" | "intern-reports" | "intern-commands" | "intern-abbr" | "intern-schedule" | "intern-floors" | "intern-activity" | "intern-charter" | "intern-departments" | "intern-drugs" | "intern-oath" | "intern-report" | "intern-mis" | "intern-evidence" | "intern-gov" | "feldsher" | "feldsher-ksmp" | "feldsher-radio" | "feldsher-pmp" | "feldsher-mzportal" | "feldsher-patrol" | "feldsher-prmo" | "feldsher-medhelp" | "feldsher-wards";
 
 export const NAV: { id: SectionId; label: string; icon: string; parent?: string; divider?: string }[] = [
   { id: "intro",           label: "Вступление",         icon: "Flag" },
@@ -26,4 +26,6 @@ export const NAV: { id: SectionId; label: string; icon: string; parent?: string;
   { id: "feldsher-mzportal",   label: "МЗ Портал",               icon: "Globe",         parent: "feldsher" },
   { id: "feldsher-patrol",     label: "Пост и патрулирование",   icon: "ShieldCheck",   parent: "feldsher" },
   { id: "feldsher-prmo",       label: "ПРМО",                    icon: "ClipboardPlus", parent: "feldsher" },
+  { id: "feldsher-medhelp",    label: "Оказание врачебной помощи", icon: "Stethoscope", parent: "feldsher" },
+  { id: "feldsher-wards",      label: "Работа отделений",        icon: "Building2",     parent: "feldsher" },
 ];
