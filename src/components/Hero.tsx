@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { playClickSound } from "@/hooks/useSound";
 import { useSiteData } from "@/hooks/useSiteData";
+import Icon from "@/components/ui/icon";
 import RichContent from "@/components/ui/rich-content";
 
 const defaultHero = {
