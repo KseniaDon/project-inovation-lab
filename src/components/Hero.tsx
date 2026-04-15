@@ -60,23 +60,23 @@ export default function Hero() {
             </svg>
           ))}
 
-          {/* Угловые линии — вплотную, яркие */}
+          {/* Угловые линии — с отступом от логотипа */}
           {/* Верхний левый */}
-          <div className="absolute top-0 left-0 w-8 h-[2px] z-20 bg-gradient-to-r from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
-          <div className="absolute top-0 left-0 w-[2px] h-8 z-20 bg-gradient-to-b from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
+          <div className="absolute -top-3 -left-1 w-10 h-[2px] z-20 bg-gradient-to-r from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
+          <div className="absolute -top-1 -left-3 w-[2px] h-10 z-20 bg-gradient-to-b from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
           {/* Верхний правый */}
-          <div className="absolute top-0 right-0 w-8 h-[2px] z-20 bg-gradient-to-l from-red-500 to-transparent" />
-          <div className="absolute top-0 right-0 w-[2px] h-8 z-20 bg-gradient-to-b from-red-500 to-transparent" />
+          <div className="absolute -top-3 -right-1 w-10 h-[2px] z-20 bg-gradient-to-l from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
+          <div className="absolute -top-1 -right-3 w-[2px] h-10 z-20 bg-gradient-to-b from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
           {/* Нижний левый */}
-          <div className="absolute bottom-0 left-0 w-8 h-[2px] z-20 bg-gradient-to-r from-red-500 to-transparent" />
-          <div className="absolute bottom-0 left-0 w-[2px] h-8 z-20 bg-gradient-to-t from-red-500 to-transparent" />
+          <div className="absolute -bottom-3 -left-1 w-10 h-[2px] z-20 bg-gradient-to-r from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
+          <div className="absolute -bottom-1 -left-3 w-[2px] h-10 z-20 bg-gradient-to-t from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
           {/* Нижний правый */}
-          <div className="absolute bottom-0 right-0 w-8 h-[2px] z-20 bg-gradient-to-l from-red-500 to-transparent" />
-          <div className="absolute bottom-0 right-0 w-[2px] h-8 z-20 bg-gradient-to-t from-red-500 to-transparent" />
+          <div className="absolute -bottom-3 -right-1 w-10 h-[2px] z-20 bg-gradient-to-l from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
+          <div className="absolute -bottom-1 -right-3 w-[2px] h-10 z-20 bg-gradient-to-t from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
 
           {/* Центральные линии сверху и снизу */}
-          <div className="absolute -top-px left-10 right-10 h-px z-20 bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
-          <div className="absolute -bottom-px left-10 right-10 h-px z-20 bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
+          <div className="absolute -top-3 left-10 right-10 h-px z-20 bg-gradient-to-r from-transparent via-red-500/70 to-transparent" />
+          <div className="absolute -bottom-3 left-10 right-10 h-px z-20 bg-gradient-to-r from-transparent via-red-500/70 to-transparent" />
 
           <img
             src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9e862ab9-9ec9-4b2e-a45e-db112feda735.png"
