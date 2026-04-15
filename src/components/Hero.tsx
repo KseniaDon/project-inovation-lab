@@ -69,19 +69,16 @@ export default function Hero() {
           <div className="absolute top-6 bottom-6 -left-2 w-px bg-gradient-to-b from-transparent via-red-500/60 to-transparent" />
           <div className="absolute top-6 bottom-6 -right-2 w-px bg-gradient-to-b from-transparent via-red-500/60 to-transparent" />
 
-          {/* Виньетка */}
-          <div
-            className="absolute inset-0 rounded-lg pointer-events-none"
-            style={{
-              background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%)",
-            }}
-          />
-
           <img
             src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9e862ab9-9ec9-4b2e-a45e-db112feda735.png"
             alt="Логотип ЦГБ Невский"
             className="w-full object-contain relative z-10"
-            style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
+            style={{
+              mixBlendMode: "screen",
+              filter: "brightness(1.1) contrast(1.05)",
+              WebkitMaskImage: "radial-gradient(ellipse 85% 85% at 50% 50%, black 55%, transparent 100%)",
+              maskImage: "radial-gradient(ellipse 85% 85% at 50% 50%, black 55%, transparent 100%)",
+            }}
           />
         </div>
         <div className="text-base md:text-lg max-w-xl opacity-90 rich-content text-center">
