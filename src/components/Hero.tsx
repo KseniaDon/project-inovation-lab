@@ -49,6 +49,9 @@ export default function Hero() {
           className="w-44 md:w-60 lg:w-72 object-contain"
           style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
         />
+        <div className="text-base md:text-lg max-w-xl opacity-90 rich-content text-center">
+          <RichContent html={heroData.subtitle} />
+        </div>
         <div className="flex flex-col sm:flex-row items-center gap-3 mt-2">
           <button
             onClick={() => { playClickSound(); navigate("/learn"); }}
