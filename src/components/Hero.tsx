@@ -43,26 +43,67 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 text-center text-white flex flex-col items-center gap-6 px-6">
-        {/* Логотип в медицинской рамке */}
-        <div className="relative w-44 md:w-60 lg:w-72">
+        {/* Логотип с декоративным оформлением */}
+        <div className="relative w-44 md:w-60 lg:w-72 flex items-center justify-center">
 
-          {/* Угловые линии — с отступом от логотипа */}
-          {/* Верхний левый */}
-          <div className="absolute -top-3 -left-1 w-10 h-[2px] z-20 bg-gradient-to-r from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
-          <div className="absolute -top-1 -left-3 w-[2px] h-10 z-20 bg-gradient-to-b from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
-          {/* Верхний правый */}
-          <div className="absolute -top-3 -right-1 w-10 h-[2px] z-20 bg-gradient-to-l from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
-          <div className="absolute -top-1 -right-3 w-[2px] h-10 z-20 bg-gradient-to-b from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
-          {/* Нижний левый */}
-          <div className="absolute -bottom-3 -left-1 w-10 h-[2px] z-20 bg-gradient-to-r from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
-          <div className="absolute -bottom-1 -left-3 w-[2px] h-10 z-20 bg-gradient-to-t from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
-          {/* Нижний правый */}
-          <div className="absolute -bottom-3 -right-1 w-10 h-[2px] z-20 bg-gradient-to-l from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
-          <div className="absolute -bottom-1 -right-3 w-[2px] h-10 z-20 bg-gradient-to-t from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
+          {/* Пульсирующий ореол */}
+          <div className="absolute inset-0 rounded-full"
+            style={{
+              background: "radial-gradient(ellipse at center, rgba(239,68,68,0.12) 0%, transparent 70%)",
+              animation: "logoPulse 3s ease-in-out infinite",
+            }}
+          />
 
-          {/* Центральные линии сверху и снизу */}
-          <div className="absolute -top-3 left-10 right-10 h-px z-20 bg-gradient-to-r from-transparent via-red-500/70 to-transparent" />
-          <div className="absolute -bottom-3 left-10 right-10 h-px z-20 bg-gradient-to-r from-transparent via-red-500/70 to-transparent" />
+          {/* Вращающееся кольцо — пунктир */}
+          <svg
+            className="absolute inset-0 w-full h-full"
+            viewBox="0 0 100 100"
+            style={{ animation: "logoSpin 18s linear infinite" }}
+          >
+            <circle
+              cx="50" cy="50" r="47"
+              fill="none"
+              stroke="rgba(239,68,68,0.35)"
+              strokeWidth="0.5"
+              strokeDasharray="4 6"
+              strokeLinecap="round"
+            />
+          </svg>
+
+          {/* Статичное кольцо тонкое */}
+          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
+            <circle
+              cx="50" cy="50" r="44"
+              fill="none"
+              stroke="rgba(239,68,68,0.15)"
+              strokeWidth="0.3"
+            />
+          </svg>
+
+          {/* Маленькие точки-маркеры по кругу на 12/3/6/9 */}
+          {[0, 90, 180, 270].map((deg, i) => {
+            const r = 47;
+            const rad = (deg - 90) * Math.PI / 180;
+            const cx = 50 + r * Math.cos(rad);
+            const cy = 50 + r * Math.sin(rad);
+            return (
+              <svg key={i} className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
+                <circle cx={cx} cy={cy} r="1.2" fill="#ef4444" opacity="0.8" />
+                <circle cx={cx} cy={cy} r="2.5" fill="none" stroke="#ef4444" strokeWidth="0.4" opacity="0.4" />
+              </svg>
+            );
+          })}
+
+          <style>{`
+            @keyframes logoPulse {
+              0%, 100% { transform: scale(1); opacity: 0.7; }
+              50% { transform: scale(1.08); opacity: 1; }
+            }
+            @keyframes logoSpin {
+              from { transform: rotate(0deg); }
+              to { transform: rotate(360deg); }
+            }
+          `}</style>
 
           <img
             src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9e862ab9-9ec9-4b2e-a45e-db112feda735.png"
