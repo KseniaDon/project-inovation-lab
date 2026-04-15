@@ -60,11 +60,11 @@ export default function Hero() {
             }
           `}</style>
 
-          {/* Внешнее медленно вращающееся кольцо с пунктиром */}
+          {/* Внешний вращающийся квадрат с пунктиром */}
           <div className="absolute -inset-6 flex items-center justify-center"
             style={{ animation: "logoSpin 20s linear infinite" }}>
             <svg viewBox="0 0 120 120" className="w-full h-full">
-              <circle cx="60" cy="60" r="56"
+              <rect x="6" y="6" width="108" height="108"
                 fill="none"
                 stroke="#ef4444"
                 strokeWidth="1"
@@ -75,11 +75,11 @@ export default function Hero() {
             </svg>
           </div>
 
-          {/* Внутреннее кольцо обратное вращение */}
+          {/* Внутренний квадрат обратное вращение */}
           <div className="absolute -inset-3 flex items-center justify-center"
             style={{ animation: "logoSpinReverse 12s linear infinite" }}>
             <svg viewBox="0 0 110 110" className="w-full h-full">
-              <circle cx="55" cy="55" r="52"
+              <rect x="5" y="5" width="100" height="100"
                 fill="none"
                 stroke="#ef4444"
                 strokeWidth="0.6"
@@ -92,26 +92,24 @@ export default function Hero() {
 
           {/* Пульсирующее свечение */}
           <div
-            className="absolute -inset-4 rounded-full pointer-events-none"
+            className="absolute -inset-4 pointer-events-none"
             style={{
               background: "radial-gradient(ellipse at center, rgba(239,68,68,0.18) 0%, transparent 65%)",
               animation: "logoPulseGlow 3s ease-in-out infinite",
             }}
           />
 
-          {/* 4 точки-маркера на осях */}
-          {[0, 90, 180, 270].map((deg, i) => {
-            const rad = (deg - 90) * Math.PI / 180;
-            const r = 50;
-            const x = 50 + r * Math.cos(rad);
-            const y = 50 + r * Math.sin(rad);
-            return (
-              <svg key={i} className="absolute -inset-2 w-[calc(100%+16px)] h-[calc(100%+16px)]" viewBox="0 0 100 100">
-                <circle cx={x} cy={y} r="2" fill="#ef4444" opacity="0.9"
-                  style={{ filter: "drop-shadow(0 0 3px #ef4444)" }} />
-              </svg>
-            );
-          })}
+          {/* 4 точки по углам */}
+          {[[-24,-24],[ 24,-24],[-24, 24],[ 24, 24]].map(([ox, oy], i) => (
+            <div key={i}
+              className="absolute w-2 h-2 rounded-full bg-red-500 z-20"
+              style={{
+                top: "50%", left: "50%",
+                transform: `translate(calc(-50% + ${ox}px), calc(-50% + ${oy}px))`,
+                boxShadow: "0 0 6px 2px rgba(239,68,68,0.8)",
+              }}
+            />
+          ))}
 
           <img
             src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9e862ab9-9ec9-4b2e-a45e-db112feda735.png"
