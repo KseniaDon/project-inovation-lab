@@ -43,12 +43,39 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 text-center text-white flex flex-col items-center gap-6 px-6">
-        <img
-          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9e862ab9-9ec9-4b2e-a45e-db112feda735.png"
-          alt="Логотип ЦГБ Невский"
-          className="w-44 md:w-60 lg:w-72 object-contain"
-          style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
-        />
+        {/* Логотип в медицинской рамке */}
+        <div className="relative w-44 md:w-60 lg:w-72">
+          {/* Угловые крестики */}
+          <svg className="absolute -top-3 -left-3 w-6 h-6 text-red-500/70" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="9" y="2" width="6" height="20" rx="1"/>
+            <rect x="2" y="9" width="20" height="6" rx="1"/>
+          </svg>
+          <svg className="absolute -top-3 -right-3 w-6 h-6 text-red-500/70" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="9" y="2" width="6" height="20" rx="1"/>
+            <rect x="2" y="9" width="20" height="6" rx="1"/>
+          </svg>
+          <svg className="absolute -bottom-3 -left-3 w-6 h-6 text-red-500/70" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="9" y="2" width="6" height="20" rx="1"/>
+            <rect x="2" y="9" width="20" height="6" rx="1"/>
+          </svg>
+          <svg className="absolute -bottom-3 -right-3 w-6 h-6 text-red-500/70" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="9" y="2" width="6" height="20" rx="1"/>
+            <rect x="2" y="9" width="20" height="6" rx="1"/>
+          </svg>
+
+          {/* Линии рамки по углам */}
+          <div className="absolute -top-2 left-4 right-4 h-px bg-gradient-to-r from-transparent via-red-500/50 to-transparent" />
+          <div className="absolute -bottom-2 left-4 right-4 h-px bg-gradient-to-r from-transparent via-red-500/50 to-transparent" />
+          <div className="absolute top-4 bottom-4 -left-2 w-px bg-gradient-to-b from-transparent via-red-500/50 to-transparent" />
+          <div className="absolute top-4 bottom-4 -right-2 w-px bg-gradient-to-b from-transparent via-red-500/50 to-transparent" />
+
+          <img
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9e862ab9-9ec9-4b2e-a45e-db112feda735.png"
+            alt="Логотип ЦГБ Невский"
+            className="w-full object-contain"
+            style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
+          />
+        </div>
         <div className="text-base md:text-lg max-w-xl opacity-90 rich-content text-center">
           <RichContent html={heroData.subtitle} />
         </div>
