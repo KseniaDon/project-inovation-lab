@@ -21,7 +21,7 @@ export default function LearnFeldsherKsmpSection({ go }: Props) {
           Назад к Фельдшеру
         </button>
         <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Фельдшер</p>
-        <h1 className="text-3xl font-bold">Работа с КСМП</h1>
+        <h1 className="text-3xl font-bold">Рабочий транспорт</h1>
       </div>
 
       {/* Вводный абзац */}
@@ -160,15 +160,15 @@ export default function LearnFeldsherKsmpSection({ go }: Props) {
       </div>
 
       {/* Основные правила */}
-      <p className="text-base text-left leading-relaxed">
+      <p className="text-sm text-left leading-relaxed">
         <span className="text-foreground">Основные правила работы на рабочем транспорте Вы можете посмотреть в официальном источнике ОУМЗ на госпортале:{" "}</span>
         <a
           href="https://forum.gtaprovince.ru/topic/853771-mz-obschiy-ustav-ministerstva-zdravoohraneniya/"
           target="_blank"
           rel="noopener noreferrer"
-          className="font-semibold text-red-600 underline underline-offset-2 hover:text-red-400 transition-colors"
+          className="font-medium text-red-500 hover:text-red-400 transition-colors"
         >
-          ОУМЗ | Глава 8. Правила использования рабочего транспорта.
+          Глава 8. Правила использования рабочего транспорта.
         </a>
       </p>
 

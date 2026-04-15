@@ -20,7 +20,7 @@ export const NAV: { id: SectionId; label: string; icon: string; parent?: string;
   { id: "intern-mis",          label: "МИС «Здоровье»",          icon: "MonitorCheck",  parent: "intern" },
   { id: "intern-gov",          label: "Госпортал",               icon: "Globe",         parent: "intern" },
   { id: "feldsher",            label: "Фельдшер",                icon: "Stethoscope" },
-  { id: "feldsher-ksmp",       label: "Работа на КСМП",          icon: "Ambulance",     parent: "feldsher", divider: "Шаг 1: Сдача ОМЭ" },
+  { id: "feldsher-ksmp",       label: "Рабочий транспорт",        icon: "Ambulance",     parent: "feldsher", divider: "Шаг 1: Сдача ОМЭ" },
   { id: "feldsher-radio",      label: "Работа с рацией",         icon: "Megaphone",     parent: "feldsher" },
   { id: "feldsher-pmp",        label: "ПМП",                     icon: "HeartPulse",    parent: "feldsher" },
   { id: "feldsher-mzportal",   label: "МЗ Портал",               icon: "Globe",         parent: "feldsher" },
