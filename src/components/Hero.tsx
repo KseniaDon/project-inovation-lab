@@ -43,81 +43,12 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 text-center text-white flex flex-col items-center gap-6 px-6">
-        {/* Логотип с декоративным оформлением */}
-        <div className="relative w-44 md:w-60 lg:w-72 flex items-center justify-center">
-          <style>{`
-            @keyframes logoSpin {
-              from { transform: rotate(0deg); }
-              to { transform: rotate(360deg); }
-            }
-            @keyframes logoSpinReverse {
-              from { transform: rotate(0deg); }
-              to { transform: rotate(-360deg); }
-            }
-            @keyframes logoPulseGlow {
-              0%, 100% { opacity: 0.5; }
-              50% { opacity: 1; }
-            }
-          `}</style>
-
-          {/* Внешний вращающийся квадрат с пунктиром */}
-          <div className="absolute -inset-6 flex items-center justify-center"
-            style={{ animation: "logoSpin 20s linear infinite" }}>
-            <svg viewBox="0 0 120 120" className="w-full h-full">
-              <rect x="6" y="6" width="108" height="108"
-                fill="none"
-                stroke="#ef4444"
-                strokeWidth="1"
-                strokeDasharray="6 8"
-                strokeLinecap="round"
-                opacity="0.6"
-              />
-            </svg>
-          </div>
-
-          {/* Внутренний квадрат обратное вращение */}
-          <div className="absolute -inset-3 flex items-center justify-center"
-            style={{ animation: "logoSpinReverse 12s linear infinite" }}>
-            <svg viewBox="0 0 110 110" className="w-full h-full">
-              <rect x="5" y="5" width="100" height="100"
-                fill="none"
-                stroke="#ef4444"
-                strokeWidth="0.6"
-                strokeDasharray="2 12"
-                strokeLinecap="round"
-                opacity="0.4"
-              />
-            </svg>
-          </div>
-
-          {/* Пульсирующее свечение */}
-          <div
-            className="absolute -inset-4 pointer-events-none"
-            style={{
-              background: "radial-gradient(ellipse at center, rgba(239,68,68,0.18) 0%, transparent 65%)",
-              animation: "logoPulseGlow 3s ease-in-out infinite",
-            }}
-          />
-
-          {/* 4 точки по углам */}
-          {[[-24,-24],[ 24,-24],[-24, 24],[ 24, 24]].map(([ox, oy], i) => (
-            <div key={i}
-              className="absolute w-2 h-2 rounded-full bg-red-500 z-20"
-              style={{
-                top: "50%", left: "50%",
-                transform: `translate(calc(-50% + ${ox}px), calc(-50% + ${oy}px))`,
-                boxShadow: "0 0 6px 2px rgba(239,68,68,0.8)",
-              }}
-            />
-          ))}
-
-          <img
-            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9e862ab9-9ec9-4b2e-a45e-db112feda735.png"
-            alt="Логотип ЦГБ Невский"
-            className="w-full object-contain relative z-10"
-            style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
-          />
-        </div>
+        <img
+          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9e862ab9-9ec9-4b2e-a45e-db112feda735.png"
+          alt="Логотип ЦГБ Невский"
+          className="w-44 md:w-60 lg:w-72 object-contain"
+          style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
+        />
         <div className="text-base md:text-lg max-w-xl opacity-90 rich-content text-center">
           <RichContent html={heroData.subtitle} />
         </div>
