@@ -160,13 +160,13 @@ export default function LearnFeldsherKsmpSection({ go }: Props) {
       </div>
 
       {/* Основные правила */}
-      <p className="text-base text-red-600 text-right leading-relaxed">
-        Основные правила работы на рабочем транспорте Вы можете посмотреть в официальном источнике ОУМЗ на госпортале:{" "}
+      <p className="text-base text-left leading-relaxed">
+        <span className="text-foreground">Основные правила работы на рабочем транспорте Вы можете посмотреть в официальном источнике ОУМЗ на госпортале:{" "}</span>
         <a
           href="https://forum.gtaprovince.ru/topic/853771-mz-obschiy-ustav-ministerstva-zdravoohraneniya/"
           target="_blank"
           rel="noopener noreferrer"
-          className="font-semibold underline underline-offset-2 hover:text-red-400 transition-colors"
+          className="font-semibold text-red-600 underline underline-offset-2 hover:text-red-400 transition-colors"
         >
           ОУМЗ | Глава 8. Правила использования рабочего транспорта.
         </a>
