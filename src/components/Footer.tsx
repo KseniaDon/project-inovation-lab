@@ -16,6 +16,9 @@ export default function Footer() {
           display: inline-block;
           animation: heartbeat 1.4s ease infinite;
           color: #ef4444;
+          font-size: 1.25em;
+          line-height: 1;
+          vertical-align: middle;
         }
       `}</style>
       <div
