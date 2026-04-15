@@ -44,46 +44,39 @@ export default function Hero() {
 
       <div className="relative z-10 text-center text-white flex flex-col items-center gap-6 px-6">
         {/* Логотип в медицинской рамке */}
-        <div className="relative w-44 md:w-60 lg:w-72 p-5">
+        <div className="relative w-44 md:w-60 lg:w-72">
 
-          {/* Угловые крестики */}
+          {/* Угловые крестики — вплотную к углам логотипа */}
           {[
-            "-top-4 -left-4",
-            "-top-4 -right-4",
-            "-bottom-4 -left-4",
-            "-bottom-4 -right-4",
+            "-top-3 -left-3",
+            "-top-3 -right-3",
+            "-bottom-3 -left-3",
+            "-bottom-3 -right-3",
           ].map((pos, i) => (
-            <svg key={i} className={`absolute ${pos} w-8 h-8 drop-shadow-[0_0_6px_rgba(239,68,68,0.7)]`} viewBox="0 0 24 24" fill="none">
-              <rect x="9" y="2" width="6" height="20" rx="1.5" fill="#ef4444" opacity="0.9"/>
-              <rect x="2" y="9" width="20" height="6" rx="1.5" fill="#ef4444" opacity="0.9"/>
-              <rect x="9" y="2" width="6" height="20" rx="1.5" fill="url(#cg)" opacity="0.4"/>
-              <rect x="2" y="9" width="20" height="6" rx="1.5" fill="url(#cg)" opacity="0.4"/>
-              <defs>
-                <linearGradient id="cg" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#fff"/>
-                  <stop offset="100%" stopColor="transparent"/>
-                </linearGradient>
-              </defs>
+            <svg key={i} className={`absolute ${pos} w-7 h-7 drop-shadow-[0_0_8px_rgba(239,68,68,1)]`} viewBox="0 0 24 24" fill="none">
+              <rect x="9" y="2" width="6" height="20" rx="1.5" fill="#ff2222"/>
+              <rect x="2" y="9" width="20" height="6" rx="1.5" fill="#ff2222"/>
+              <rect x="10" y="3" width="4" height="8" rx="1" fill="rgba(255,255,255,0.25)"/>
             </svg>
           ))}
 
-          {/* Угловые линии — только по углам, не полная рамка */}
+          {/* Угловые линии — вплотную, яркие */}
           {/* Верхний левый */}
-          <div className="absolute top-0 left-0 w-6 h-px bg-gradient-to-r from-red-500/80 to-transparent" />
-          <div className="absolute top-0 left-0 w-px h-6 bg-gradient-to-b from-red-500/80 to-transparent" />
+          <div className="absolute top-0 left-0 w-8 h-[2px] bg-gradient-to-r from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
+          <div className="absolute top-0 left-0 w-[2px] h-8 bg-gradient-to-b from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
           {/* Верхний правый */}
-          <div className="absolute top-0 right-0 w-6 h-px bg-gradient-to-l from-red-500/80 to-transparent" />
-          <div className="absolute top-0 right-0 w-px h-6 bg-gradient-to-b from-red-500/80 to-transparent" />
+          <div className="absolute top-0 right-0 w-8 h-[2px] bg-gradient-to-l from-red-500 to-transparent" />
+          <div className="absolute top-0 right-0 w-[2px] h-8 bg-gradient-to-b from-red-500 to-transparent" />
           {/* Нижний левый */}
-          <div className="absolute bottom-0 left-0 w-6 h-px bg-gradient-to-r from-red-500/80 to-transparent" />
-          <div className="absolute bottom-0 left-0 w-px h-6 bg-gradient-to-t from-red-500/80 to-transparent" />
+          <div className="absolute bottom-0 left-0 w-8 h-[2px] bg-gradient-to-r from-red-500 to-transparent" />
+          <div className="absolute bottom-0 left-0 w-[2px] h-8 bg-gradient-to-t from-red-500 to-transparent" />
           {/* Нижний правый */}
-          <div className="absolute bottom-0 right-0 w-6 h-px bg-gradient-to-l from-red-500/80 to-transparent" />
-          <div className="absolute bottom-0 right-0 w-px h-6 bg-gradient-to-t from-red-500/80 to-transparent" />
+          <div className="absolute bottom-0 right-0 w-8 h-[2px] bg-gradient-to-l from-red-500 to-transparent" />
+          <div className="absolute bottom-0 right-0 w-[2px] h-8 bg-gradient-to-t from-red-500 to-transparent" />
 
-          {/* Тонкая горизонтальная линия посередине рамки сверху и снизу */}
-          <div className="absolute -top-2 left-8 right-8 h-px bg-gradient-to-r from-transparent via-red-500/40 to-transparent" />
-          <div className="absolute -bottom-2 left-8 right-8 h-px bg-gradient-to-r from-transparent via-red-500/40 to-transparent" />
+          {/* Центральные линии сверху и снизу */}
+          <div className="absolute -top-px left-10 right-10 h-px bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
+          <div className="absolute -bottom-px left-10 right-10 h-px bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
 
           <img
             src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9e862ab9-9ec9-4b2e-a45e-db112feda735.png"
