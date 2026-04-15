@@ -45,65 +45,73 @@ export default function Hero() {
       <div className="relative z-10 text-center text-white flex flex-col items-center gap-6 px-6">
         {/* Логотип с декоративным оформлением */}
         <div className="relative w-44 md:w-60 lg:w-72 flex items-center justify-center">
-
-          {/* Пульсирующий ореол */}
-          <div className="absolute inset-0 rounded-full"
-            style={{
-              background: "radial-gradient(ellipse at center, rgba(239,68,68,0.12) 0%, transparent 70%)",
-              animation: "logoPulse 3s ease-in-out infinite",
-            }}
-          />
-
-          {/* Вращающееся кольцо — пунктир */}
-          <svg
-            className="absolute inset-0 w-full h-full"
-            viewBox="0 0 100 100"
-            style={{ animation: "logoSpin 18s linear infinite" }}
-          >
-            <circle
-              cx="50" cy="50" r="47"
-              fill="none"
-              stroke="rgba(239,68,68,0.35)"
-              strokeWidth="0.5"
-              strokeDasharray="4 6"
-              strokeLinecap="round"
-            />
-          </svg>
-
-          {/* Статичное кольцо тонкое */}
-          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
-            <circle
-              cx="50" cy="50" r="44"
-              fill="none"
-              stroke="rgba(239,68,68,0.15)"
-              strokeWidth="0.3"
-            />
-          </svg>
-
-          {/* Маленькие точки-маркеры по кругу на 12/3/6/9 */}
-          {[0, 90, 180, 270].map((deg, i) => {
-            const r = 47;
-            const rad = (deg - 90) * Math.PI / 180;
-            const cx = 50 + r * Math.cos(rad);
-            const cy = 50 + r * Math.sin(rad);
-            return (
-              <svg key={i} className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
-                <circle cx={cx} cy={cy} r="1.2" fill="#ef4444" opacity="0.8" />
-                <circle cx={cx} cy={cy} r="2.5" fill="none" stroke="#ef4444" strokeWidth="0.4" opacity="0.4" />
-              </svg>
-            );
-          })}
-
           <style>{`
-            @keyframes logoPulse {
-              0%, 100% { transform: scale(1); opacity: 0.7; }
-              50% { transform: scale(1.08); opacity: 1; }
-            }
             @keyframes logoSpin {
               from { transform: rotate(0deg); }
               to { transform: rotate(360deg); }
             }
+            @keyframes logoSpinReverse {
+              from { transform: rotate(0deg); }
+              to { transform: rotate(-360deg); }
+            }
+            @keyframes logoPulseGlow {
+              0%, 100% { opacity: 0.5; }
+              50% { opacity: 1; }
+            }
           `}</style>
+
+          {/* Внешнее медленно вращающееся кольцо с пунктиром */}
+          <div className="absolute -inset-6 flex items-center justify-center"
+            style={{ animation: "logoSpin 20s linear infinite" }}>
+            <svg viewBox="0 0 120 120" className="w-full h-full">
+              <circle cx="60" cy="60" r="56"
+                fill="none"
+                stroke="#ef4444"
+                strokeWidth="1"
+                strokeDasharray="6 8"
+                strokeLinecap="round"
+                opacity="0.6"
+              />
+            </svg>
+          </div>
+
+          {/* Внутреннее кольцо обратное вращение */}
+          <div className="absolute -inset-3 flex items-center justify-center"
+            style={{ animation: "logoSpinReverse 12s linear infinite" }}>
+            <svg viewBox="0 0 110 110" className="w-full h-full">
+              <circle cx="55" cy="55" r="52"
+                fill="none"
+                stroke="#ef4444"
+                strokeWidth="0.6"
+                strokeDasharray="2 12"
+                strokeLinecap="round"
+                opacity="0.4"
+              />
+            </svg>
+          </div>
+
+          {/* Пульсирующее свечение */}
+          <div
+            className="absolute -inset-4 rounded-full pointer-events-none"
+            style={{
+              background: "radial-gradient(ellipse at center, rgba(239,68,68,0.18) 0%, transparent 65%)",
+              animation: "logoPulseGlow 3s ease-in-out infinite",
+            }}
+          />
+
+          {/* 4 точки-маркера на осях */}
+          {[0, 90, 180, 270].map((deg, i) => {
+            const rad = (deg - 90) * Math.PI / 180;
+            const r = 50;
+            const x = 50 + r * Math.cos(rad);
+            const y = 50 + r * Math.sin(rad);
+            return (
+              <svg key={i} className="absolute -inset-2 w-[calc(100%+16px)] h-[calc(100%+16px)]" viewBox="0 0 100 100">
+                <circle cx={x} cy={y} r="2" fill="#ef4444" opacity="0.9"
+                  style={{ filter: "drop-shadow(0 0 3px #ef4444)" }} />
+              </svg>
+            );
+          })}
 
           <img
             src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9e862ab9-9ec9-4b2e-a45e-db112feda735.png"
