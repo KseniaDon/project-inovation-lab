@@ -43,12 +43,55 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 text-center text-white flex flex-col items-center gap-6 px-6">
-        <img
-          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9e862ab9-9ec9-4b2e-a45e-db112feda735.png"
-          alt="Логотип ЦГБ Невский"
-          className="w-44 md:w-60 lg:w-72 object-contain"
-          style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
-        />
+        {/* Логотип в медицинской рамке */}
+        <div className="relative w-44 md:w-60 lg:w-72 p-5">
+
+          {/* Угловые крестики */}
+          {[
+            "-top-4 -left-4",
+            "-top-4 -right-4",
+            "-bottom-4 -left-4",
+            "-bottom-4 -right-4",
+          ].map((pos, i) => (
+            <svg key={i} className={`absolute ${pos} w-8 h-8 drop-shadow-[0_0_6px_rgba(239,68,68,0.7)]`} viewBox="0 0 24 24" fill="none">
+              <rect x="9" y="2" width="6" height="20" rx="1.5" fill="#ef4444" opacity="0.9"/>
+              <rect x="2" y="9" width="20" height="6" rx="1.5" fill="#ef4444" opacity="0.9"/>
+              <rect x="9" y="2" width="6" height="20" rx="1.5" fill="url(#cg)" opacity="0.4"/>
+              <rect x="2" y="9" width="20" height="6" rx="1.5" fill="url(#cg)" opacity="0.4"/>
+              <defs>
+                <linearGradient id="cg" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#fff"/>
+                  <stop offset="100%" stopColor="transparent"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          ))}
+
+          {/* Угловые линии — только по углам, не полная рамка */}
+          {/* Верхний левый */}
+          <div className="absolute top-0 left-0 w-6 h-px bg-gradient-to-r from-red-500/80 to-transparent" />
+          <div className="absolute top-0 left-0 w-px h-6 bg-gradient-to-b from-red-500/80 to-transparent" />
+          {/* Верхний правый */}
+          <div className="absolute top-0 right-0 w-6 h-px bg-gradient-to-l from-red-500/80 to-transparent" />
+          <div className="absolute top-0 right-0 w-px h-6 bg-gradient-to-b from-red-500/80 to-transparent" />
+          {/* Нижний левый */}
+          <div className="absolute bottom-0 left-0 w-6 h-px bg-gradient-to-r from-red-500/80 to-transparent" />
+          <div className="absolute bottom-0 left-0 w-px h-6 bg-gradient-to-t from-red-500/80 to-transparent" />
+          {/* Нижний правый */}
+          <div className="absolute bottom-0 right-0 w-6 h-px bg-gradient-to-l from-red-500/80 to-transparent" />
+          <div className="absolute bottom-0 right-0 w-px h-6 bg-gradient-to-t from-red-500/80 to-transparent" />
+
+          {/* Тонкая горизонтальная линия посередине рамки сверху и снизу */}
+          <div className="absolute -top-2 left-8 right-8 h-px bg-gradient-to-r from-transparent via-red-500/40 to-transparent" />
+          <div className="absolute -bottom-2 left-8 right-8 h-px bg-gradient-to-r from-transparent via-red-500/40 to-transparent" />
+
+          <img
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9e862ab9-9ec9-4b2e-a45e-db112feda735.png"
+            alt="Логотип ЦГБ Невский"
+            className="w-full object-contain relative z-10"
+            style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
+          />
+        </div>
         <div className="text-base md:text-lg max-w-xl opacity-90 rich-content text-center">
           <RichContent html={heroData.subtitle} />
         </div>
