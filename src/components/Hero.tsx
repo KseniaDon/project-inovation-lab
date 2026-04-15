@@ -46,20 +46,6 @@ export default function Hero() {
         {/* Логотип в медицинской рамке */}
         <div className="relative w-44 md:w-60 lg:w-72">
 
-          {/* Угловые крестики — вплотную к углам логотипа */}
-          {[
-            "-top-3 -left-3",
-            "-top-3 -right-3",
-            "-bottom-3 -left-3",
-            "-bottom-3 -right-3",
-          ].map((pos, i) => (
-            <svg key={i} className={`absolute ${pos} w-7 h-7 z-20 drop-shadow-[0_0_8px_rgba(239,68,68,1)]`} viewBox="0 0 24 24" fill="none">
-              <rect x="9" y="2" width="6" height="20" rx="1.5" fill="#ff2222"/>
-              <rect x="2" y="9" width="20" height="6" rx="1.5" fill="#ff2222"/>
-              <rect x="10" y="3" width="4" height="8" rx="1" fill="rgba(255,255,255,0.25)"/>
-            </svg>
-          ))}
-
           {/* Угловые линии — с отступом от логотипа */}
           {/* Верхний левый */}
           <div className="absolute -top-3 -left-1 w-10 h-[2px] z-20 bg-gradient-to-r from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
