@@ -172,6 +172,20 @@ export default function LearnFeldsherKsmpSection({ go }: Props) {
         </a>
       </p>
 
+      {/* Информационный раздел автопарка */}
+      <p className="text-sm text-muted-foreground">
+        Информационный раздел нашей больницы по автопарку:{" "}
+        <a
+          href="https://forum.gtaprovince.ru/topic/995733-cgb-g-nevskiy-informacionnyy-razdel/#comment-6982188"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+        >
+          Раздел 12. Автопарк.
+          <Icon name="ExternalLink" size={13} />
+        </a>
+      </p>
+
     </div>
   );
 }
