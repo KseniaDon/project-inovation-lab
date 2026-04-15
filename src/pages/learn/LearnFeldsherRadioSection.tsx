@@ -239,6 +239,18 @@ export default function LearnFeldsherRadioSection({ go }: Props) {
           ))}
         </div>
       </div>
+      <p className="text-sm text-muted-foreground">
+        Информационный раздел нашей больницы на госпортале с другими докладами:{" "}
+        <a
+          href="https://forum.gtaprovince.ru/topic/995733-cgb-g-nevskiy-informacionnyy-razdel/#comment-6982159"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+        >
+          Раздел 6. Доклады в рацию.
+          <Icon name="ExternalLink" size={13} />
+        </a>
+      </p>
     </div>
   );
 }
