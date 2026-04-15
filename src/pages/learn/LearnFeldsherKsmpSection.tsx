@@ -159,12 +159,18 @@ export default function LearnFeldsherKsmpSection({ go }: Props) {
         )}
       </div>
 
-      {/* Заголовок правил в красной контурной рамке */}
-      <div className="border border-red-600 rounded-lg flex items-center justify-center py-4 px-6">
-        <p className="text-base font-semibold text-center text-red-600">
-          Основные правила работы на рабочем транспорте
-        </p>
-      </div>
+      {/* Основные правила */}
+      <p className="text-base text-red-600 text-right leading-relaxed">
+        Основные правила работы на рабочем транспорте Вы можете посмотреть в официальном источнике ОУМЗ на госпортале:{" "}
+        <a
+          href="https://forum.gtaprovince.ru/topic/853771-mz-obschiy-ustav-ministerstva-zdravoohraneniya/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold underline underline-offset-2 hover:text-red-400 transition-colors"
+        >
+          ОУМЗ | Глава 8. Правила использования рабочего транспорта.
+        </a>
+      </p>
 
     </div>
   );
