@@ -53,7 +53,7 @@ export default function Hero() {
             "-bottom-3 -left-3",
             "-bottom-3 -right-3",
           ].map((pos, i) => (
-            <svg key={i} className={`absolute ${pos} w-7 h-7 drop-shadow-[0_0_8px_rgba(239,68,68,1)]`} viewBox="0 0 24 24" fill="none">
+            <svg key={i} className={`absolute ${pos} w-7 h-7 z-20 drop-shadow-[0_0_8px_rgba(239,68,68,1)]`} viewBox="0 0 24 24" fill="none">
               <rect x="9" y="2" width="6" height="20" rx="1.5" fill="#ff2222"/>
               <rect x="2" y="9" width="20" height="6" rx="1.5" fill="#ff2222"/>
               <rect x="10" y="3" width="4" height="8" rx="1" fill="rgba(255,255,255,0.25)"/>
@@ -62,21 +62,21 @@ export default function Hero() {
 
           {/* Угловые линии — вплотную, яркие */}
           {/* Верхний левый */}
-          <div className="absolute top-0 left-0 w-8 h-[2px] bg-gradient-to-r from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
-          <div className="absolute top-0 left-0 w-[2px] h-8 bg-gradient-to-b from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
+          <div className="absolute top-0 left-0 w-8 h-[2px] z-20 bg-gradient-to-r from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
+          <div className="absolute top-0 left-0 w-[2px] h-8 z-20 bg-gradient-to-b from-red-500 to-transparent shadow-[0_0_6px_#ef4444]" />
           {/* Верхний правый */}
-          <div className="absolute top-0 right-0 w-8 h-[2px] bg-gradient-to-l from-red-500 to-transparent" />
-          <div className="absolute top-0 right-0 w-[2px] h-8 bg-gradient-to-b from-red-500 to-transparent" />
+          <div className="absolute top-0 right-0 w-8 h-[2px] z-20 bg-gradient-to-l from-red-500 to-transparent" />
+          <div className="absolute top-0 right-0 w-[2px] h-8 z-20 bg-gradient-to-b from-red-500 to-transparent" />
           {/* Нижний левый */}
-          <div className="absolute bottom-0 left-0 w-8 h-[2px] bg-gradient-to-r from-red-500 to-transparent" />
-          <div className="absolute bottom-0 left-0 w-[2px] h-8 bg-gradient-to-t from-red-500 to-transparent" />
+          <div className="absolute bottom-0 left-0 w-8 h-[2px] z-20 bg-gradient-to-r from-red-500 to-transparent" />
+          <div className="absolute bottom-0 left-0 w-[2px] h-8 z-20 bg-gradient-to-t from-red-500 to-transparent" />
           {/* Нижний правый */}
-          <div className="absolute bottom-0 right-0 w-8 h-[2px] bg-gradient-to-l from-red-500 to-transparent" />
-          <div className="absolute bottom-0 right-0 w-[2px] h-8 bg-gradient-to-t from-red-500 to-transparent" />
+          <div className="absolute bottom-0 right-0 w-8 h-[2px] z-20 bg-gradient-to-l from-red-500 to-transparent" />
+          <div className="absolute bottom-0 right-0 w-[2px] h-8 z-20 bg-gradient-to-t from-red-500 to-transparent" />
 
           {/* Центральные линии сверху и снизу */}
-          <div className="absolute -top-px left-10 right-10 h-px bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
-          <div className="absolute -bottom-px left-10 right-10 h-px bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
+          <div className="absolute -top-px left-10 right-10 h-px z-20 bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
+          <div className="absolute -bottom-px left-10 right-10 h-px z-20 bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
 
           <img
             src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9e862ab9-9ec9-4b2e-a45e-db112feda735.png"
