@@ -58,41 +58,44 @@ export default function Hero() {
               style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
             />
           </div>
-          <div
-            className="px-8 py-4 text-white text-center flex flex-col gap-2"
-            style={{
-              background: "rgba(0,0,0,0.08)",
-              border: "2px solid transparent",
-              borderImage: "linear-gradient(135deg, #7f1d1d, #dc2626, #991b1b, #b91c1c) 1",
-            }}
-          >
-            <span className="font-bold text-sm md:text-base tracking-wide uppercase">Министерство Здравоохранения</span>
-            <span className="text-xs md:text-sm tracking-wide opacity-90">Центральная Городская Больница города Невский</span>
-            <span className="text-xs tracking-widest opacity-75 uppercase font-medium">Отделение Интернатуры</span>
+          <div className="relative" style={{ padding: "2px", background: "linear-gradient(135deg, #7f1d1d, #dc2626, #991b1b, #b91c1c)", borderRadius: "2px" }}>
+            <div className="px-8 py-4 text-white text-center flex flex-col gap-2" style={{ background: "rgba(0,0,0,0.08)" }}>
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <span className="text-xl">🎓</span>
+                <span className="font-bold text-sm md:text-base tracking-wide uppercase">Министерство Здравоохранения</span>
+                <span className="text-xl">🎓</span>
+              </div>
+              <span className="text-xs md:text-sm tracking-wide opacity-90">Центральная Городская Больница города Невский</span>
+              <span className="text-xs tracking-widest opacity-75 uppercase font-medium">Отделение Интернатуры</span>
+            </div>
           </div>
         </div>
         <div className="text-base md:text-lg max-w-xl opacity-90 rich-content text-center">
           <RichContent html={heroData.subtitle} />
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-3 mt-2">
-          <button
-            onClick={() => { playClickSound(); navigate("/learn"); }}
-            className="hover-pulse-outline group relative flex items-center gap-3 bg-red-700 hover:bg-red-800 text-white px-10 py-4 text-sm uppercase tracking-widest font-bold transition-all duration-300 shadow-lg shadow-red-900/30 hover:shadow-red-800/50 hover:scale-105"
-          >
-            <Icon name="BookOpen" size={18} className="relative transition-transform duration-300 group-hover:-translate-y-0.5" />
-            <span className="relative">{heroData.buttonText}</span>
-            <Icon name="ArrowRight" size={16} className="relative transition-transform duration-300 group-hover:translate-x-1" />
-          </button>
-          <button
-            onClick={() => {
-              playClickSound();
-              const hasSession = localStorage.getItem("admin_token") && localStorage.getItem("admin_nickname");
-              navigate(hasSession ? "/admin" : "/admin/login");
-            }}
-            className="hover-pulse-outline flex items-center gap-2 border border-white/30 hover:border-white/60 text-white/60 hover:text-white px-6 py-4 text-xs uppercase tracking-widest font-medium transition-all duration-300"
-          >
-            <Icon name="UserCog" size={16} />Для РС ОИ
-          </button>
+          <div style={{ padding: "2px", background: "linear-gradient(135deg, #7f1d1d, #dc2626, #991b1b, #b91c1c)" }}>
+            <button
+              onClick={() => { playClickSound(); navigate("/learn"); }}
+              className="hover-pulse-outline group relative flex items-center gap-3 bg-red-700 hover:bg-red-800 text-white px-10 py-4 text-sm uppercase tracking-widest font-bold transition-all duration-300 shadow-lg shadow-red-900/30 hover:shadow-red-800/50 hover:scale-105"
+            >
+              <Icon name="BookOpen" size={18} className="relative transition-transform duration-300 group-hover:-translate-y-0.5" />
+              <span className="relative">{heroData.buttonText}</span>
+              <Icon name="ArrowRight" size={16} className="relative transition-transform duration-300 group-hover:translate-x-1" />
+            </button>
+          </div>
+          <div style={{ padding: "2px", background: "linear-gradient(135deg, #7f1d1d, #dc2626, #991b1b, #b91c1c)" }}>
+            <button
+              onClick={() => {
+                playClickSound();
+                const hasSession = localStorage.getItem("admin_token") && localStorage.getItem("admin_nickname");
+                navigate(hasSession ? "/admin" : "/admin/login");
+              }}
+              className="hover-pulse-outline flex items-center gap-2 bg-black/20 hover:bg-black/30 text-white/70 hover:text-white px-6 py-4 text-xs uppercase tracking-widest font-medium transition-all duration-300"
+            >
+              <Icon name="UserCog" size={16} />Для РС ОИ
+            </button>
+          </div>
         </div>
       </div>
     </div>
