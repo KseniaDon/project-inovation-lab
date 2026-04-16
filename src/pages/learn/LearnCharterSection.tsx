@@ -9,10 +9,14 @@ interface LearnCharterSectionProps {
 type Doc = { abbr: string; title: string; href: string };
 
 const DEFAULT_DOCS: Doc[] = [
+  { abbr: "ВПС",      title: "Внутренние Правила Сервера",                                          href: "https://forum.gtaprovince.ru/topic/467270-vnutrennie-pravila-servera/" },
   { abbr: "ОПСГО",    title: "Общие правила для сотрудников государственных организаций",          href: "https://forum.gtaprovince.ru/topic/816638-obschie-pravila-dlya-sotrudnikov-gosudarstvennyh-organizaciy/" },
   { abbr: "ФЗоОЗ",    title: "ФЕДЕРАЛЬНЫЙ ЗАКОН «ОБ ОСНОВАХ ОХРАНЫ ЗДОРОВЬЯ ГРАЖДАН»",            href: "https://forum.gtaprovince.ru/topic/724454-federalnyy-zakon-«ob-osnovah-ohrany-zdorovya-grazhdan»-ot-10052023-n-6-fz/" },
   { abbr: "ОУМЗ",     title: "Общий устав министерства здравоохранения",                           href: "https://forum.gtaprovince.ru/topic/853771-mz-obschiy-ustav-ministerstva-zdravoohraneniya/" },
   { abbr: "ВУ ЦГБ-Н", title: "Внутренний Устав ЦГБ-Н",                                            href: "https://forum.gtaprovince.ru/topic/995741-cgb-g-nevskiy-vnutrenniy-ustav/" },
+  { abbr: "АУМЗ",     title: "Авиационный Устав Министерства Здравоохранения",                     href: "https://forum.gtaprovince.ru/topic/853773-mz-aviacionnyy-ustav-ministerstva-zdravoohraneniya/" },
+  { abbr: "ПдСВМУ",   title: "Правила для Сотрудников Военно-Медицинского Управления",             href: "https://forum.gtaprovince.ru/topic/853781-mz-voenno-medicinskoe-upravlenie/" },
+  { abbr: "УПСМЗ",    title: "Устав Пресс-Службы Министерства Здравоохранения",                    href: "https://forum.gtaprovince.ru/topic/853785-psmz-ustav-press-sluzhby-ministerstva-zdravoohraneniya/" },
   { abbr: "ОПиЛТС",   title: "Общие правила использования сотрудниками личных транспортных средств", href: "https://forum.gtaprovince.ru/topic/816635-obschie-pravila-ispolzovaniya-sotrudnikami-lichnyh-transportnyh-sredstv/" },
 ];
 
