@@ -11,64 +11,56 @@ const defaultHero = {
   buttonText: "Перейти к обучению",
 };
 
-// Стили анимаций инжектируются один раз
 const ANIM_STYLE = `
-@keyframes beacon-spin {
-  0%   { opacity: 0.15; box-shadow: 0 0 4px 2px #38bdf8, 0 0 12px 4px #38bdf888; }
-  25%  { opacity: 1;    box-shadow: 0 0 8px 4px #38bdf8, 0 0 24px 10px #38bdf8cc, 0 0 40px 16px #38bdf855; }
-  50%  { opacity: 0.15; box-shadow: 0 0 4px 2px #38bdf8, 0 0 12px 4px #38bdf888; }
-  75%  { opacity: 1;    box-shadow: 0 0 8px 4px #38bdf8, 0 0 24px 10px #38bdf8cc, 0 0 40px 16px #38bdf855; }
-  100% { opacity: 0.15; box-shadow: 0 0 4px 2px #38bdf8, 0 0 12px 4px #38bdf888; }
+@keyframes beacon-a {
+  0%,100% { opacity: 0.1; box-shadow: 0 0 3px 1px #38bdf8; }
+  50%     { opacity: 1;   box-shadow: 0 0 7px 3px #38bdf8, 0 0 18px 7px #38bdf8aa, 0 0 32px 12px #38bdf833; }
 }
-@keyframes beacon-spin-offset {
-  0%   { opacity: 1;    box-shadow: 0 0 8px 4px #38bdf8, 0 0 24px 10px #38bdf8cc, 0 0 40px 16px #38bdf855; }
-  25%  { opacity: 0.15; box-shadow: 0 0 4px 2px #38bdf8, 0 0 12px 4px #38bdf888; }
-  50%  { opacity: 1;    box-shadow: 0 0 8px 4px #38bdf8, 0 0 24px 10px #38bdf8cc, 0 0 40px 16px #38bdf855; }
-  75%  { opacity: 0.15; box-shadow: 0 0 4px 2px #38bdf8, 0 0 12px 4px #38bdf888; }
-  100% { opacity: 1;    box-shadow: 0 0 8px 4px #38bdf8, 0 0 24px 10px #38bdf8cc, 0 0 40px 16px #38bdf855; }
+@keyframes beacon-b {
+  0%,100% { opacity: 1;   box-shadow: 0 0 7px 3px #38bdf8, 0 0 18px 7px #38bdf8aa, 0 0 32px 12px #38bdf833; }
+  50%     { opacity: 0.1; box-shadow: 0 0 3px 1px #38bdf8; }
 }
-@keyframes headlight-blink {
-  0%,  42% { opacity: 0; }
-  44%, 50% { opacity: 0.85; }
-  52%, 90% { opacity: 0; }
-  92%, 96% { opacity: 0.6; }
-  98%, 100%{ opacity: 0; }
+@keyframes headlight {
+  0%, 55%    { opacity: 0; }
+  57%, 66%   { opacity: 0.9; }
+  68%, 100%  { opacity: 0; }
 }
 `;
 
-function BeaconPair({ left, top }: { left: string; top: string }) {
+/* Один маячок */
+function Beacon({ left, top, delay = "0s" }: { left: string; top: string; delay?: string }) {
   return (
-    <div style={{ position: "absolute", left, top, display: "flex", gap: "6px", transform: "translateX(-50%)" }}>
-      <div style={{
-        width: 7, height: 7, borderRadius: "50%",
-        background: "#38bdf8",
-        animation: "beacon-spin 1.1s ease-in-out infinite",
-      }} />
-      <div style={{
-        width: 7, height: 7, borderRadius: "50%",
-        background: "#38bdf8",
-        animation: "beacon-spin-offset 1.1s ease-in-out infinite",
-      }} />
-    </div>
+    <div style={{
+      position: "absolute", left, top,
+      width: 6, height: 6, borderRadius: "50%",
+      background: "#38bdf8",
+      transform: "translate(-50%, -50%)",
+      animation: `beacon-a 0.9s ease-in-out ${delay} infinite`,
+    }} />
   );
 }
 
-function HeadlightPair({ left, top }: { left: string; top: string }) {
+/* Пара маячков рядом */
+function BeaconPair({ left, top }: { left: string; top: string }) {
   return (
-    <div style={{ position: "absolute", left, top, display: "flex", gap: "22px", transform: "translateX(-50%)" }}>
-      <div style={{
-        width: 10, height: 6, borderRadius: "3px",
-        background: "#fffbe6",
-        boxShadow: "0 0 8px 3px #fffbe6cc, 0 0 20px 8px #ffd70055",
-        animation: "headlight-blink 4.5s ease-in-out infinite",
-      }} />
-      <div style={{
-        width: 10, height: 6, borderRadius: "3px",
-        background: "#fffbe6",
-        boxShadow: "0 0 8px 3px #fffbe6cc, 0 0 20px 8px #ffd70055",
-        animation: "headlight-blink 4.5s ease-in-out infinite 0.08s",
-      }} />
-    </div>
+    <>
+      <Beacon left={left} top={top} delay="0s" />
+      <Beacon left={`calc(${left} + 10px)`} top={top} delay="0.45s" />
+    </>
+  );
+}
+
+/* Одна фара */
+function Headlight({ left, top, delay = "0s" }: { left: string; top: string; delay?: string }) {
+  return (
+    <div style={{
+      position: "absolute", left, top,
+      width: 14, height: 5, borderRadius: "2px",
+      background: "#fff9e0",
+      transform: "translate(-50%, -50%)",
+      boxShadow: "0 0 6px 2px #fff9e0bb, 0 0 16px 6px #ffd70044",
+      animation: `headlight 5s ease-in-out ${delay} infinite`,
+    }} />
   );
 }
 
@@ -100,11 +92,12 @@ export default function Hero() {
           style={{ filter: "grayscale(40%) brightness(0.45) blur(2px)" }}
         />
 
-        {/* Маячки АСМП — два синих проблесковых огня на крыше */}
-        <BeaconPair left="36%" top="51%" />
+        {/* Маячки АСМП — крыша скорой */}
+        <BeaconPair left="56%" top="50%" />
 
-        {/* Фары белого автобуса — периодически моргают */}
-        <HeadlightPair left="62%" top="60%" />
+        {/* Фары автобуса — левая часть кадра */}
+        <Headlight left="15.5%" top="63%" delay="0s" />
+        <Headlight left="20.5%" top="63%" delay="0.1s" />
       </motion.div>
 
       <div className="absolute bottom-6 left-6 z-10 flex items-center gap-2 text-white/80">
