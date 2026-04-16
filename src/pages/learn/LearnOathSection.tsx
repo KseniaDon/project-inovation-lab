@@ -63,10 +63,10 @@ export default function LearnOathSection({ go }: LearnOathSectionProps) {
       </p>
 
       {/* Совет */}
-      <div className="flex items-start gap-2 sm:gap-3 bg-sky-950/30 border border-sky-700/50 rounded-sm px-3 sm:px-5 py-3 sm:py-4">
-        <Icon name="Lightbulb" size={18} className="text-sky-400 shrink-0 mt-0.5" />
-        <p className="text-sm text-foreground leading-relaxed">
-          <span className="font-semibold text-sky-400">Совет:</span>{" "}
+      <div className="flex items-start gap-3 bg-sky-50 dark:bg-sky-950/40 border border-sky-300 dark:border-sky-700 rounded-sm px-4 py-3">
+        <Icon name="Lightbulb" size={18} className="text-sky-500 shrink-0 mt-0.5" />
+        <p className="text-sm text-sky-800 dark:text-sky-200 leading-relaxed">
+          <strong>Совет:</strong>{" "}
           Открывайте консоль на <strong>F8</strong> и построчно копируйте и вставляйте данный текст.
         </p>
       </div>

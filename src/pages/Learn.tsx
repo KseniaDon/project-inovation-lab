@@ -131,12 +131,7 @@ export default function Learn() {
                 <RichContent html={internExam.content} />
               </div>
 
-              {/* Задача ПМЭ */}
-              <p className="text-sm text-foreground leading-relaxed">
-                Сдать <strong>Первичный Медицинский Экзамен (ПМЭ)</strong>, который включает: информацию о больнице, практический экзамен по выдаче препаратов, вопросы по Внутреннему уставу.
-              </p>
-
-              {/* Блок ПМЭ */}
+              {/* Блок ПМЭ — после п.3, перед п.4 (клятва) */}
               <div className="border border-border rounded-sm px-5 py-4 flex flex-col gap-3">
                 <p className="text-base font-semibold text-foreground">Первичный Медицинский Экзамен (ПМЭ) включает в себя:</p>
                 <ul className="flex flex-col gap-1.5 pl-1">

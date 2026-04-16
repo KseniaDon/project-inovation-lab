@@ -77,10 +77,10 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
             className="w-full max-w-3xl rounded-sm border border-border"
             caption="Скриншот №1: Лечение пациента в палате и захват всего чата."
           />
-          <div className="flex items-start gap-3 bg-sky-500/10 border border-sky-500/40 rounded-sm px-4 py-3">
-            <span className="text-lg shrink-0 mt-0.5">💡</span>
-            <p className="text-sm text-sky-300 leading-relaxed">
-              <span className="font-bold">Совет:</span> обратите внимание на то, как на Скриншоте №1 выглядит чат. Он выглядит расширенным и туда помещаются и Ваши действия, и действия Ваших коллег, что увенчивается успехом при одобрении отчета. Также, будьте внимательнее и всегда надевайте медицинскую сумку, чтобы Вам не выдали наказание.
+          <div className="flex items-start gap-3 bg-sky-50 dark:bg-sky-950/40 border border-sky-300 dark:border-sky-700 rounded-sm px-4 py-3">
+            <Icon name="Lightbulb" size={18} className="text-sky-500 shrink-0 mt-0.5" />
+            <p className="text-sm text-sky-800 dark:text-sky-200 leading-relaxed">
+              <strong>Совет:</strong> обратите внимание на то, как на Скриншоте №1 выглядит чат. Он выглядит расширенным и туда помещаются и Ваши действия, и действия Ваших коллег, что увенчивается успехом при одобрении отчета. Также, будьте внимательнее и всегда надевайте медицинскую сумку, чтобы Вам не выдали наказание.
             </p>
           </div>
         </div>
@@ -147,10 +147,10 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
                 className="w-full max-w-3xl rounded-sm border border-border"
                 caption="Скриншот №5: Макет чата и его настройки."
               />
-              <div className="flex items-start gap-3 bg-sky-500/10 border border-sky-500/40 rounded-sm px-4 py-3">
-                <span className="text-lg shrink-0 mt-0.5">💡</span>
-                <p className="text-sm text-sky-300 leading-relaxed">
-                  <span className="font-bold">Совет:</span> внимательнее проверяйте как будет выглядеть Ваш чат, если Вы уверены, что на нем все хорошо видно и он никак не мешает Вашей игре, то все отлично. Но не забывайте, также, если Вы будете ставить «Затухание сообщений», то делайте их не таким быстрым, чтобы Ваш чат при фиксации доказательств не исчез.
+              <div className="flex items-start gap-3 bg-sky-50 dark:bg-sky-950/40 border border-sky-300 dark:border-sky-700 rounded-sm px-4 py-3">
+                <Icon name="Lightbulb" size={18} className="text-sky-500 shrink-0 mt-0.5" />
+                <p className="text-sm text-sky-800 dark:text-sky-200 leading-relaxed">
+                  <strong>Совет:</strong> внимательнее проверяйте как будет выглядеть Ваш чат, если Вы уверены, что на нем все хорошо видно и он никак не мешает Вашей игре, то все отлично. Но не забывайте, также, если Вы будете ставить «Затухание сообщений», то делайте их не таким быстрым, чтобы Ваш чат при фиксации доказательств не исчез.
                 </p>
               </div>
             </li>
