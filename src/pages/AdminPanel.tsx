@@ -183,7 +183,7 @@ export default function AdminPanel() {
           <span className="text-xs uppercase tracking-widest text-zinc-400 hidden sm:block">ЦГБ Невский</span>
           <span className="text-sm font-semibold">Панель управления</span>
         </div>
-        <div className="flex items-center gap-3 md:gap-4">
+        <div className="flex items-center gap-2 md:gap-3">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
               <Icon name="User" size={13} className="text-zinc-400" />
@@ -193,9 +193,19 @@ export default function AdminPanel() {
               <p className="text-xs text-zinc-500 mt-0.5">{isSuperAdmin ? "Главный администратор" : "Редактор"}</p>
             </div>
           </div>
-          <button onClick={() => { playClickSound(); navigate("/"); }} className="text-zinc-400 hover:text-white text-xs transition-colors hidden sm:block">На сайт</button>
-          <button onClick={logout} className="text-red-500 hover:text-red-400 text-xs transition-colors flex items-center gap-1">
-            <Icon name="LogOut" size={14} /><span className="hidden sm:inline">Выйти</span>
+          <button
+            onClick={() => { playClickSound(); window.open("/", "_blank"); }}
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 transition-colors"
+          >
+            <Icon name="Globe" size={13} />
+            <span className="hidden sm:inline">На сайт</span>
+          </button>
+          <button
+            onClick={logout}
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-red-800 bg-red-950/40 text-red-400 hover:bg-red-900/60 hover:text-red-300 transition-colors"
+          >
+            <Icon name="LogOut" size={13} />
+            <span className="hidden sm:inline">Выйти</span>
           </button>
         </div>
       </div>
@@ -249,10 +259,22 @@ export default function AdminPanel() {
           {/* ── КОНТАКТЫ РС ОИ ── */}
           {tab === "staff" && (
             <div className="max-w-2xl flex flex-col gap-6">
-              <div>
-                <p className="text-xs uppercase tracking-widest text-zinc-500 mb-1">Управление</p>
-                <h2 className="text-xl font-bold">Контакты РС ОИ</h2>
-                <p className="text-sm text-zinc-400 mt-1">Изменения мгновенно отображаются на странице контактов.</p>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-xs uppercase tracking-widest text-zinc-500 mb-1">Управление</p>
+                  <h2 className="text-xl font-bold">Контакты РС ОИ</h2>
+                  <p className="text-sm text-zinc-400 mt-1">Изменения мгновенно отображаются на странице контактов.</p>
+                </div>
+                <a
+                  href="/contacts"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={playClickSound}
+                  className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 transition-colors shrink-0"
+                >
+                  <Icon name="Eye" size={13} />
+                  <span>Предпросмотр</span>
+                </a>
               </div>
 
               <div className="flex flex-col gap-4">
