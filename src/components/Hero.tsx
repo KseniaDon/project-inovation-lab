@@ -45,10 +45,7 @@ export default function Hero() {
           className="w-14 h-14 object-contain"
           style={{ filter: "drop-shadow(0 0 4px rgba(0,0,0,0.8))" }}
         />
-        <div className="flex flex-col gap-0.5">
-          <span className="text-xs font-bold uppercase tracking-widest text-white leading-tight">Province-RP Сервер #1</span>
-          <span className="text-[10px] text-zinc-400 leading-tight">с любовью для отделения интернатуры</span>
-        </div>
+        <span className="text-xs font-bold uppercase tracking-widest text-white leading-tight">Province-RP Сервер #1</span>
       </div>
 
       <div className="relative z-10 text-center text-white flex flex-col items-center gap-4 sm:gap-6 px-4 sm:px-6 w-full max-w-lg mx-auto">
