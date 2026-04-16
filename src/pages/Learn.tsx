@@ -209,7 +209,7 @@ export default function Learn() {
           {active === "intern-gov" && <LearnGovSection go={go} />}
 
           {/* ФЕЛЬДШЕР */}
-          {active === "feldsher" && <LearnFeldsherSection go={go} />}
+          {active === "feldsher" && <LearnFeldsherSection />}
 
           {/* ФЕЛЬДШЕР — РАБОТА НА КСМП */}
           {active === "feldsher-ksmp" && <LearnFeldsherKsmpSection go={go} />}

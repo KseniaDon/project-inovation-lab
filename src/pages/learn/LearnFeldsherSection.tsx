@@ -1,22 +1,6 @@
 import Icon from "@/components/ui/icon";
-import { SectionId } from "./learnConfig";
 
-interface Props {
-  go: (id: SectionId) => void;
-}
-
-const STEP1_ITEMS: { id: SectionId; label: string; num: string; icon: string }[] = [
-  { id: "feldsher-ksmp",     label: "Рабочий транспорт",          num: "1.1", icon: "Ambulance" },
-  { id: "feldsher-radio",    label: "Работа с рацией",            num: "1.2", icon: "Megaphone" },
-  { id: "feldsher-pmp",      label: "ПМП",                        num: "1.3", icon: "HeartPulse" },
-  { id: "feldsher-mzportal", label: "МЗ Портал",                  num: "1.4", icon: "Globe" },
-  { id: "feldsher-patrol",   label: "Пост и патрулирование",      num: "1.5", icon: "ShieldCheck" },
-  { id: "feldsher-prmo",     label: "ПРМО",                       num: "1.6", icon: "ClipboardPlus" },
-  { id: "feldsher-medhelp",  label: "Оказание врачебной помощи",  num: "1.7", icon: "Syringe" },
-  { id: "feldsher-wards",    label: "Специализация отделений",    num: "1.8", icon: "Microscope" },
-];
-
-export default function LearnFeldsherSection({ go }: Props) {
+export default function LearnFeldsherSection() {
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -84,24 +68,7 @@ export default function LearnFeldsherSection({ go }: Props) {
         </p>
       </div>
 
-      {/* Содержание — Шаг 1 */}
-      <div className="flex flex-col gap-3 pt-4 border-t border-border">
-        <p className="text-xs uppercase tracking-widest text-zinc-500 select-none">Шаг 1: Сдача ОМЭ</p>
-        <div className="flex flex-col gap-1">
-          {STEP1_ITEMS.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => go(item.id)}
-              className="group flex items-center gap-3 px-3 py-2.5 border border-border hover:border-red-600/50 hover:bg-red-600/5 transition-all duration-200 text-left"
-            >
-              <span className="text-xs font-bold text-muted-foreground w-7 shrink-0">{item.num}</span>
-              <Icon name={item.icon as "Flag"} size={14} className="text-muted-foreground group-hover:text-red-500 transition-colors shrink-0" />
-              <span className="text-sm text-foreground group-hover:text-red-500 transition-colors font-medium">{item.label}</span>
-              <Icon name="ChevronRight" size={13} className="ml-auto text-muted-foreground group-hover:text-red-400 transition-colors shrink-0" />
-            </button>
-          ))}
-        </div>
-      </div>
+
 
 
     </div>
