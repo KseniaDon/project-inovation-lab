@@ -83,7 +83,7 @@ export default function Hero() {
           src="https://sun9-14.userapi.com/s/v1/ig2/oh9odkGbAUAKfEAPiLIT71AH3kiwlI3zMF9KfjDou7lJS_7y75faZ-icfreo8zqOMDQhKC2fFVRhwvh4aq7ag5Co.jpg?quality=95&as=32x17,48x25,72x38,108x57,160x85,240x127,360x191,480x255,540x286,640x340,720x382,1080x573,1280x679,1440x764,1919x1018&from=bu&u=EhFT96MoKQ5BFfhQ6lJs2ReadKrPQert1dApP3wydVA&cs=1919x0"
           alt="Background"
           className="w-full h-full object-cover"
-          style={{ filter: "grayscale(35%) brightness(0.42) blur(3px) sepia(20%) hue-rotate(-15deg) saturate(120%)" }}
+          style={{ filter: "grayscale(35%) brightness(0.42) sepia(20%) hue-rotate(-15deg) saturate(120%)" }}
         />
 
         {/* Красный оттенок-оверлей */}
@@ -93,19 +93,16 @@ export default function Hero() {
           pointerEvents: "none",
         }} />
 
-        {/* Маячки АСМП — 3 машины, крыши */}
-        {/* Машина 1 (крайняя левая скорая) */}
-        <BeaconPair left="27%" top="35%" />
-        {/* Машина 2 (средняя) */}
-        <BeaconPair left="38%" top="33%" />
-        {/* Машина 3 (ближняя к автобусу) */}
-        <BeaconPair left="50%" top="31%" />
+        {/* Маячки АСМП — 3 машины, крыши (дальняя → ближняя, слева направо) */}
+        <BeaconPair left="33%" top="37%" />
+        <BeaconPair left="42%" top="35%" />
+        <BeaconPair left="52%" top="33%" />
 
-        {/* Фары автобуса — 4 лампочки внизу */}
-        <Headlight left="70.5%" top="62%" delay="0s" />
-        <Headlight left="73%"   top="62%" delay="0.05s" />
-        <Headlight left="79%"   top="62%" delay="0.1s" />
-        <Headlight left="81.5%" top="62%" delay="0.15s" />
+        {/* Фары автобуса — 4 лампочки */}
+        <Headlight left="63%"   top="58%" delay="0s" />
+        <Headlight left="65.5%" top="58%" delay="0.05s" />
+        <Headlight left="74%"   top="58%" delay="0.1s" />
+        <Headlight left="76.5%" top="58%" delay="0.15s" />
       </motion.div>
 
       <div className="absolute bottom-6 left-6 z-10 flex items-center gap-2 text-white/80">
