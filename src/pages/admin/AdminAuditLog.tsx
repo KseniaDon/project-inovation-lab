@@ -9,9 +9,10 @@ export type AuditEntry = {
 };
 
 const ACTION_META: Record<string, { label: string; icon: string; color: string }> = {
-  add_access:    { label: "Добавил доступ",   icon: "UserPlus",  color: "text-green-400" },
-  remove_access: { label: "Удалил доступ",    icon: "UserMinus", color: "text-red-400" },
-  edit_content:  { label: "Изменил контент",  icon: "Pencil",    color: "text-blue-400" },
+  add_access:    { label: "Добавил доступ",    icon: "UserPlus",   color: "text-green-400" },
+  remove_access: { label: "Удалил доступ",     icon: "UserMinus",  color: "text-red-400" },
+  edit_access:   { label: "Изменил участника", icon: "UserCog",    color: "text-blue-400" },
+  edit_content:  { label: "Изменил контент",   icon: "Pencil",     color: "text-zinc-400" },
 };
 
 interface Props {
@@ -48,8 +49,18 @@ export default function AdminAuditLog({ logs, loading, onRefresh }: Props) {
             const dateStr = date.toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", year: "2-digit", hour: "2-digit", minute: "2-digit" });
 
             let detailText = "";
-            if (entry.action === "add_access" || entry.action === "remove_access") {
-              detailText = `vk.ru/${entry.details.nickname}` + (entry.details.role ? ` (${entry.details.role})` : "");
+            if (entry.action === "add_access") {
+              detailText = `vk.ru/${entry.details.nickname}` + (entry.details.role ? ` · ${entry.details.role}` : "");
+            } else if (entry.action === "remove_access") {
+              detailText = `vk.ru/${entry.details.nickname}` + (entry.details.role ? ` · ${entry.details.role}` : "");
+            } else if (entry.action === "edit_access") {
+              detailText = `vk.ru/${entry.details.nickname}`;
+              if (entry.details.old_role && entry.details.new_role) {
+                detailText += ` · роль: ${entry.details.old_role} → ${entry.details.new_role}`;
+              }
+              if (entry.details.hospital_role) {
+                detailText += ` · должность: ${entry.details.hospital_role}`;
+              }
             } else if (entry.action === "edit_content") {
               const keyLabels: Record<string, string> = {
                 staff: "Контакты РС ОИ",

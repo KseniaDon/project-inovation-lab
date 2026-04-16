@@ -298,9 +298,17 @@ def handler(event: dict, context) -> dict:
             cur.execute(f"UPDATE {s}.access_list SET href = %s WHERE nickname = %s", (new_href, target))
         if new_hospital is not None:
             cur.execute(f"UPDATE {s}.access_list SET hospital_role = %s WHERE nickname = %s", (new_hospital, target))
+        changes = {"nickname": target}
+        if new_role and new_role != target_role:
+            changes["old_role"] = target_role
+            changes["new_role"] = new_role
+        if new_href is not None:
+            changes["href"] = new_href
+        if new_hospital is not None:
+            changes["hospital_role"] = new_hospital
         cur.execute(
             f"INSERT INTO {s}.audit_log (actor, action, details) VALUES (%s, %s, %s)",
-            (user.get("nick", ""), "edit_access", json.dumps({"nickname": target}, ensure_ascii=False))
+            (user.get("nick", ""), "edit_access", json.dumps(changes, ensure_ascii=False))
         )
         conn.commit()
         conn.close()
