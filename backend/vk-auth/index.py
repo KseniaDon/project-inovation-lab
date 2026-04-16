@@ -215,11 +215,8 @@ def handler(event: dict, context) -> dict:
         conn.close()
         return resp(200, {"ok": True})
 
-    # ── GET site_data ─────────────────────────────────────────────────────────
+    # ── GET site_data — публичный, без авторизации ────────────────────────────
     if action == "site_data":
-        user = get_current_user(event)
-        if not user:
-            return resp(401, {"error": "Unauthorized"})
         conn = get_conn()
         cur = conn.cursor()
         s = get_schema()

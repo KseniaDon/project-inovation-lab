@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
+import { invalidateSiteCache } from "@/hooks/useSiteData";
 
 import { Role, AccessUser } from "./admin/adminTypes";
 
@@ -117,6 +118,7 @@ export default function AdminPanel() {
     await authFetch(`${API}?action=save_site_data`, { method: "POST", body: JSON.stringify({ key: "staff", value: staff }) });
     setStaffSaving(false);
     setStaffSaved(true);
+    invalidateSiteCache();
     setTimeout(() => setStaffSaved(false), 2200);
   };
 
