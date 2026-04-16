@@ -95,25 +95,18 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef    = useRef<number>(0);
   const startRef  = useRef<number>(0);
-  const [started, setStarted]   = useState(false);
   const [visible, setVisible]   = useState(false);
   const [fadeOut, setFadeOut]   = useState(false);
 
-  const handleEnter = () => {
-    setStarted(true);
-  };
-
   useEffect(() => {
-    if (!started) return;
     const t0 = setTimeout(() => setVisible(true),   100);
     const t1 = setTimeout(() => setFadeOut(true),  TOTAL_MS - 900);
     const t2 = setTimeout(() => onFinish(),         TOTAL_MS);
     return () => { clearTimeout(t0); clearTimeout(t1); clearTimeout(t2); };
-  }, [started, onFinish]);
+  }, [onFinish]);
 
   // ── Звук ЭКГ-аппарата ─────────────────────────────────────────
   useEffect(() => {
-    if (!started) return;
     const AC = window.AudioContext ||
       (window as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!AC) return;
@@ -129,11 +122,10 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
     ac.resume().then(() => scheduleBeats());
 
     return () => { ac.close(); };
-  }, [started]);
+  }, []);
 
   // ── Canvas ────────────────────────────────────────────────────
   useEffect(() => {
-    if (!started) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d")!;
@@ -261,66 +253,6 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
     rafRef.current = requestAnimationFrame(draw);
     return () => { cancelAnimationFrame(rafRef.current); ro.disconnect(); };
   }, [started]);
-
-  if (!started) {
-    return (
-      <div
-        className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden"
-        style={{ backgroundColor: "#080000" }}
-      >
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse 80% 60% at 50% 55%, rgba(140,0,0,0.35) 0%, transparent 75%)",
-          }}
-        />
-        <div className="relative z-10 flex flex-col items-center gap-8 select-none px-6 text-center">
-          <p style={{
-            fontSize: "clamp(2rem, 6vw, 4rem)",
-            fontWeight: 900,
-            letterSpacing: "0.10em",
-            color: "#ff2222",
-            textTransform: "uppercase",
-            textShadow: "0 0 12px rgba(255,40,40,1), 0 0 35px rgba(255,0,0,0.75)",
-            lineHeight: 1.1,
-          }}>
-            ЦГБ Невский
-          </p>
-          <p style={{
-            fontSize: "clamp(0.8rem, 2vw, 1.1rem)",
-            letterSpacing: "0.28em",
-            textTransform: "uppercase",
-            color: "rgba(255,120,120,0.7)",
-          }}>
-            Отделение Интернатуры
-          </p>
-          <button
-            onClick={handleEnter}
-            style={{
-              marginTop: "1rem",
-              padding: "0.9rem 3rem",
-              background: "linear-gradient(160deg, rgba(185,28,28,0.85), rgba(127,14,14,0.9))",
-              border: "1px solid rgba(255,255,255,0.15)",
-              boxShadow: "0 0 24px rgba(220,38,38,0.4)",
-              color: "#fff",
-              fontSize: "0.8rem",
-              fontWeight: 700,
-              letterSpacing: "0.3em",
-              textTransform: "uppercase",
-              cursor: "pointer",
-              position: "relative",
-            }}
-          >
-            <span style={{ position: "absolute", top: 0, left: 0, width: 10, height: 10, borderTop: "1px solid rgba(255,255,255,0.4)", borderLeft: "1px solid rgba(255,255,255,0.4)" }} />
-            <span style={{ position: "absolute", top: 0, right: 0, width: 10, height: 10, borderTop: "1px solid rgba(255,255,255,0.4)", borderRight: "1px solid rgba(255,255,255,0.4)" }} />
-            <span style={{ position: "absolute", bottom: 0, left: 0, width: 10, height: 10, borderBottom: "1px solid rgba(255,255,255,0.4)", borderLeft: "1px solid rgba(255,255,255,0.4)" }} />
-            <span style={{ position: "absolute", bottom: 0, right: 0, width: 10, height: 10, borderBottom: "1px solid rgba(255,255,255,0.4)", borderRight: "1px solid rgba(255,255,255,0.4)" }} />
-            Войти
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
