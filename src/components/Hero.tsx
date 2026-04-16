@@ -34,7 +34,7 @@ export default function Hero() {
           src="https://sun9-14.userapi.com/s/v1/ig2/oh9odkGbAUAKfEAPiLIT71AH3kiwlI3zMF9KfjDou7lJS_7y75faZ-icfreo8zqOMDQhKC2fFVRhwvh4aq7ag5Co.jpg?quality=95&as=32x17,48x25,72x38,108x57,160x85,240x127,360x191,480x255,540x286,640x340,720x382,1080x573,1280x679,1440x764,1919x1018&from=bu&u=EhFT96MoKQ5BFfhQ6lJs2ReadKrPQert1dApP3wydVA&cs=1919x0"
           alt="Background"
           className="w-full h-full object-cover"
-          style={{ filter: "grayscale(40%) brightness(0.45)" }}
+          style={{ filter: "grayscale(85%) brightness(0.45) blur(1.5px)" }}
         />
       </motion.div>
 
