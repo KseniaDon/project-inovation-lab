@@ -13,6 +13,7 @@ import LearnRadioSection from "./learn/LearnRadioSection";
 import LearnReportsSection from "./learn/LearnReportsSection";
 import LearnCommandsSection from "./learn/LearnCommandsSection";
 import LearnAbbrSection from "./learn/LearnAbbrSection";
+import LearnHierarchySection from "./learn/LearnHierarchySection";
 import LearnScheduleSection from "./learn/LearnScheduleSection";
 import LearnFloorsSection from "./learn/LearnFloorsSection";
 import LearnActivitySection from "./learn/LearnActivitySection";
@@ -159,6 +160,9 @@ export default function Learn() {
 
           {/* АББРЕВИАТУРЫ */}
           {active === "intern-abbr" && <LearnAbbrSection go={go} />}
+
+          {/* ИЕРАРХИЯ */}
+          {active === "intern-hierarchy" && <LearnHierarchySection go={go} />}
 
           {/* ГРАФИК РАБОТЫ */}
           {active === "intern-schedule" && <LearnScheduleSection go={go} />}
