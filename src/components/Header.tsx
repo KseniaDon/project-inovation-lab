@@ -16,13 +16,13 @@ export default function Header({ className }: HeaderProps) {
           <img
             src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/c307311f-f41f-4364-96ce-f301e9e8e2a3.png"
             alt="Герб Невского района"
-            className="w-7 sm:w-8 md:w-10 object-contain shrink-0"
+            className="w-10 sm:w-12 md:w-14 object-contain shrink-0"
             style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
           />
           <img
             src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/5538aeba-2e9c-4083-8eca-e47726470bbe.png"
             alt="Герб Минздрава"
-            className="w-7 sm:w-8 md:w-10 object-contain shrink-0"
+            className="w-10 sm:w-12 md:w-14 object-contain shrink-0"
             style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
           />
           <div className="text-white leading-tight min-w-0">
