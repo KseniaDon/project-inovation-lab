@@ -43,12 +43,25 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 text-center text-white flex flex-col items-center gap-6 px-6">
-        <img
-          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9e862ab9-9ec9-4b2e-a45e-db112feda735.png"
-          alt="Логотип ЦГБ Невский"
-          className="w-44 md:w-60 lg:w-72 object-contain"
-          style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
-        />
+        <div className="flex flex-col items-center gap-3">
+          <div className="flex items-center gap-6">
+            <img
+              src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/c307311f-f41f-4364-96ce-f301e9e8e2a3.png"
+              alt="Герб Санкт-Петербург Невский"
+              className="w-24 md:w-32 lg:w-40 object-contain"
+              style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
+            />
+            <img
+              src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/5538aeba-2e9c-4083-8eca-e47726470bbe.png"
+              alt="Герб Министерства Здравоохранения"
+              className="w-24 md:w-32 lg:w-40 object-contain"
+              style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
+            />
+          </div>
+          <div className="border-2 border-red-600 bg-red-700/20 px-6 py-1.5 text-white font-semibold text-sm md:text-base tracking-wide text-center uppercase">
+            Министерство Здравоохранения
+          </div>
+        </div>
         <div className="text-base md:text-lg max-w-xl opacity-90 rich-content text-center">
           <RichContent html={heroData.subtitle} />
         </div>
