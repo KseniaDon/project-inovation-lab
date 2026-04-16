@@ -189,10 +189,10 @@ def handler(event: dict, context) -> dict:
         conn = get_conn()
         cur = conn.cursor()
         s = get_schema()
-        cur.execute(f"SELECT nickname, role, created_at, created_by FROM {s}.access_list ORDER BY created_at")
+        cur.execute(f"SELECT nickname, role, created_at, created_by, href, hospital_role FROM {s}.access_list ORDER BY created_at")
         rows = cur.fetchall()
         conn.close()
-        users = [{"nickname": r[0], "role": r[1], "created_at": str(r[2]), "created_by": r[3]} for r in rows]
+        users = [{"nickname": r[0], "role": r[1], "created_at": str(r[2]), "created_by": r[3], "href": r[4] or "", "hospital_role": r[5] or ""} for r in rows]
         return resp(200, {"users": users})
 
     # ── POST add_access — добавить пользователя ───────────────────────────────
@@ -255,6 +255,52 @@ def handler(event: dict, context) -> dict:
         cur.execute(
             f"INSERT INTO {s}.audit_log (actor, action, details) VALUES (%s, %s, %s)",
             (user.get("nick", ""), "remove_access", json.dumps({"nickname": target, "role": target_role}, ensure_ascii=False))
+        )
+        conn.commit()
+        conn.close()
+        return resp(200, {"ok": True})
+
+    # ── POST update_access — редактировать роль/ссылку пользователя ──────────
+    if action == "update_access":
+        user = get_current_user(event)
+        if not user:
+            return resp(401, {"error": "Unauthorized"})
+        body = json.loads(event.get("body") or "{}")
+        target = clean_nick(body.get("nickname") or "")
+        new_role = body.get("role")
+        new_href = body.get("href")
+        new_hospital = body.get("hospital_role")
+        if not target:
+            return resp(400, {"error": "Введите никнейм"})
+        conn = get_conn()
+        cur = conn.cursor()
+        s = get_schema()
+        cur.execute(f"SELECT role FROM {s}.access_list WHERE nickname = %s", (target,))
+        row = cur.fetchone()
+        if not row:
+            conn.close()
+            return resp(404, {"error": "Пользователь не найден"})
+        target_role = row[0]
+        actor_role = user.get("role", "")
+        # Суперадмин может редактировать себя и всех, остальные — только ниже по иерархии
+        if target != user.get("nick") and not can_manage(actor_role, target_role):
+            conn.close()
+            return resp(403, {"error": "Недостаточно прав"})
+        if new_role and new_role != target_role:
+            if new_role not in VALID_ROLES:
+                conn.close()
+                return resp(400, {"error": "Неверная роль"})
+            if not can_manage(actor_role, new_role):
+                conn.close()
+                return resp(403, {"error": "Нельзя назначить роль выше или равную своей"})
+            cur.execute(f"UPDATE {s}.access_list SET role = %s WHERE nickname = %s", (new_role, target))
+        if new_href is not None:
+            cur.execute(f"UPDATE {s}.access_list SET href = %s WHERE nickname = %s", (new_href, target))
+        if new_hospital is not None:
+            cur.execute(f"UPDATE {s}.access_list SET hospital_role = %s WHERE nickname = %s", (new_hospital, target))
+        cur.execute(
+            f"INSERT INTO {s}.audit_log (actor, action, details) VALUES (%s, %s, %s)",
+            (user.get("nick", ""), "edit_access", json.dumps({"nickname": target}, ensure_ascii=False))
         )
         conn.commit()
         conn.close()

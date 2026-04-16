@@ -157,6 +157,13 @@ export default function AdminPanel() {
     else setAccessMsg(d.error || "Ошибка");
   };
 
+  const editAccess = async (nick: string, data: { role?: Role; href?: string; hospital_role?: string }) => {
+    const r = await authFetch(`${API}?action=update_access`, { method: "POST", body: JSON.stringify({ nickname: nick, ...data }) });
+    const d = await r.json();
+    if (d.ok) loadAccess();
+    else setAccessMsg(d.error || "Ошибка");
+  };
+
   const changePassword = async () => {
     setPwMsg("");
     if (!pwNew || pwNew !== pwConfirm) { setPwMsg("Пароли не совпадают"); return; }
@@ -284,6 +291,7 @@ export default function AdminPanel() {
               onRefresh={loadAccess}
               onAdd={addAccess}
               onRemove={removeAccess}
+              onEdit={editAccess}
             />
           )}
 
