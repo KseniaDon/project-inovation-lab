@@ -122,7 +122,10 @@ export default function Hero() {
               <div className="flex-1 h-px bg-gradient-to-l from-transparent via-white/40 to-white/40" />
             </div>
 
-            <span className="font-light text-sm sm:text-base md:text-lg tracking-[0.25em] uppercase text-white/95">
+            <span
+              className="text-base sm:text-xl md:text-2xl text-white/95 tracking-wide"
+              style={{ fontFamily: "'Playfair Display', serif", fontWeight: 500 }}
+            >
               Министерство Здравоохранения
             </span>
 
@@ -132,13 +135,18 @@ export default function Hero() {
               <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/25" />
             </div>
 
-            <span className="text-xs sm:text-sm md:text-base tracking-[0.12em] text-white/80 font-extralight">
+            <span
+              className="text-xs sm:text-sm md:text-base text-white/75 tracking-[0.08em]"
+              style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 400 }}
+            >
               Центральная Городская Больница города Невский
             </span>
 
             <div className="flex items-center gap-3 mt-0.5">
               <div className="w-10 h-px bg-gradient-to-r from-transparent to-white/35" />
-              <span className="text-[10px] sm:text-[11px] tracking-[0.3em] uppercase font-medium text-white/55">
+              <span className="text-[10px] sm:text-[11px] tracking-[0.35em] uppercase font-medium text-white/50"
+                style={{ fontFamily: "'Montserrat', sans-serif" }}
+              >
                 Отделение Интернатуры
               </span>
               <div className="w-10 h-px bg-gradient-to-l from-transparent to-white/35" />
