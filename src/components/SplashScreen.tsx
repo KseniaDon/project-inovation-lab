@@ -252,7 +252,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
 
     rafRef.current = requestAnimationFrame(draw);
     return () => { cancelAnimationFrame(rafRef.current); ro.disconnect(); };
-  }, [started]);
+  }, []);
 
   return (
     <div
