@@ -11,58 +11,9 @@ const defaultHero = {
   buttonText: "Перейти к обучению",
 };
 
-const ANIM_STYLE = `
-@keyframes beacon-a {
-  0%,100% { opacity: 0.1; box-shadow: 0 0 3px 1px #38bdf8; }
-  50%     { opacity: 1;   box-shadow: 0 0 7px 3px #38bdf8, 0 0 18px 7px #38bdf8aa, 0 0 32px 12px #38bdf833; }
-}
-@keyframes beacon-b {
-  0%,100% { opacity: 1;   box-shadow: 0 0 7px 3px #38bdf8, 0 0 18px 7px #38bdf8aa, 0 0 32px 12px #38bdf833; }
-  50%     { opacity: 0.1; box-shadow: 0 0 3px 1px #38bdf8; }
-}
-@keyframes headlight {
-  0%, 55%    { opacity: 0; }
-  57%, 66%   { opacity: 0.9; }
-  68%, 100%  { opacity: 0; }
-}
-`;
 
-/* Один маячок */
-function Beacon({ left, top, delay = "0s" }: { left: string; top: string; delay?: string }) {
-  return (
-    <div style={{
-      position: "absolute", left, top,
-      width: 6, height: 6, borderRadius: "50%",
-      background: "#38bdf8",
-      transform: "translate(-50%, -50%)",
-      animation: `beacon-a 0.9s ease-in-out ${delay} infinite`,
-    }} />
-  );
-}
 
-/* Пара маячков рядом */
-function BeaconPair({ left, top }: { left: string; top: string }) {
-  return (
-    <>
-      <Beacon left={left} top={top} delay="0s" />
-      <Beacon left={`calc(${left} + 10px)`} top={top} delay="0.45s" />
-    </>
-  );
-}
 
-/* Одна фара */
-function Headlight({ left, top, delay = "0s" }: { left: string; top: string; delay?: string }) {
-  return (
-    <div style={{
-      position: "absolute", left, top,
-      width: 14, height: 5, borderRadius: "2px",
-      background: "#fff9e0",
-      transform: "translate(-50%, -50%)",
-      boxShadow: "0 0 6px 2px #fff9e0bb, 0 0 16px 6px #ffd70044",
-      animation: `headlight 5s ease-in-out ${delay} infinite`,
-    }} />
-  );
-}
 
 export default function Hero() {
   const heroData = useSiteData("hero", defaultHero);
@@ -79,8 +30,6 @@ export default function Hero() {
       ref={container}
       className="relative flex items-center justify-center h-screen overflow-hidden"
     >
-      <style>{ANIM_STYLE}</style>
-
       <motion.div
         style={{ y }}
         className="absolute inset-0 w-full h-full"
@@ -92,12 +41,7 @@ export default function Hero() {
           style={{ filter: "grayscale(40%) brightness(0.45) blur(2px)" }}
         />
 
-        {/* Маячки АСМП — крыша скорой */}
-        <BeaconPair left="56%" top="50%" />
 
-        {/* Фары автобуса — левая часть кадра */}
-        <Headlight left="15.5%" top="63%" delay="0s" />
-        <Headlight left="20.5%" top="63%" delay="0.1s" />
       </motion.div>
 
       <div className="absolute bottom-6 left-6 z-10 flex items-center gap-2 text-white/80">
