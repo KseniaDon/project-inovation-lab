@@ -13,7 +13,7 @@ export const NAV: { id: SectionId; label: string; icon: string; parent?: string;
   { id: "intern-floors",   label: "Распределение этажей",    icon: "Building2",     parent: "intern" },
   { id: "intern-activity", label: "Журнал активности (ЖА)",  icon: "ClipboardList", parent: "intern" },
   { id: "intern-charter",  label: "Уставная документация",   icon: "ScrollText",    parent: "intern" },
-  { id: "intern-departments", label: "Отделения ЦГБ-Н",     icon: "LayoutGrid",    parent: "intern", divider: "Шаг 3: Экзамен" },
+  { id: "intern-departments", label: "Отделения ЦГБ-Н",     icon: "Network",       parent: "intern", divider: "Шаг 3: Экзамен" },
   { id: "intern-drugs",    label: "Препараты",               icon: "Pill",          parent: "intern" },
   { id: "intern-oath",     label: "Клятва врача",            icon: "GraduationCap", parent: "intern" },
   { id: "intern-report",   label: "Подготовка к повышению",  icon: "ClipboardCheck",parent: "intern", divider: "Шаг 4: Отчет на повышение" },
