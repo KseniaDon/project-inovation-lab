@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
-import { Role, AccessUser, ROLE_HIERARCHY, ROLE_META, canManage, canAddUsers, normalizeRole } from "./adminTypes";
+import { Role, AccessUser, ROLE_HIERARCHY, ROLE_META, canManage, canAddUsers, normalizeRole, roleRank } from "./adminTypes";
 
 export const HOSPITAL_ROLES = ["Нет", "ГВ", "КОИ", "ЗОИ", "ЗЗОИ"] as const;
 export type HospitalRole = typeof HOSPITAL_ROLES[number];
@@ -47,6 +47,48 @@ export default function AdminAccess({
   const [editState, setEditState] = useState<EditState>({ role: "editor", href: "", hospital_role: "" });
   const [editSaving, setEditSaving] = useState(false);
 
+  // Локальный порядок карточек
+  const [sortedUsers, setSortedUsers] = useState<AccessUser[]>([]);
+  const [sortMode, setSortMode] = useState<"manual" | "hierarchy">("hierarchy");
+
+  // Синхронизируем при получении новых данных
+  useEffect(() => {
+    if (accessUsers.length === 0) return;
+    if (sortMode === "hierarchy") {
+      setSortedUsers([...accessUsers].sort((a, b) =>
+        roleRank(normalizeRole(a.role as string)) - roleRank(normalizeRole(b.role as string))
+      ));
+    } else {
+      // При manual — сохраняем текущий порядок, добавляем новых в конец
+      setSortedUsers(prev => {
+        const existing = prev.filter(p => accessUsers.some(u => u.nickname === p.nickname));
+        const updated = existing.map(p => accessUsers.find(u => u.nickname === p.nickname)!);
+        const newOnes = accessUsers.filter(u => !prev.some(p => p.nickname === u.nickname));
+        return [...updated, ...newOnes];
+      });
+    }
+  }, [accessUsers, sortMode]);
+
+  const applyHierarchy = () => {
+    playClickSound();
+    setSortMode("hierarchy");
+    setSortedUsers([...accessUsers].sort((a, b) =>
+      roleRank(normalizeRole(a.role as string)) - roleRank(normalizeRole(b.role as string))
+    ));
+  };
+
+  const moveCard = (idx: number, dir: -1 | 1) => {
+    playClickSound();
+    setSortMode("manual");
+    setSortedUsers(prev => {
+      const arr = [...prev];
+      const target = idx + dir;
+      if (target < 0 || target >= arr.length) return arr;
+      [arr[idx], arr[target]] = [arr[target], arr[idx]];
+      return arr;
+    });
+  };
+
   const startEdit = (u: AccessUser) => {
     playClickSound();
     setEditingNick(u.nickname);
@@ -71,9 +113,19 @@ export default function AdminAccess({
           <h2 className="text-xl font-bold">Список доступов</h2>
           <p className="text-sm text-zinc-400 mt-1">Кто имеет доступ к панели управления</p>
         </div>
-        <button onClick={() => { playClickSound(); onRefresh(); }} className="text-zinc-400 hover:text-white transition-colors shrink-0">
-          <Icon name="RefreshCw" size={15} />
-        </button>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={applyHierarchy}
+            title="Отсортировать по иерархии"
+            className={`flex items-center gap-1.5 text-xs px-2.5 py-1.5 border transition-colors ${sortMode === "hierarchy" ? "border-red-600/60 text-red-400 bg-red-950/20" : "border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500"}`}
+          >
+            <Icon name="ArrowUpDown" size={12} />
+            <span className="hidden sm:inline">По иерархии</span>
+          </button>
+          <button onClick={() => { playClickSound(); onRefresh(); }} className="text-zinc-400 hover:text-white transition-colors">
+            <Icon name="RefreshCw" size={15} />
+          </button>
+        </div>
       </div>
 
       {accessLoading ? (
@@ -82,7 +134,7 @@ export default function AdminAccess({
         </div>
       ) : (
         <div className="flex flex-col gap-3 mb-6">
-          {accessUsers.map((u) => {
+          {sortedUsers.map((u, idx) => {
             const normRole = normalizeRole(u.role as string);
             const meta = ROLE_META[normRole] ?? { label: u.role, hospitalLabel: u.role, short: u.role, color: "text-zinc-400", bg: "bg-zinc-800" };
             const canDelete = u.nickname !== me.nickname && canManage(myRole, normRole);
@@ -91,11 +143,29 @@ export default function AdminAccess({
 
             return (
               <div key={u.nickname} className="border border-zinc-800">
-                {/* Основная строка */}
-                <div className="p-4 flex items-center gap-3">
+                <div className="p-4 flex items-center gap-2">
+                  {/* Кнопки перемещения */}
+                  <div className="flex flex-col gap-0.5 shrink-0">
+                    <button
+                      onClick={() => moveCard(idx, -1)}
+                      disabled={idx === 0}
+                      className="text-zinc-700 hover:text-zinc-400 disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <Icon name="ChevronUp" size={13} />
+                    </button>
+                    <button
+                      onClick={() => moveCard(idx, 1)}
+                      disabled={idx === sortedUsers.length - 1}
+                      className="text-zinc-700 hover:text-zinc-400 disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <Icon name="ChevronDown" size={13} />
+                    </button>
+                  </div>
+
                   <div className="w-9 h-9 bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
                     <Icon name="User" size={15} className="text-zinc-400" />
                   </div>
+
                   <div className="flex-1 min-w-0">
                     <a href={u.href || `https://vk.ru/${u.nickname}`} target="_blank" rel="noopener noreferrer"
                       className="font-semibold text-sm hover:text-red-400 transition-colors block">
@@ -108,9 +178,11 @@ export default function AdminAccess({
                       )}
                     </p>
                   </div>
+
                   <span className={`text-xs px-2 py-0.5 font-semibold uppercase tracking-wider shrink-0 ${meta.bg} ${meta.color}`}>
                     {meta.label}
                   </span>
+
                   <div className="flex items-center gap-1 shrink-0">
                     {canEdit && (
                       <button
