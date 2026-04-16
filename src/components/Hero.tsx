@@ -55,19 +55,29 @@ export default function Hero() {
         />
       </motion.div>
 
-      <div className="relative z-10 text-center text-white flex flex-col items-center gap-5 sm:gap-7 px-4 sm:px-6 w-full max-w-2xl mx-auto">
-
-        {/* Герб Минздрава */}
-        <motion.img
+      {/* Гербы — левый верхний угол */}
+      <motion.div
+        className="absolute top-5 left-5 sm:top-7 sm:left-7 z-20 flex items-center gap-1"
+        variants={fadeUp}
+        initial="hidden"
+        animate="visible"
+        custom={0}
+      >
+        <img
           src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/c307311f-f41f-4364-96ce-f301e9e8e2a3.png"
           alt="Герб Министерства Здравоохранения"
-          className="w-24 sm:w-36 md:w-44 lg:w-52 object-contain drop-shadow-[0_0_22px_rgba(220,38,38,0.4)]"
-          style={{ mixBlendMode: "screen", filter: "brightness(1.15) contrast(1.08)" }}
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0}
+          className="w-16 sm:w-20 md:w-24 object-contain drop-shadow-[0_0_16px_rgba(220,38,38,0.5)]"
+          style={{ mixBlendMode: "screen", filter: "brightness(1.2) contrast(1.1)" }}
         />
+        <img
+          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/5538aeba-2e9c-4083-8eca-e47726470bbe.png"
+          alt="Герб Невского района"
+          className="w-16 sm:w-20 md:w-24 object-contain drop-shadow-[0_0_16px_rgba(220,38,38,0.5)]"
+          style={{ mixBlendMode: "screen", filter: "brightness(1.2) contrast(1.1)" }}
+        />
+      </motion.div>
+
+      <div className="relative z-10 text-center text-white flex flex-col items-center gap-5 sm:gap-7 px-4 sm:px-6 w-full max-w-2xl mx-auto">
 
         {/* Табличка */}
         <motion.div
@@ -208,17 +218,7 @@ export default function Hero() {
           </button>
         </motion.div>
 
-        {/* Герб Невского */}
-        <motion.img
-          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/5538aeba-2e9c-4083-8eca-e47726470bbe.png"
-          alt="Герб Санкт-Петербург Невский"
-          className="w-20 sm:w-28 md:w-36 object-contain drop-shadow-[0_0_22px_rgba(220,38,38,0.4)]"
-          style={{ mixBlendMode: "screen", filter: "brightness(1.15) contrast(1.08)" }}
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.9}
-        />
+
       </div>
     </div>
   );
