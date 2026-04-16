@@ -29,7 +29,7 @@ export default function LearnScheduleSection({ go }: LearnScheduleSectionProps) 
           Назад к командам
         </button>
         <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Шаг 2: Устав и правила</p>
-        <h1 className="text-3xl font-bold">График работы</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">График работы</h1>
       </div>
 
       <p className="text-base font-semibold text-muted-foreground">2.1. График работы</p>

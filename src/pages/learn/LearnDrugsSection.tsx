@@ -97,15 +97,20 @@ export default function LearnDrugsSection({ go }: LearnDrugsSectionProps) {
   const toggleComp = (drug: string) =>
     setOpenComp((prev) => ({ ...prev, [drug]: !prev[drug] }));
 
-  const filtered = DRUGS.filter(({ symptom, drugs }) => {
-    const q = search.toLowerCase();
-    return symptom.toLowerCase().includes(q) || drugs.some((d) => d.toLowerCase().includes(q));
-  });
+  const filtered = DRUGS
+    .filter(({ symptom, drugs }) => {
+      const q = search.toLowerCase();
+      return symptom.toLowerCase().includes(q) || drugs.some((d) => d.toLowerCase().includes(q));
+    })
+    .sort((a, b) => a.symptom.localeCompare(b.symptom, "ru"))
+    .map(entry => ({ ...entry, drugs: [...entry.drugs].sort((a, b) => a.localeCompare(b, "ru")) }));
 
-  const compEntries = Object.entries(DRUG_COMPOSITION).filter(([name, comp]) => {
-    const q = compSearch.toLowerCase();
-    return name.toLowerCase().includes(q) || comp.toLowerCase().includes(q);
-  });
+  const compEntries = Object.entries(DRUG_COMPOSITION)
+    .filter(([name, comp]) => {
+      const q = compSearch.toLowerCase();
+      return name.toLowerCase().includes(q) || comp.toLowerCase().includes(q);
+    })
+    .sort(([a], [b]) => a.localeCompare(b, "ru"));
 
   return (
     <div className="flex flex-col gap-6">
@@ -118,7 +123,7 @@ export default function LearnDrugsSection({ go }: LearnDrugsSectionProps) {
           Назад к отделениям
         </button>
         <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Шаг 3: Экзамен</p>
-        <h1 className="text-3xl font-bold">Препараты</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">Препараты</h1>
       </div>
 
       {/* Вкладки */}

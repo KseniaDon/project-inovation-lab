@@ -40,7 +40,7 @@ export default function LearnReportsSection({ go }: LearnReportsSectionProps) {
           Назад к рации
         </button>
         <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Шаг 1: Подготовка</p>
-        <h1 className="text-3xl font-bold">Доклады в рацию</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">Доклады в рацию</h1>
       </div>
 
       <p className="text-base font-semibold text-muted-foreground">1.3. Доклады в рацию</p>

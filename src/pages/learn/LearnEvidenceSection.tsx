@@ -23,7 +23,7 @@ export default function LearnEvidenceSection({ go }: LearnEvidenceSectionProps) 
           Назад к «Подготовка к повышению»
         </button>
         <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Шаг 4: Отчет на повышение</p>
-        <h1 className="text-3xl font-bold">{data.title}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">{data.title}</h1>
       </div>
 
       <p className="text-base font-semibold text-muted-foreground">4.2. Фиксация доказательств</p>

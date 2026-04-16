@@ -5,7 +5,7 @@ export default function LearnFeldsherSection() {
     <div className="flex flex-col gap-6">
       <div>
         <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Раздел</p>
-        <h1 className="text-3xl font-bold">Фельдшер</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">Фельдшер</h1>
       </div>
 
       <p className="text-base text-foreground leading-relaxed">

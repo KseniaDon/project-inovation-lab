@@ -17,7 +17,7 @@ export default function LearnHierarchySection({ go }: Props) {
           Назад к аббревиатурам
         </button>
         <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Шаг 1: Подготовка</p>
-        <h1 className="text-3xl font-bold">Иерархия</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">Иерархия</h1>
       </div>
 
       <p className="text-base text-muted-foreground leading-relaxed">
