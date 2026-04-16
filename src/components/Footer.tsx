@@ -27,23 +27,32 @@ export default function Footer() {
       >
         <div className="relative h-[calc(100vh+120px)] -top-[100vh]">
           <div className="h-[120px] sticky top-[calc(100vh-120px)]">
-            <div className="bg-neutral-900 py-4 sm:py-6 lg:py-8 px-4 sm:px-6 h-full w-full flex flex-col justify-between">
-              <div className="flex shrink-0 gap-8 sm:gap-12 lg:gap-20"></div>
-              <div className="flex justify-end items-end">
-                <p className="text-neutral-400 text-xs sm:text-sm text-right max-w-sm">
-                  Сделано с{" "}
-                  <span className="heart-beat" aria-hidden="true">♥</span>
-                  {" "}для Отделения интернатуры ЦГБ города Невский by{" "}
-                  <a
-                    href="https://vk.com/id132273284"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-white hover:text-red-400 transition-colors duration-300 font-semibold"
-                  >
-                    Ksenia_Donskaya
-                  </a>
-                </p>
+            <div className="bg-neutral-900 py-4 sm:py-6 px-4 sm:px-6 h-full w-full flex items-center justify-between gap-4">
+              {/* Левая часть — трамвай */}
+              <div className="flex items-center gap-2.5 shrink-0">
+                <img
+                  src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/057720b9-4728-4e1d-b58f-259e234c21d2.png"
+                  alt="Province-RP Logo"
+                  className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+                />
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-white leading-tight whitespace-nowrap">
+                  Province-RP<br />Сервер #1
+                </span>
               </div>
+              {/* Правая часть — подпись */}
+              <p className="text-neutral-400 text-[10px] sm:text-xs text-right">
+                Сделано с{" "}
+                <span className="heart-beat" aria-hidden="true">♥</span>
+                {" "}для Отделения интернатуры<br className="hidden sm:inline" /> ЦГБ города Невский by{" "}
+                <a
+                  href="https://vk.com/id132273284"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-red-400 transition-colors duration-300 font-semibold"
+                >
+                  Ksenia_Donskaya
+                </a>
+              </p>
             </div>
           </div>
         </div>

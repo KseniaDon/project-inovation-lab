@@ -38,15 +38,7 @@ export default function Hero() {
         />
       </motion.div>
 
-      <div className="absolute bottom-6 left-6 z-10 flex flex-col items-start gap-1.5">
-        <img
-          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/057720b9-4728-4e1d-b58f-259e234c21d2.png"
-          alt="Province-RP Logo"
-          className="w-14 h-14 object-contain"
-          style={{ filter: "drop-shadow(0 0 4px rgba(0,0,0,0.8))" }}
-        />
-        <span className="text-xs font-bold uppercase tracking-widest text-white leading-tight">Province-RP Сервер #1</span>
-      </div>
+
 
       <div className="relative z-10 text-center text-white flex flex-col items-center gap-4 sm:gap-6 px-4 sm:px-6 w-full max-w-lg mx-auto">
         <div className="flex flex-col items-center gap-2 sm:gap-3 w-full">
