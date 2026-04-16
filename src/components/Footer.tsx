@@ -33,7 +33,7 @@ export default function Footer() {
                 <img
                   src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/057720b9-4728-4e1d-b58f-259e234c21d2.png"
                   alt="Province-RP Logo"
-                  className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+                  className="w-10 h-10 sm:w-20 sm:h-20 object-contain"
                 />
                 <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-white leading-tight whitespace-nowrap">
                   Province-RP<br />Сервер #1
