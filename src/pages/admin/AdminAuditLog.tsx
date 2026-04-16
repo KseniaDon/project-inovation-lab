@@ -24,7 +24,7 @@ interface Props {
 export default function AdminAuditLog({ logs, loading, onRefresh }: Props) {
   return (
     <div className="max-w-2xl">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4">
         <div>
           <p className="text-xs uppercase tracking-widest text-zinc-500 mb-1">Управление</p>
           <h2 className="text-xl font-bold">Журнал Аудита</h2>
@@ -33,6 +33,15 @@ export default function AdminAuditLog({ logs, loading, onRefresh }: Props) {
         <button onClick={() => { playClickSound(); onRefresh(); }} className="text-zinc-400 hover:text-white transition-colors shrink-0">
           <Icon name="RefreshCw" size={15} />
         </button>
+      </div>
+
+      <div className="border border-zinc-800 bg-zinc-900/40 px-4 py-3 flex flex-col gap-1.5 mb-6 text-xs text-zinc-500">
+        <p className="text-zinc-400 font-semibold mb-1">Журнал Аудита записывает:</p>
+        <p>✅ Добавление пользователя в доступы;</p>
+        <p>✅ Удаление пользователя из доступов;</p>
+        <p>✅ Изменение роли / должности / ссылки участника;</p>
+        <p>✅ Сохранение контактов РС ОИ;</p>
+        <p>✅ Изменение ссылок на главной.</p>
       </div>
 
       {loading ? (
