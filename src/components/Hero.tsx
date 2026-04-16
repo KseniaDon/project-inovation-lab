@@ -11,6 +11,67 @@ const defaultHero = {
   buttonText: "Перейти к обучению",
 };
 
+// Стили анимаций инжектируются один раз
+const ANIM_STYLE = `
+@keyframes beacon-spin {
+  0%   { opacity: 0.15; box-shadow: 0 0 4px 2px #38bdf8, 0 0 12px 4px #38bdf888; }
+  25%  { opacity: 1;    box-shadow: 0 0 8px 4px #38bdf8, 0 0 24px 10px #38bdf8cc, 0 0 40px 16px #38bdf855; }
+  50%  { opacity: 0.15; box-shadow: 0 0 4px 2px #38bdf8, 0 0 12px 4px #38bdf888; }
+  75%  { opacity: 1;    box-shadow: 0 0 8px 4px #38bdf8, 0 0 24px 10px #38bdf8cc, 0 0 40px 16px #38bdf855; }
+  100% { opacity: 0.15; box-shadow: 0 0 4px 2px #38bdf8, 0 0 12px 4px #38bdf888; }
+}
+@keyframes beacon-spin-offset {
+  0%   { opacity: 1;    box-shadow: 0 0 8px 4px #38bdf8, 0 0 24px 10px #38bdf8cc, 0 0 40px 16px #38bdf855; }
+  25%  { opacity: 0.15; box-shadow: 0 0 4px 2px #38bdf8, 0 0 12px 4px #38bdf888; }
+  50%  { opacity: 1;    box-shadow: 0 0 8px 4px #38bdf8, 0 0 24px 10px #38bdf8cc, 0 0 40px 16px #38bdf855; }
+  75%  { opacity: 0.15; box-shadow: 0 0 4px 2px #38bdf8, 0 0 12px 4px #38bdf888; }
+  100% { opacity: 1;    box-shadow: 0 0 8px 4px #38bdf8, 0 0 24px 10px #38bdf8cc, 0 0 40px 16px #38bdf855; }
+}
+@keyframes headlight-blink {
+  0%,  42% { opacity: 0; }
+  44%, 50% { opacity: 0.85; }
+  52%, 90% { opacity: 0; }
+  92%, 96% { opacity: 0.6; }
+  98%, 100%{ opacity: 0; }
+}
+`;
+
+function BeaconPair({ left, top }: { left: string; top: string }) {
+  return (
+    <div style={{ position: "absolute", left, top, display: "flex", gap: "6px", transform: "translateX(-50%)" }}>
+      <div style={{
+        width: 7, height: 7, borderRadius: "50%",
+        background: "#38bdf8",
+        animation: "beacon-spin 1.1s ease-in-out infinite",
+      }} />
+      <div style={{
+        width: 7, height: 7, borderRadius: "50%",
+        background: "#38bdf8",
+        animation: "beacon-spin-offset 1.1s ease-in-out infinite",
+      }} />
+    </div>
+  );
+}
+
+function HeadlightPair({ left, top }: { left: string; top: string }) {
+  return (
+    <div style={{ position: "absolute", left, top, display: "flex", gap: "22px", transform: "translateX(-50%)" }}>
+      <div style={{
+        width: 10, height: 6, borderRadius: "3px",
+        background: "#fffbe6",
+        boxShadow: "0 0 8px 3px #fffbe6cc, 0 0 20px 8px #ffd70055",
+        animation: "headlight-blink 4.5s ease-in-out infinite",
+      }} />
+      <div style={{
+        width: 10, height: 6, borderRadius: "3px",
+        background: "#fffbe6",
+        boxShadow: "0 0 8px 3px #fffbe6cc, 0 0 20px 8px #ffd70055",
+        animation: "headlight-blink 4.5s ease-in-out infinite 0.08s",
+      }} />
+    </div>
+  );
+}
+
 export default function Hero() {
   const heroData = useSiteData("hero", defaultHero);
   const container = useRef<HTMLDivElement>(null);
@@ -26,6 +87,8 @@ export default function Hero() {
       ref={container}
       className="relative flex items-center justify-center h-screen overflow-hidden"
     >
+      <style>{ANIM_STYLE}</style>
+
       <motion.div
         style={{ y }}
         className="absolute inset-0 w-full h-full"
@@ -36,6 +99,12 @@ export default function Hero() {
           className="w-full h-full object-cover"
           style={{ filter: "grayscale(40%) brightness(0.45) blur(2px)" }}
         />
+
+        {/* Маячки АСМП — два синих проблесковых огня на крыше */}
+        <BeaconPair left="36%" top="51%" />
+
+        {/* Фары белого автобуса — периодически моргают */}
+        <HeadlightPair left="62%" top="60%" />
       </motion.div>
 
       <div className="absolute bottom-6 left-6 z-10 flex items-center gap-2 text-white/80">
