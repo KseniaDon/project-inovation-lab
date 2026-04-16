@@ -16,8 +16,9 @@ export default function LearnFeldsherMedhelpSection({ go }: Props) {
           <Icon name="ChevronLeft" size={14} />
           Назад к Фельдшеру
         </button>
-        <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Фельдшер</p>
+        <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Шаг 1: Сдача ОМЭ</p>
         <h1 className="text-3xl font-bold">Оказание врачебной помощи</h1>
+        <p className="text-base font-semibold text-muted-foreground">1.7 Оказание врачебной помощи.</p>
       </div>
 
       <p className="text-base text-muted-foreground leading-relaxed">
