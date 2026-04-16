@@ -59,7 +59,7 @@ export default function Hero() {
 
         {/* Герб Минздрава */}
         <motion.img
-          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/5538aeba-2e9c-4083-8eca-e47726470bbe.png"
+          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/c307311f-f41f-4364-96ce-f301e9e8e2a3.png"
           alt="Герб Министерства Здравоохранения"
           className="w-24 sm:w-36 md:w-44 lg:w-52 object-contain drop-shadow-[0_0_22px_rgba(220,38,38,0.4)]"
           style={{ mixBlendMode: "screen", filter: "brightness(1.15) contrast(1.08)" }}
@@ -210,7 +210,7 @@ export default function Hero() {
 
         {/* Герб Невского */}
         <motion.img
-          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/c307311f-f41f-4364-96ce-f301e9e8e2a3.png"
+          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/5538aeba-2e9c-4083-8eca-e47726470bbe.png"
           alt="Герб Санкт-Петербург Невский"
           className="w-20 sm:w-28 md:w-36 object-contain drop-shadow-[0_0_22px_rgba(220,38,38,0.4)]"
           style={{ mixBlendMode: "screen", filter: "brightness(1.15) contrast(1.08)" }}
