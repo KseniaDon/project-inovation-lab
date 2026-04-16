@@ -62,7 +62,11 @@ export default function Hero() {
             <Icon name="ArrowRight" size={16} className="relative transition-transform duration-300 group-hover:translate-x-1" />
           </button>
           <button
-            onClick={() => { playClickSound(); navigate("/admin/login"); }}
+            onClick={() => {
+              playClickSound();
+              const hasSession = localStorage.getItem("admin_token") && localStorage.getItem("admin_nickname");
+              navigate(hasSession ? "/admin" : "/admin/login");
+            }}
             className="hover-pulse-outline flex items-center gap-2 border border-white/30 hover:border-white/60 text-white/60 hover:text-white px-6 py-4 text-xs uppercase tracking-widest font-medium transition-all duration-300"
           >
             <Icon name="UserCog" size={16} />Для РС ОИ
