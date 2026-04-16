@@ -10,17 +10,20 @@ import AdminStaff, { StaffMember } from "./admin/AdminStaff";
 import AdminAccess, { HospitalRole } from "./admin/AdminAccess";
 import AdminPassword from "./admin/AdminPassword";
 import AdminAuditLog, { AuditEntry } from "./admin/AdminAuditLog";
+import AdminWhatsNew from "./admin/AdminWhatsNew";
+import { WhatsNewEntry } from "@/components/WhatsNew";
 
 const API = "https://functions.poehali.dev/ee0c9d49-3da0-4e2e-a2ab-1f68f29a1405";
 
-type Tab = "home" | "staff" | "access" | "audit" | "password";
+type Tab = "home" | "whats_new" | "staff" | "access" | "audit" | "password";
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
-  { id: "home",     label: "Главная",        icon: "Home" },
-  { id: "staff",    label: "Контакты РС ОИ", icon: "Users" },
-  { id: "access",   label: "Доступы",        icon: "Shield" },
-  { id: "audit",    label: "Журнал Аудита",  icon: "ClipboardList" },
-  { id: "password", label: "Мой пароль",     icon: "KeyRound" },
+  { id: "home",      label: "Главная",        icon: "Home" },
+  { id: "whats_new", label: "Что нового",     icon: "Sparkles" },
+  { id: "staff",     label: "Контакты РС ОИ", icon: "Users" },
+  { id: "access",    label: "Доступы",        icon: "Shield" },
+  { id: "audit",     label: "Журнал Аудита",  icon: "ClipboardList" },
+  { id: "password",  label: "Мой пароль",     icon: "KeyRound" },
 ];
 
 const defaultStaff: StaffMember[] = [
@@ -33,6 +36,11 @@ export default function AdminPanel() {
   const navigate = useNavigate();
   const [me, setMe] = useState<{ nickname: string; role: Role } | null>(null);
   const [tab, setTab] = useState<Tab>("home");
+
+  // Whats new state
+  const [whatsNew, setWhatsNew] = useState<WhatsNewEntry[]>([]);
+  const [whatsNewSaving, setWhatsNewSaving] = useState(false);
+  const [whatsNewSaved, setWhatsNewSaved] = useState(false);
 
   // Home links state
   const [links, setLinks] = useState<HomeLink[]>(DEFAULT_LINKS);
@@ -87,6 +95,7 @@ export default function AdminPanel() {
     authFetch(`${API}?action=site_data`).then(r => r.json()).then(d => {
       if (d.data?.staff) setStaff(d.data.staff);
       if (d.data?.home_links) setLinks(d.data.home_links);
+      if (d.data?.whats_new) setWhatsNew(d.data.whats_new);
     });
   }, [me, authFetch]);
 
@@ -111,6 +120,27 @@ export default function AdminPanel() {
   const canEditContacts = ["super_admin", "head_admin", "admin"].includes(myNormRole);
 
   const logout = () => { playClickSound(); localStorage.clear(); navigate("/admin/login"); };
+
+  const saveWhatsNew = async () => {
+    setWhatsNewSaving(true);
+    await authFetch(`${API}?action=save_site_data`, { method: "POST", body: JSON.stringify({ key: "whats_new", value: whatsNew }) });
+    setWhatsNewSaving(false);
+    setWhatsNewSaved(true);
+    invalidateSiteCache();
+    setTimeout(() => setWhatsNewSaved(false), 2200);
+  };
+
+  const updateWhatsNew = (i: number, field: keyof WhatsNewEntry, val: string | boolean) => {
+    setWhatsNew(prev => prev.map((e, idx) => idx === i ? { ...e, [field]: val } : e));
+  };
+
+  const removeWhatsNew = (i: number) => {
+    setWhatsNew(prev => prev.filter((_, idx) => idx !== i));
+  };
+
+  const addWhatsNew = () => {
+    setWhatsNew(prev => [...prev, { date: "", title: "", desc: "", link: "", linkLabel: "", linkExternal: false }]);
+  };
 
   const saveLinks = async () => {
     setLinksSaving(true);
@@ -261,6 +291,18 @@ export default function AdminPanel() {
               onRemoveLink={removeLink}
               onAddLink={addLink}
               onSaveLinks={saveLinks}
+            />
+          )}
+
+          {tab === "whats_new" && (
+            <AdminWhatsNew
+              entries={whatsNew}
+              saving={whatsNewSaving}
+              saved={whatsNewSaved}
+              onUpdate={updateWhatsNew}
+              onRemove={removeWhatsNew}
+              onAdd={addWhatsNew}
+              onSave={saveWhatsNew}
             />
           )}
 
