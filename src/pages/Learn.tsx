@@ -131,6 +131,11 @@ export default function Learn() {
                 <RichContent html={internExam.content} />
               </div>
 
+              {/* Задача ПМЭ */}
+              <p className="text-sm text-foreground leading-relaxed">
+                Сдать <strong>Первичный Медицинский Экзамен (ПМЭ)</strong>, который включает: информацию о больнице, практический экзамен по выдаче препаратов, вопросы по Внутреннему уставу.
+              </p>
+
               {/* Блок ПМЭ */}
               <div className="border border-border rounded-sm px-5 py-4 flex flex-col gap-3">
                 <p className="text-base font-semibold text-foreground">Первичный Медицинский Экзамен (ПМЭ) включает в себя:</p>
@@ -147,6 +152,14 @@ export default function Learn() {
                     </li>
                   ))}
                 </ul>
+              </div>
+
+              {/* Совет */}
+              <div className="flex items-start gap-3 bg-sky-50 dark:bg-sky-950/40 border border-sky-300 dark:border-sky-700 rounded-sm px-4 py-3">
+                <Icon name="Lightbulb" size={18} className="text-sky-500 shrink-0 mt-0.5" />
+                <p className="text-sm text-sky-800 dark:text-sky-200 leading-relaxed">
+                  <strong>Совет:</strong> Проводить ПМЭ Вам смогут сотрудники ОПРС (врачи-терапевты) или любой другой РС нашей больницы. Если Вам нужно будет сдать ПМЭ, обязательно отпишите это в беседке «Отделение Интернатуры» или подойдите на смене к врачу 6+, чтобы спросить, сможет ли Вам провести экзамен. Обычно проведение ПМЭ происходит сразу, после принятия в больницу, но случаи бывают разные.
+                </p>
               </div>
 
               <div className="flex flex-col gap-2 mt-2">
