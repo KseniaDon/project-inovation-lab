@@ -133,6 +133,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
 
   // ── Canvas ────────────────────────────────────────────────────
   useEffect(() => {
+    if (!started) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d")!;
@@ -259,7 +260,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
 
     rafRef.current = requestAnimationFrame(draw);
     return () => { cancelAnimationFrame(rafRef.current); ro.disconnect(); };
-  }, []);
+  }, [started]);
 
   if (!started) {
     return (
