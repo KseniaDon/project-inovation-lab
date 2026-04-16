@@ -118,6 +118,7 @@ export default function AdminPanel() {
 
   const myNormRole = me ? normalizeRole(me.role as string) : "editor";
   const canEditContacts = ["super_admin", "head_admin", "admin"].includes(myNormRole);
+  const canEditWhatsNew = myNormRole === "super_admin";
 
   const logout = () => { playClickSound(); localStorage.clear(); navigate("/admin/login"); };
 
@@ -299,6 +300,7 @@ export default function AdminPanel() {
               entries={whatsNew}
               saving={whatsNewSaving}
               saved={whatsNewSaved}
+              canEdit={canEditWhatsNew}
               onUpdate={updateWhatsNew}
               onRemove={removeWhatsNew}
               onAdd={addWhatsNew}
