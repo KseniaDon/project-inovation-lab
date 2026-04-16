@@ -21,80 +21,18 @@
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #f5e8e8;
-}
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #e08080, #f5d5d5);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #c85c5c, #e8b0b0);
-}
-
-.dark ::-webkit-scrollbar-track {
   background: #1a0a0a;
 }
-.dark ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #7f1d1d, #3d0a0a);
   border-radius: 4px;
 }
-.dark ::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #991b1b, #5a1010);
 }
 
 @layer base {
   :root {
-    --background: 30 20% 97%;
-    --foreground: 20 10% 15%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 20 10% 15%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 20 10% 15%;
-
-    --primary: 0 72% 45%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 30 15% 93%;
-    --secondary-foreground: 20 10% 20%;
-
-    --muted: 30 12% 92%;
-    --muted-foreground: 20 8% 48%;
-
-    --accent: 0 72% 45%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 72% 45%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 30 12% 86%;
-    --input: 30 12% 86%;
-    --ring: 0 72% 45%;
-
-    --radius: 0rem;
-
-    --sidebar-background: 30 18% 96%;
-
-    --sidebar-foreground: 20 10% 25%;
-
-    --sidebar-primary: 20 10% 15%;
-
-    --sidebar-primary-foreground: 30 18% 96%;
-
-    --sidebar-accent: 30 15% 91%;
-
-    --sidebar-accent-foreground: 20 10% 20%;
-
-    --sidebar-border: 30 12% 88%;
-
-    --sidebar-ring: 0 72% 45%;
-    --red-border: 0 60% 55%;
-    --red-border-hover: 0 65% 45%;
-    --red-bg-subtle: 0 60% 55% / 0.06;
-  }
-
-  .dark {
     --background: 20 8% 9%;
     --foreground: 30 10% 92%;
 
@@ -122,6 +60,9 @@
     --border: 20 8% 22%;
     --input: 20 8% 22%;
     --ring: 0 70% 52%;
+
+    --radius: 0rem;
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;

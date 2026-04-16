@@ -37,25 +37,7 @@ import LearnFeldsherWardsSection from "./learn/LearnFeldsherWardsSection";
 
 export default function Learn() {
   const [active, setActive] = useState<SectionId>("intro");
-  const [dark, setDark] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved === "dark") setDark(true);
-  }, []);
-
-  const toggleTheme = () => {
-    const next = !dark;
-    setDark(next);
-    if (next) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  };
 
   const go = (id: SectionId) => {
     playClickSound();
@@ -74,7 +56,7 @@ export default function Learn() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Top bar */}
-      <div className="border-b border-border px-4 md:px-6 py-3 md:py-4 flex items-center gap-3">
+      <div className="border-b border-border px-4 md:px-8 xl:px-12 py-3 md:py-4 flex items-center gap-3">
         <button
           onClick={() => { playClickSound(); navigate("/"); }}
           className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors shrink-0"
@@ -84,22 +66,14 @@ export default function Learn() {
         </button>
         <div className="w-px h-4 bg-border hidden sm:block" />
         <p className="text-xs uppercase tracking-widest text-red-600 truncate">Отделение интернатуры</p>
-        <div className="ml-auto flex items-center gap-2">
-          <button
-            onClick={() => { playClickSound(); toggleTheme(); }}
-            className="text-muted-foreground hover:text-foreground transition-colors p-1"
-            aria-label="Переключить тему"
-          >
-            <Icon name={dark ? "Sun" : "Moon"} size={18} />
-          </button>
-        </div>
+
       </div>
 
       <div className="flex flex-1 pb-16 md:pb-0">
         <LearnSidebar active={active} go={go} />
 
         {/* ── Content ── */}
-        <main className={`flex-1 px-4 md:px-8 py-6 md:py-10 min-w-0 mx-auto w-full ${active === "intern-binds" || active === "intern-evidence" || active === "intern-mis" || active === "intern-gov" ? "max-w-5xl" : "max-w-3xl"}`}>
+        <main className={`flex-1 px-4 md:px-10 xl:px-16 py-6 md:py-10 min-w-0 mx-auto w-full ${active === "intern-binds" || active === "intern-evidence" || active === "intern-mis" || active === "intern-gov" ? "max-w-6xl" : "max-w-4xl"}`}>
 
 
         <AnimatePresence mode="wait">
