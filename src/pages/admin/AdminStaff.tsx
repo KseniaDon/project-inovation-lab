@@ -97,16 +97,15 @@ export default function AdminStaff({ staff, staffSaving, staffSaved, onUpdate, o
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-zinc-500">Цвет бейджа (CSS класс)</label>
+                <label className="text-xs text-zinc-500">Цвет бейджа</label>
                 <select
                   value={member.badgeColor}
                   onChange={e => onUpdate(i, "badgeColor", e.target.value)}
                   className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-sm outline-none focus:border-red-600 transition-colors"
                 >
-                  <option value="bg-red-600">Красный (Куратор)</option>
-                  <option value="bg-zinc-700">Серый (Зам. Зав.)</option>
-                  <option value="bg-blue-700">Синий</option>
-                  <option value="bg-orange-600">Оранжевый</option>
+                  <option value="bg-red-600">Красный — КОИ</option>
+                  <option value="bg-purple-700">Фиолетовый — ЗОИ</option>
+                  <option value="bg-orange-600">Оранжевый — ЗЗОИ</option>
                 </select>
               </div>
             </div>

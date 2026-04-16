@@ -5,7 +5,7 @@ import Icon from "@/components/ui/icon";
 import { invalidateSiteCache } from "@/hooks/useSiteData";
 
 import { Role, AccessUser, ROLE_META } from "./admin/adminTypes";
-import AdminHome from "./admin/AdminHome";
+import AdminHome, { HomeLink, DEFAULT_LINKS } from "./admin/AdminHome";
 import AdminStaff, { StaffMember } from "./admin/AdminStaff";
 import AdminAccess from "./admin/AdminAccess";
 import AdminPassword from "./admin/AdminPassword";
@@ -31,6 +31,11 @@ export default function AdminPanel() {
   const navigate = useNavigate();
   const [me, setMe] = useState<{ nickname: string; role: Role } | null>(null);
   const [tab, setTab] = useState<Tab>("home");
+
+  // Home links state
+  const [links, setLinks] = useState<HomeLink[]>(DEFAULT_LINKS);
+  const [linksSaving, setLinksSaving] = useState(false);
+  const [linksSaved, setLinksSaved] = useState(false);
 
   // Staff state
   const [staff, setStaff] = useState<StaffMember[]>(defaultStaff);
@@ -74,6 +79,7 @@ export default function AdminPanel() {
     if (!me) return;
     authFetch(`${API}?action=site_data`).then(r => r.json()).then(d => {
       if (d.data?.staff) setStaff(d.data.staff);
+      if (d.data?.home_links) setLinks(d.data.home_links);
     });
   }, [me, authFetch]);
 
@@ -87,6 +93,26 @@ export default function AdminPanel() {
   useEffect(() => { if (tab === "access" && me) loadAccess(); }, [tab, me, loadAccess]);
 
   const logout = () => { playClickSound(); localStorage.clear(); navigate("/admin/login"); };
+
+  const saveLinks = async () => {
+    setLinksSaving(true);
+    await authFetch(`${API}?action=save_site_data`, { method: "POST", body: JSON.stringify({ key: "home_links", value: links }) });
+    setLinksSaving(false);
+    setLinksSaved(true);
+    setTimeout(() => setLinksSaved(false), 2200);
+  };
+
+  const updateLink = (i: number, field: keyof HomeLink, val: string) => {
+    setLinks(prev => prev.map((l, idx) => idx === i ? { ...l, [field]: val } : l));
+  };
+
+  const removeLink = (i: number) => {
+    setLinks(prev => prev.filter((_, idx) => idx !== i));
+  };
+
+  const addLink = () => {
+    setLinks(prev => [...prev, { title: "", desc: "", href: "" }]);
+  };
 
   const saveStaff = async () => {
     setStaffSaving(true);
@@ -201,7 +227,17 @@ export default function AdminPanel() {
 
         {/* Content */}
         <main className="flex-1 overflow-y-auto p-5 md:p-8">
-          {tab === "home" && <AdminHome />}
+          {tab === "home" && (
+            <AdminHome
+              links={links}
+              linksSaving={linksSaving}
+              linksSaved={linksSaved}
+              onUpdateLink={updateLink}
+              onRemoveLink={removeLink}
+              onAddLink={addLink}
+              onSaveLinks={saveLinks}
+            />
+          )}
 
           {tab === "staff" && (
             <AdminStaff
