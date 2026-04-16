@@ -46,38 +46,38 @@ export default function AdminHome({ links, linksSaving, linksSaved, onUpdateLink
   const [editMode, setEditMode] = useState(false);
 
   return (
-    <div className="flex gap-6 items-start">
-      {/* Левая часть — превью ссылок */}
-      <div className="flex-1 min-w-0 flex flex-col gap-6">
-        <div>
-          <p className="text-xs uppercase tracking-widest text-zinc-500 mb-1">Панель управления</p>
-          <h2 className="text-2xl font-bold">Добро пожаловать, дорогое руководство ОИ!</h2>
-        </div>
-        <div className="flex flex-col gap-3">
-          {links.map((link, i) => (
-            <a
-              key={i}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={playClickSound}
-              className="group flex items-start justify-between gap-4 border border-zinc-800 hover:border-red-600/60 transition-all duration-300 px-4 py-4 overflow-hidden"
-            >
-              <div className="flex items-stretch gap-0">
-                <div className="w-1 shrink-0 bg-red-600 group-hover:w-1.5 transition-all duration-300 mr-4 rounded-sm" />
-                <div className="flex flex-col gap-1">
-                  <p className="text-sm text-red-400 font-semibold leading-snug">{link.title}</p>
-                  <p className="text-xs text-zinc-400 leading-relaxed">{link.desc}</p>
-                </div>
-              </div>
-              <Icon name="ExternalLink" size={15} className="text-zinc-600 group-hover:text-red-400 transition-colors duration-300 shrink-0 mt-0.5" />
-            </a>
-          ))}
-        </div>
+    <div className="flex flex-col gap-6">
+      {/* Заголовок */}
+      <div>
+        <p className="text-xs uppercase tracking-widest text-zinc-500 mb-1">Панель управления</p>
+        <h2 className="text-lg sm:text-2xl font-bold">Добро пожаловать, дорогое руководство ОИ!</h2>
       </div>
 
-      {/* Правая часть — редактор ссылок */}
-      <div className="w-80 shrink-0 flex flex-col gap-4">
+      {/* Ссылки */}
+      <div className="flex flex-col gap-2.5">
+        {links.map((link, i) => (
+          <a
+            key={i}
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={playClickSound}
+            className="group flex items-start justify-between gap-3 border border-zinc-800 hover:border-red-600/60 transition-all duration-300 px-3 sm:px-4 py-3 overflow-hidden"
+          >
+            <div className="flex items-stretch gap-0 min-w-0">
+              <div className="w-1 shrink-0 bg-red-600 group-hover:w-1.5 transition-all duration-300 mr-3 rounded-sm" />
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <p className="text-xs sm:text-sm text-red-400 font-semibold leading-snug">{link.title}</p>
+                <p className="text-xs text-zinc-400 leading-relaxed">{link.desc}</p>
+              </div>
+            </div>
+            <Icon name="ExternalLink" size={14} className="text-zinc-600 group-hover:text-red-400 transition-colors duration-300 shrink-0 mt-0.5" />
+          </a>
+        ))}
+      </div>
+
+      {/* Редактор ссылок */}
+      <div className="border-t border-zinc-800 pt-4 flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <p className="text-xs uppercase tracking-widest text-zinc-500">Редактор ссылок</p>
           <button
@@ -91,10 +91,10 @@ export default function AdminHome({ links, linksSaving, linksSaved, onUpdateLink
         {editMode && (
           <div className="flex flex-col gap-4">
             {links.map((link, i) => (
-              <div key={i} className="border border-zinc-800 p-4 flex flex-col gap-2.5">
+              <div key={i} className="border border-zinc-800 p-3 sm:p-4 flex flex-col gap-2.5">
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-zinc-500 uppercase tracking-widest">Ссылка {i + 1}</p>
-                  <button onClick={() => { playClickSound(); onRemoveLink(i); }} className="text-zinc-600 hover:text-red-500 transition-colors">
+                  <button onClick={() => { playClickSound(); onRemoveLink(i); }} className="text-zinc-600 hover:text-red-500 transition-colors p-1">
                     <Icon name="Trash2" size={13} />
                   </button>
                 </div>
@@ -103,7 +103,7 @@ export default function AdminHome({ links, linksSaving, linksSaved, onUpdateLink
                   <input
                     value={link.title}
                     onChange={e => onUpdateLink(i, "title", e.target.value)}
-                    className="bg-zinc-900 border border-zinc-700 text-white px-2.5 py-1.5 text-xs outline-none focus:border-red-600 transition-colors"
+                    className="bg-zinc-900 border border-zinc-700 text-white px-2.5 py-1.5 text-xs outline-none focus:border-red-600 transition-colors w-full"
                     placeholder="Название ссылки"
                   />
                 </div>
@@ -112,7 +112,7 @@ export default function AdminHome({ links, linksSaving, linksSaved, onUpdateLink
                   <input
                     value={link.desc}
                     onChange={e => onUpdateLink(i, "desc", e.target.value)}
-                    className="bg-zinc-900 border border-zinc-700 text-white px-2.5 py-1.5 text-xs outline-none focus:border-red-600 transition-colors"
+                    className="bg-zinc-900 border border-zinc-700 text-white px-2.5 py-1.5 text-xs outline-none focus:border-red-600 transition-colors w-full"
                     placeholder="Для чего эта ссылка"
                   />
                 </div>
@@ -121,7 +121,7 @@ export default function AdminHome({ links, linksSaving, linksSaved, onUpdateLink
                   <input
                     value={link.href}
                     onChange={e => onUpdateLink(i, "href", e.target.value)}
-                    className="bg-zinc-900 border border-zinc-700 text-white px-2.5 py-1.5 text-xs outline-none focus:border-red-600 transition-colors"
+                    className="bg-zinc-900 border border-zinc-700 text-white px-2.5 py-1.5 text-xs outline-none focus:border-red-600 transition-colors w-full"
                     placeholder="https://..."
                   />
                 </div>
