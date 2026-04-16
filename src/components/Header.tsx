@@ -12,9 +12,23 @@ export default function Header({ className }: HeaderProps) {
   return (
     <header className={`absolute top-0 left-0 right-0 z-20 px-4 md:px-6 py-4 md:py-6 ${className ?? ""}`}>
       <div className="flex justify-between items-center">
-        <div className="text-white text-sm uppercase tracking-wide font-semibold leading-tight">
-          <span className="block">ЦГБ Невский</span>
-          <span className="block text-xs font-normal tracking-widest opacity-70 normal-case">Отделение Интернатуры</span>
+        <div className="flex items-center gap-3">
+          <img
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/c307311f-f41f-4364-96ce-f301e9e8e2a3.png"
+            alt="Герб Невского района"
+            className="w-8 md:w-10 object-contain"
+            style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
+          />
+          <img
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/5538aeba-2e9c-4083-8eca-e47726470bbe.png"
+            alt="Герб Минздрава"
+            className="w-8 md:w-10 object-contain"
+            style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
+          />
+          <div className="text-white text-sm uppercase tracking-wide font-semibold leading-tight">
+            <span className="block">ЦГБ Невский</span>
+            <span className="block text-xs font-normal tracking-widest opacity-70 normal-case">Отделение Интернатуры</span>
+          </div>
         </div>
         <nav className="flex items-center gap-3 md:gap-6">
           <button
