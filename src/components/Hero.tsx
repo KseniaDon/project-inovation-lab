@@ -58,8 +58,12 @@ export default function Hero() {
               style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
             />
           </div>
-          <div className="border-2 border-red-600 bg-red-700/20 px-6 py-1.5 text-white font-semibold text-sm md:text-base tracking-wide text-center uppercase">
-            Министерство Здравоохранения
+          <div className="border-2 border-red-600 bg-red-700/20 px-6 py-3 text-white text-center flex flex-col gap-1">
+            <span className="font-bold text-sm md:text-base tracking-wide uppercase">Министерство Здравоохранения</span>
+            <div className="border-t border-red-500/50 my-1" />
+            <span className="text-xs md:text-sm tracking-wide opacity-90">Центральная Городская Больница города Невский</span>
+            <div className="border-t border-red-500/50 my-1" />
+            <span className="text-xs tracking-widest opacity-75 uppercase font-medium">Отделение Интернатуры</span>
           </div>
         </div>
         <div className="text-base md:text-lg max-w-xl opacity-90 rich-content text-center">
