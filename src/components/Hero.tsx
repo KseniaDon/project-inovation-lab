@@ -71,7 +71,7 @@ export default function Hero() {
           />
           <motion.div
             className="h-16 sm:h-24 md:h-32 w-px"
-            style={{ background: "linear-gradient(to bottom, transparent, rgba(220,38,38,0.7), transparent)" }}
+            style={{ background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.5), transparent)" }}
             variants={fadeIn}
             initial="hidden"
             animate="visible"
@@ -98,49 +98,61 @@ export default function Hero() {
           className="relative w-full"
         >
           {/* Угловые акценты */}
-          <span className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-red-500/80" />
-          <span className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-red-500/80" />
-          <span className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-red-500/80" />
-          <span className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-red-500/80" />
+          <span className="absolute top-0 left-0 w-5 h-5 border-t border-l border-white/60" />
+          <span className="absolute top-0 right-0 w-5 h-5 border-t border-r border-white/60" />
+          <span className="absolute bottom-0 left-0 w-5 h-5 border-b border-l border-white/60" />
+          <span className="absolute bottom-0 right-0 w-5 h-5 border-b border-r border-white/60" />
 
           <div
-            className="px-6 sm:px-10 py-4 sm:py-5 flex flex-col items-center gap-2"
+            className="px-6 sm:px-12 py-5 sm:py-6 flex flex-col items-center gap-2.5"
             style={{
-              background: "linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(30,0,0,0.45) 100%)",
-              border: "1px solid rgba(220,38,38,0.3)",
-              backdropFilter: "blur(6px)",
+              background: "linear-gradient(160deg, rgba(0,0,0,0.6) 0%, rgba(10,10,10,0.5) 100%)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              backdropFilter: "blur(8px)",
             }}
           >
-            {/* Верхний разделитель */}
-            <div className="flex items-center gap-3 w-full mb-1">
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent to-red-600/60" />
-              <div className="w-1.5 h-1.5 bg-red-500 rotate-45 shrink-0" />
-              <div className="flex-1 h-px bg-gradient-to-l from-transparent to-red-600/60" />
+            {/* Верхний орнамент */}
+            <div className="flex items-center gap-3 w-full mb-0.5">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/40 to-white/40" />
+              <div className="flex items-center gap-1">
+                <div className="w-1 h-1 rounded-full bg-white/40" />
+                <div className="w-1.5 h-1.5 rotate-45 bg-white/70" />
+                <div className="w-1 h-1 rounded-full bg-white/40" />
+              </div>
+              <div className="flex-1 h-px bg-gradient-to-l from-transparent via-white/40 to-white/40" />
             </div>
 
-            <span className="font-bold text-sm sm:text-base md:text-lg tracking-widest uppercase text-white">
+            <span className="font-light text-sm sm:text-base md:text-lg tracking-[0.25em] uppercase text-white/95">
               Министерство Здравоохранения
             </span>
 
-            <div className="w-24 h-px bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
+            <div className="flex items-center gap-2 w-full">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/25" />
+              <div className="w-1 h-1 rotate-45 bg-white/40 shrink-0" />
+              <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/25" />
+            </div>
 
-            <span className="text-xs sm:text-sm md:text-base tracking-wide text-white/85 font-light">
+            <span className="text-xs sm:text-sm md:text-base tracking-[0.12em] text-white/80 font-extralight">
               Центральная Городская Больница города Невский
             </span>
 
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-px bg-red-600/50" />
-              <span className="text-[10px] sm:text-xs tracking-[0.2em] uppercase font-semibold text-red-400">
+            <div className="flex items-center gap-3 mt-0.5">
+              <div className="w-10 h-px bg-gradient-to-r from-transparent to-white/35" />
+              <span className="text-[10px] sm:text-[11px] tracking-[0.3em] uppercase font-medium text-white/55">
                 Отделение Интернатуры
               </span>
-              <div className="w-8 h-px bg-red-600/50" />
+              <div className="w-10 h-px bg-gradient-to-l from-transparent to-white/35" />
             </div>
 
-            {/* Нижний разделитель */}
-            <div className="flex items-center gap-3 w-full mt-1">
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent to-red-600/60" />
-              <div className="w-1.5 h-1.5 bg-red-500 rotate-45 shrink-0" />
-              <div className="flex-1 h-px bg-gradient-to-l from-transparent to-red-600/60" />
+            {/* Нижний орнамент */}
+            <div className="flex items-center gap-3 w-full mt-0.5">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/40 to-white/40" />
+              <div className="flex items-center gap-1">
+                <div className="w-1 h-1 rounded-full bg-white/40" />
+                <div className="w-1.5 h-1.5 rotate-45 bg-white/70" />
+                <div className="w-1 h-1 rounded-full bg-white/40" />
+              </div>
+              <div className="flex-1 h-px bg-gradient-to-l from-transparent via-white/40 to-white/40" />
             </div>
           </div>
         </motion.div>
