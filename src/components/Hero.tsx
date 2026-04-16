@@ -11,6 +11,23 @@ const defaultHero = {
   buttonText: "Перейти к обучению",
 };
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 32 },
+  visible: (delay = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: "easeOut", delay },
+  }),
+};
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: (delay = 0) => ({
+    opacity: 1,
+    transition: { duration: 0.8, ease: "easeOut", delay },
+  }),
+};
+
 export default function Hero() {
   const heroData = useSiteData("hero", defaultHero);
   const container = useRef<HTMLDivElement>(null);
@@ -38,42 +55,115 @@ export default function Hero() {
         />
       </motion.div>
 
+      <div className="relative z-10 text-center text-white flex flex-col items-center gap-5 sm:gap-7 px-4 sm:px-6 w-full max-w-2xl mx-auto">
 
+        {/* Логотипы */}
+        <div className="flex items-center gap-6 sm:gap-10 md:gap-16">
+          <motion.img
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/c307311f-f41f-4364-96ce-f301e9e8e2a3.png"
+            alt="Герб Санкт-Петербург Невский"
+            className="w-20 sm:w-32 md:w-40 lg:w-48 object-contain drop-shadow-[0_0_22px_rgba(220,38,38,0.4)]"
+            style={{ mixBlendMode: "screen", filter: "brightness(1.15) contrast(1.08)" }}
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            custom={0}
+          />
+          <motion.div
+            className="h-16 sm:h-24 md:h-32 w-px"
+            style={{ background: "linear-gradient(to bottom, transparent, rgba(220,38,38,0.7), transparent)" }}
+            variants={fadeIn}
+            initial="hidden"
+            animate="visible"
+            custom={0.3}
+          />
+          <motion.img
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/5538aeba-2e9c-4083-8eca-e47726470bbe.png"
+            alt="Герб Министерства Здравоохранения"
+            className="w-20 sm:w-32 md:w-40 lg:w-48 object-contain drop-shadow-[0_0_22px_rgba(220,38,38,0.4)]"
+            style={{ mixBlendMode: "screen", filter: "brightness(1.15) contrast(1.08)" }}
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            custom={0.15}
+          />
+        </div>
 
-      <div className="relative z-10 text-center text-white flex flex-col items-center gap-4 sm:gap-6 px-4 sm:px-6 w-full max-w-2xl mx-auto">
-        <div className="flex flex-col items-center gap-2 sm:gap-3 w-full">
-          <div className="flex items-center gap-6 sm:gap-10 md:gap-14">
-            <img
-              src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/c307311f-f41f-4364-96ce-f301e9e8e2a3.png"
-              alt="Герб Санкт-Петербург Невский"
-              className="w-20 sm:w-32 md:w-40 lg:w-48 object-contain drop-shadow-[0_0_18px_rgba(220,38,38,0.35)]"
-              style={{ mixBlendMode: "screen", filter: "brightness(1.15) contrast(1.08)" }}
-            />
-            <div className="h-16 sm:h-24 md:h-28 w-px bg-gradient-to-b from-transparent via-red-600/60 to-transparent" />
-            <img
-              src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/5538aeba-2e9c-4083-8eca-e47726470bbe.png"
-              alt="Герб Министерства Здравоохранения"
-              className="w-20 sm:w-32 md:w-40 lg:w-48 object-contain drop-shadow-[0_0_18px_rgba(220,38,38,0.35)]"
-              style={{ mixBlendMode: "screen", filter: "brightness(1.15) contrast(1.08)" }}
-            />
-          </div>
+        {/* Табличка */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={0.4}
+          className="relative w-full"
+        >
+          {/* Угловые акценты */}
+          <span className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-red-500/80" />
+          <span className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-red-500/80" />
+          <span className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-red-500/80" />
+          <span className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-red-500/80" />
+
           <div
-            className="px-4 sm:px-8 py-3 sm:py-4 text-white text-center flex flex-col gap-1.5 w-full"
+            className="px-6 sm:px-10 py-4 sm:py-5 flex flex-col items-center gap-2"
             style={{
-              background: "rgba(0,0,0,0.08)",
-              border: "2px solid transparent",
-              borderImage: "linear-gradient(135deg, #7f1d1d, #dc2626, #991b1b, #b91c1c) 1",
+              background: "linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(30,0,0,0.45) 100%)",
+              border: "1px solid rgba(220,38,38,0.3)",
+              backdropFilter: "blur(6px)",
             }}
           >
-            <span className="font-bold text-xs sm:text-sm md:text-base tracking-wide uppercase">Министерство Здравоохранения</span>
-            <span className="text-[10px] sm:text-xs md:text-sm tracking-wide opacity-90">Центральная Городская Больница города Невский</span>
-            <span className="text-[10px] sm:text-xs tracking-widest opacity-75 uppercase font-medium">Отделение Интернатуры</span>
+            {/* Верхний разделитель */}
+            <div className="flex items-center gap-3 w-full mb-1">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent to-red-600/60" />
+              <div className="w-1.5 h-1.5 bg-red-500 rotate-45 shrink-0" />
+              <div className="flex-1 h-px bg-gradient-to-l from-transparent to-red-600/60" />
+            </div>
+
+            <span className="font-bold text-sm sm:text-base md:text-lg tracking-widest uppercase text-white">
+              Министерство Здравоохранения
+            </span>
+
+            <div className="w-24 h-px bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
+
+            <span className="text-xs sm:text-sm md:text-base tracking-wide text-white/85 font-light">
+              Центральная Городская Больница города Невский
+            </span>
+
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-px bg-red-600/50" />
+              <span className="text-[10px] sm:text-xs tracking-[0.2em] uppercase font-semibold text-red-400">
+                Отделение Интернатуры
+              </span>
+              <div className="w-8 h-px bg-red-600/50" />
+            </div>
+
+            {/* Нижний разделитель */}
+            <div className="flex items-center gap-3 w-full mt-1">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent to-red-600/60" />
+              <div className="w-1.5 h-1.5 bg-red-500 rotate-45 shrink-0" />
+              <div className="flex-1 h-px bg-gradient-to-l from-transparent to-red-600/60" />
+            </div>
           </div>
-        </div>
-        <div className="text-sm sm:text-base md:text-lg max-w-xl opacity-90 rich-content text-center">
+        </motion.div>
+
+        {/* Подзаголовок */}
+        <motion.div
+          className="text-sm sm:text-base md:text-lg max-w-xl opacity-90 rich-content text-center"
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={0.6}
+        >
           <RichContent html={heroData.subtitle} />
-        </div>
-        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 w-full sm:w-auto">
+        </motion.div>
+
+        {/* Кнопки */}
+        <motion.div
+          className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 w-full sm:w-auto"
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={0.75}
+        >
           <button
             onClick={() => { playClickSound(); navigate("/learn"); }}
             className="hover-pulse-outline group relative flex items-center justify-center gap-3 bg-red-700 hover:bg-red-800 text-white w-full sm:w-auto px-8 py-3.5 sm:py-4 text-sm uppercase tracking-widest font-bold transition-all duration-300 shadow-lg shadow-red-900/30 hover:shadow-red-800/50 hover:scale-105"
@@ -92,7 +182,7 @@ export default function Hero() {
           >
             <Icon name="UserCog" size={16} />Для РС ОИ
           </button>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
