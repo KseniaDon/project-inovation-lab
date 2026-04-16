@@ -4,7 +4,7 @@ import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
 import { invalidateSiteCache } from "@/hooks/useSiteData";
 
-import { Role, AccessUser } from "./admin/adminTypes";
+import { Role, AccessUser, ROLE_META } from "./admin/adminTypes";
 import AdminHome from "./admin/AdminHome";
 import AdminStaff, { StaffMember } from "./admin/AdminStaff";
 import AdminAccess from "./admin/AdminAccess";
@@ -41,7 +41,7 @@ export default function AdminPanel() {
   const [accessUsers, setAccessUsers] = useState<AccessUser[]>([]);
   const [accessLoading, setAccessLoading] = useState(false);
   const [newAccessNick, setNewAccessNick] = useState("");
-  const [newAccessRole, setNewAccessRole] = useState<Role>("editor");
+  const [newAccessRole, setNewAccessRole] = useState<Role>("deputy");
   const [accessMsg, setAccessMsg] = useState("");
 
   // Password state
@@ -86,7 +86,6 @@ export default function AdminPanel() {
 
   useEffect(() => { if (tab === "access" && me) loadAccess(); }, [tab, me, loadAccess]);
 
-  const isSuperAdmin = me?.role === "super_admin";
   const logout = () => { playClickSound(); localStorage.clear(); navigate("/admin/login"); };
 
   const saveStaff = async () => {
@@ -168,7 +167,7 @@ export default function AdminPanel() {
             </div>
             <div className="hidden md:block">
               <p className="text-sm font-medium leading-none">vk.ru/{me.nickname}</p>
-              <p className="text-xs text-zinc-500 mt-0.5">{isSuperAdmin ? "Главный администратор" : "Редактор"}</p>
+              <p className="text-xs text-zinc-500 mt-0.5">{me ? (ROLE_META[me.role]?.label ?? me.role) : ""}</p>
             </div>
           </div>
           <button
@@ -219,7 +218,6 @@ export default function AdminPanel() {
           {tab === "access" && (
             <AdminAccess
               me={me}
-              isSuperAdmin={isSuperAdmin}
               accessUsers={accessUsers}
               accessLoading={accessLoading}
               newAccessNick={newAccessNick}

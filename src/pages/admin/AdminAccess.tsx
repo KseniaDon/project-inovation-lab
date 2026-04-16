@@ -1,10 +1,9 @@
 import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
-import { Role, AccessUser } from "./adminTypes";
+import { Role, AccessUser, ROLE_HIERARCHY, ROLE_META, canManage, canAddUsers } from "./adminTypes";
 
 interface Props {
   me: { nickname: string; role: Role };
-  isSuperAdmin: boolean;
   accessUsers: AccessUser[];
   accessLoading: boolean;
   newAccessNick: string;
@@ -18,13 +17,19 @@ interface Props {
 }
 
 export default function AdminAccess({
-  me, isSuperAdmin,
+  me,
   accessUsers, accessLoading,
   newAccessNick, setNewAccessNick,
   newAccessRole, setNewAccessRole,
   accessMsg,
   onRefresh, onAdd, onRemove,
 }: Props) {
+  const myRole = me.role;
+  const canAdd = canAddUsers(myRole);
+
+  // Роли которые текущий пользователь может назначать (строго ниже своей)
+  const assignableRoles = ROLE_HIERARCHY.filter(r => canManage(myRole, r));
+
   return (
     <div className="max-w-xl">
       <div className="flex items-center justify-between mb-6">
@@ -44,33 +49,39 @@ export default function AdminAccess({
         </div>
       ) : (
         <div className="flex flex-col gap-3 mb-6">
-          {accessUsers.map((u) => (
-            <div key={u.nickname} className="border border-zinc-800 p-4 flex items-center gap-3">
-              <div className="w-9 h-9 bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
-                <Icon name="User" size={15} className="text-zinc-400" />
+          {accessUsers.map((u) => {
+            const meta = ROLE_META[u.role] ?? { label: u.role, short: u.role, color: "text-zinc-400", bg: "bg-zinc-800" };
+            const canDelete = u.nickname !== me.nickname && canManage(myRole, u.role);
+            return (
+              <div key={u.nickname} className="border border-zinc-800 p-4 flex items-center gap-3">
+                <div className="w-9 h-9 bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
+                  <Icon name="User" size={15} className="text-zinc-400" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <a href={`https://vk.ru/${u.nickname}`} target="_blank" rel="noopener noreferrer"
+                    className="font-semibold text-sm hover:text-red-400 transition-colors block">
+                    vk.ru/{u.nickname}
+                  </a>
+                  <p className="text-xs text-zinc-500">{u.created_by ? `Добавил: ${u.created_by}` : "Основатель"}</p>
+                </div>
+                <span className={`text-xs px-2 py-1 font-semibold uppercase tracking-wider shrink-0 ${meta.bg} ${meta.color}`}>
+                  {meta.short}
+                </span>
+                {canDelete ? (
+                  <button onClick={() => { playClickSound(); onRemove(u.nickname); }}
+                    className="text-zinc-600 hover:text-red-500 transition-colors shrink-0">
+                    <Icon name="UserX" size={15} />
+                  </button>
+                ) : (
+                  <div className="w-[15px] shrink-0" />
+                )}
               </div>
-              <div className="flex-1 min-w-0">
-                <a href={`https://vk.ru/${u.nickname}`} target="_blank" rel="noopener noreferrer"
-                  className="font-semibold text-sm hover:text-red-400 transition-colors block">
-                  vk.ru/{u.nickname}
-                </a>
-                <p className="text-xs text-zinc-500">{u.created_by ? `Добавил: ${u.created_by}` : "Основатель"}</p>
-              </div>
-              <span className={`text-xs px-2 py-1 font-semibold uppercase tracking-wider shrink-0 ${u.role === "super_admin" ? "bg-red-900/50 text-red-400" : "bg-zinc-800 text-zinc-400"}`}>
-                {u.role === "super_admin" ? "Гл. Адм." : "Редактор"}
-              </span>
-              {isSuperAdmin && u.nickname !== me.nickname && (
-                <button onClick={() => { playClickSound(); onRemove(u.nickname); }}
-                  className="text-zinc-600 hover:text-red-500 transition-colors shrink-0">
-                  <Icon name="UserX" size={15} />
-                </button>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
-      {isSuperAdmin && (
+      {canAdd && (
         <div className="border border-zinc-700/40 bg-zinc-900/40 p-5">
           <p className="text-sm font-semibold mb-3 text-zinc-300">Добавить пользователя</p>
           <div className="flex flex-col gap-3">
@@ -91,8 +102,9 @@ export default function AdminAccess({
                 onChange={e => setNewAccessRole(e.target.value as Role)}
                 className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors"
               >
-                <option value="editor">Редактор</option>
-                <option value="super_admin">Гл. Адм.</option>
+                {assignableRoles.map(r => (
+                  <option key={r} value={r}>{ROLE_META[r].label}</option>
+                ))}
               </select>
             </div>
             {accessMsg && (
@@ -105,10 +117,12 @@ export default function AdminAccess({
               <Icon name="Plus" size={13} />Добавить
             </button>
           </div>
-          <div className="mt-4 pt-4 border-t border-zinc-800 text-xs text-zinc-500 flex flex-col gap-1">
-            <p><span className="text-red-400 font-semibold">Гл. Администратор</span> — полный доступ ко всему сайту</p>
-            <p><span className="text-zinc-300 font-semibold">Редактор</span> — только свой пароль</p>
-            <p className="mt-1 text-zinc-600">Новый пользователь установит пароль при первом входе</p>
+          <div className="mt-4 pt-4 border-t border-zinc-800 text-xs text-zinc-500 flex flex-col gap-1.5">
+            <p><span className="text-blue-400 font-semibold">Админ / Куратор</span> — полный доступ, управляют всеми</p>
+            <p><span className="text-green-400 font-semibold">Главный Врач</span> — управляет Куратором ОИ и ниже</p>
+            <p><span className="text-red-400 font-semibold">Куратор ОИ</span> — управляет ЗОИ и ЗЗОИ</p>
+            <p><span className="text-purple-400 font-semibold">ЗОИ</span> — управляет ЗЗОИ</p>
+            <p><span className="text-orange-400 font-semibold">ЗЗОИ</span> — только просмотр кабинета</p>
           </div>
         </div>
       )}

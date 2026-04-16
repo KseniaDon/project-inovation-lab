@@ -54,6 +54,24 @@ def get_current_user(event):
     token = (event.get("headers") or {}).get("X-Authorization", "").replace("Bearer ", "")
     return verify_token(token)
 
+# Иерархия ролей: чем меньше индекс — тем выше роль
+ROLE_HIERARCHY = ["admin", "curator", "head_doctor", "curator_oi", "ward_head", "deputy"]
+VALID_ROLES = set(ROLE_HIERARCHY)
+
+def role_rank(role: str) -> int:
+    try:
+        return ROLE_HIERARCHY.index(role)
+    except ValueError:
+        return 999
+
+def can_manage(actor_role: str, target_role: str) -> bool:
+    """Актор может управлять целью только если его ранг строго выше (меньший индекс)."""
+    return role_rank(actor_role) < role_rank(target_role)
+
+def can_add_users(role: str) -> bool:
+    """Добавлять пользователей могут только admin, curator, head_doctor, curator_oi, ward_head."""
+    return role in ("admin", "curator", "head_doctor", "curator_oi", "ward_head")
+
 def clean_nick(raw: str) -> str:
     raw = raw.strip().lower()
     for prefix in ["https://vk.ru/", "https://vk.com/", "http://vk.ru/", "http://vk.com/", "vk.ru/", "vk.com/", "@"]:
@@ -169,18 +187,20 @@ def handler(event: dict, context) -> dict:
         users = [{"nickname": r[0], "role": r[1], "created_at": str(r[2]), "created_by": r[3]} for r in rows]
         return resp(200, {"users": users})
 
-    # ── POST add_access — добавить пользователя (только super_admin) ──────────
+    # ── POST add_access — добавить пользователя ───────────────────────────────
     if action == "add_access":
         user = get_current_user(event)
-        if not user or user.get("role") != "super_admin":
-            return resp(403, {"error": "Только для главного администратора"})
+        if not user or not can_add_users(user.get("role", "")):
+            return resp(403, {"error": "Недостаточно прав для добавления пользователей"})
         body = json.loads(event.get("body") or "{}")
         new_nick = clean_nick(body.get("nickname") or "")
-        role = body.get("role", "editor")
+        role = body.get("role", "deputy")
         if not new_nick:
             return resp(400, {"error": "Введите никнейм"})
-        if role not in ("super_admin", "editor"):
-            role = "editor"
+        if role not in VALID_ROLES:
+            role = "deputy"
+        if not can_manage(user.get("role", ""), role):
+            return resp(403, {"error": "Нельзя выдать роль выше или равную своей"})
         conn = get_conn()
         cur = conn.cursor()
         s = get_schema()
@@ -196,11 +216,11 @@ def handler(event: dict, context) -> dict:
         conn.close()
         return resp(200, {"ok": True})
 
-    # ── POST remove_access — удалить пользователя (только super_admin) ────────
+    # ── POST remove_access — удалить пользователя ─────────────────────────────
     if action == "remove_access":
         user = get_current_user(event)
-        if not user or user.get("role") != "super_admin":
-            return resp(403, {"error": "Только для главного администратора"})
+        if not user:
+            return resp(401, {"error": "Unauthorized"})
         body = json.loads(event.get("body") or "{}")
         target = clean_nick(body.get("nickname") or "")
         if not target:
@@ -210,6 +230,15 @@ def handler(event: dict, context) -> dict:
         conn = get_conn()
         cur = conn.cursor()
         s = get_schema()
+        cur.execute(f"SELECT role FROM {s}.access_list WHERE nickname = %s", (target,))
+        row = cur.fetchone()
+        if not row:
+            conn.close()
+            return resp(404, {"error": "Пользователь не найден"})
+        target_role = row[0]
+        if not can_manage(user.get("role", ""), target_role):
+            conn.close()
+            return resp(403, {"error": "Недостаточно прав для удаления этого пользователя"})
         cur.execute(f"DELETE FROM {s}.access_list WHERE nickname = %s", (target,))
         conn.commit()
         conn.close()

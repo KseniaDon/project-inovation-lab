@@ -1,4 +1,27 @@
-export type Role = "super_admin" | "editor";
+export type Role = "admin" | "curator" | "head_doctor" | "curator_oi" | "ward_head" | "deputy";
+
+export const ROLE_HIERARCHY: Role[] = ["admin", "curator", "head_doctor", "curator_oi", "ward_head", "deputy"];
+
+export const ROLE_META: Record<Role, { label: string; short: string; color: string; bg: string }> = {
+  admin:       { label: "Админ",                                   short: "Админ",  color: "text-blue-400",   bg: "bg-blue-900/50" },
+  curator:     { label: "Куратор",                                  short: "Куратор",color: "text-blue-400",   bg: "bg-blue-900/50" },
+  head_doctor: { label: "Главный Врач",                             short: "Гл. Врач",color: "text-green-400", bg: "bg-green-900/50" },
+  curator_oi:  { label: "Куратор Отделения Интернатуры",            short: "КОИ",    color: "text-red-400",    bg: "bg-red-900/50" },
+  ward_head:   { label: "Заведующий Отделением Интернатуры (ЗОИ)",  short: "ЗОИ",    color: "text-purple-400", bg: "bg-purple-900/50" },
+  deputy:      { label: "Заместитель Заведующего ОИ (ЗЗОИ)",        short: "ЗЗОИ",   color: "text-orange-400", bg: "bg-orange-900/50" },
+};
+
+export function roleRank(role: Role): number {
+  return ROLE_HIERARCHY.indexOf(role);
+}
+
+export function canManage(actorRole: Role, targetRole: Role): boolean {
+  return roleRank(actorRole) < roleRank(targetRole);
+}
+
+export function canAddUsers(role: Role): boolean {
+  return ["admin", "curator", "head_doctor", "curator_oi", "ward_head"].includes(role);
+}
 export type Tab =
   | "hero" | "staff" | "sections" | "schedule" | "commands"
   | "floors" | "departments" | "charter" | "oath" | "reports"
