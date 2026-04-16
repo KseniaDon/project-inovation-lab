@@ -55,22 +55,30 @@ def get_current_user(event):
     return verify_token(token)
 
 # Иерархия ролей: чем меньше индекс — тем выше роль
-ROLE_HIERARCHY = ["admin", "curator", "head_doctor", "curator_oi", "ward_head", "deputy"]
+ROLE_HIERARCHY = ["super_admin", "head_admin", "admin", "moderator", "editor"]
 VALID_ROLES = set(ROLE_HIERARCHY)
 
+# Маппинг старых ролей на новые
+ROLE_COMPAT = {
+    "curator": "super_admin", "head_doctor": "head_admin",
+    "curator_oi": "admin", "ward_head": "moderator", "deputy": "editor",
+}
+
+def normalize_role(role: str) -> str:
+    return ROLE_COMPAT.get(role, role) if role not in VALID_ROLES else role
+
 def role_rank(role: str) -> int:
+    role = normalize_role(role)
     try:
         return ROLE_HIERARCHY.index(role)
     except ValueError:
         return 999
 
 def can_manage(actor_role: str, target_role: str) -> bool:
-    """Актор может управлять целью только если его ранг строго выше (меньший индекс)."""
     return role_rank(actor_role) < role_rank(target_role)
 
 def can_add_users(role: str) -> bool:
-    """Добавлять пользователей могут только admin, curator, head_doctor, curator_oi, ward_head."""
-    return role in ("admin", "curator", "head_doctor", "curator_oi", "ward_head")
+    return normalize_role(role) in ("super_admin", "head_admin", "admin", "moderator")
 
 def clean_nick(raw: str) -> str:
     raw = raw.strip().lower()
@@ -212,6 +220,10 @@ def handler(event: dict, context) -> dict:
             f"INSERT INTO {s}.access_list (nickname, role, created_by) VALUES (%s, %s, %s)",
             (new_nick, role, user.get("nick"))
         )
+        cur.execute(
+            f"INSERT INTO {s}.audit_log (actor, action, details) VALUES (%s, %s, %s)",
+            (user.get("nick", ""), "add_access", json.dumps({"nickname": new_nick, "role": role}, ensure_ascii=False))
+        )
         conn.commit()
         conn.close()
         return resp(200, {"ok": True})
@@ -240,6 +252,10 @@ def handler(event: dict, context) -> dict:
             conn.close()
             return resp(403, {"error": "Недостаточно прав для удаления этого пользователя"})
         cur.execute(f"DELETE FROM {s}.access_list WHERE nickname = %s", (target,))
+        cur.execute(
+            f"INSERT INTO {s}.audit_log (actor, action, details) VALUES (%s, %s, %s)",
+            (user.get("nick", ""), "remove_access", json.dumps({"nickname": target, "role": target_role}, ensure_ascii=False))
+        )
         conn.commit()
         conn.close()
         return resp(200, {"ok": True})
@@ -273,8 +289,26 @@ def handler(event: dict, context) -> dict:
             f"ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_by = EXCLUDED.updated_by, updated_at = NOW()",
             (key, json.dumps(value, ensure_ascii=False), user.get("nick", ""))
         )
+        cur.execute(
+            f"INSERT INTO {s}.audit_log (actor, action, details) VALUES (%s, %s, %s)",
+            (user.get("nick", ""), "edit_content", json.dumps({"key": key}, ensure_ascii=False))
+        )
         conn.commit()
         conn.close()
         return resp(200, {"ok": True})
+
+    # ── GET audit_log ─────────────────────────────────────────────────────────
+    if action == "audit_log":
+        user = get_current_user(event)
+        if not user:
+            return resp(401, {"error": "Unauthorized"})
+        conn = get_conn()
+        cur = conn.cursor()
+        s = get_schema()
+        cur.execute(f"SELECT actor, action, details, created_at FROM {s}.audit_log ORDER BY created_at DESC LIMIT 50")
+        rows = cur.fetchall()
+        conn.close()
+        logs = [{"actor": r[0], "action": r[1], "details": json.loads(r[2]) if r[2] else {}, "created_at": str(r[3])} for r in rows]
+        return resp(200, {"logs": logs})
 
     return resp(400, {"error": "Укажите action"})

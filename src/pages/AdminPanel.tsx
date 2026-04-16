@@ -4,20 +4,22 @@ import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
 import { invalidateSiteCache } from "@/hooks/useSiteData";
 
-import { Role, AccessUser, ROLE_META } from "./admin/adminTypes";
+import { Role, AccessUser, ROLE_META, normalizeRole } from "./admin/adminTypes";
 import AdminHome, { HomeLink, DEFAULT_LINKS } from "./admin/AdminHome";
 import AdminStaff, { StaffMember } from "./admin/AdminStaff";
 import AdminAccess from "./admin/AdminAccess";
 import AdminPassword from "./admin/AdminPassword";
+import AdminAuditLog, { AuditEntry } from "./admin/AdminAuditLog";
 
 const API = "https://functions.poehali.dev/ee0c9d49-3da0-4e2e-a2ab-1f68f29a1405";
 
-type Tab = "home" | "staff" | "access" | "password";
+type Tab = "home" | "staff" | "access" | "audit" | "password";
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "home",     label: "Главная",        icon: "Home" },
   { id: "staff",    label: "Контакты РС ОИ", icon: "Users" },
   { id: "access",   label: "Доступы",        icon: "Shield" },
+  { id: "audit",    label: "Журнал правок",  icon: "ClipboardList" },
   { id: "password", label: "Мой пароль",     icon: "KeyRound" },
 ];
 
@@ -46,8 +48,12 @@ export default function AdminPanel() {
   const [accessUsers, setAccessUsers] = useState<AccessUser[]>([]);
   const [accessLoading, setAccessLoading] = useState(false);
   const [newAccessNick, setNewAccessNick] = useState("");
-  const [newAccessRole, setNewAccessRole] = useState<Role>("deputy");
+  const [newAccessRole, setNewAccessRole] = useState<Role>("editor");
   const [accessMsg, setAccessMsg] = useState("");
+
+  // Audit log state
+  const [auditLogs, setAuditLogs] = useState<AuditEntry[]>([]);
+  const [auditLoading, setAuditLoading] = useState(false);
 
   // Password state
   const [pwCurrent, setPwCurrent] = useState("");
@@ -90,7 +96,15 @@ export default function AdminPanel() {
     }).finally(() => setAccessLoading(false));
   }, [authFetch]);
 
+  const loadAudit = useCallback(() => {
+    setAuditLoading(true);
+    authFetch(`${API}?action=audit_log`).then(r => r.json()).then(d => {
+      if (d.logs) setAuditLogs(d.logs);
+    }).finally(() => setAuditLoading(false));
+  }, [authFetch]);
+
   useEffect(() => { if (tab === "access" && me) loadAccess(); }, [tab, me, loadAccess]);
+  useEffect(() => { if (tab === "audit" && me) loadAudit(); }, [tab, me, loadAudit]);
 
   const logout = () => { playClickSound(); localStorage.clear(); navigate("/admin/login"); };
 
@@ -193,7 +207,7 @@ export default function AdminPanel() {
             </div>
             <div className="hidden md:block">
               <p className="text-sm font-medium leading-none">vk.ru/{me.nickname}</p>
-              <p className="text-xs text-zinc-500 mt-0.5">{me ? (ROLE_META[me.role]?.label ?? me.role) : ""}</p>
+              <p className="text-xs text-zinc-500 mt-0.5">{me ? (ROLE_META[normalizeRole(me.role as string)]?.label ?? me.role) : ""}</p>
             </div>
           </div>
           <button
@@ -264,6 +278,14 @@ export default function AdminPanel() {
               onRefresh={loadAccess}
               onAdd={addAccess}
               onRemove={removeAccess}
+            />
+          )}
+
+          {tab === "audit" && (
+            <AdminAuditLog
+              logs={auditLogs}
+              loading={auditLoading}
+              onRefresh={loadAudit}
             />
           )}
 

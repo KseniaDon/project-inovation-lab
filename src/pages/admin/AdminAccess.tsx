@@ -1,6 +1,6 @@
 import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
-import { Role, AccessUser, ROLE_HIERARCHY, ROLE_META, canManage, canAddUsers } from "./adminTypes";
+import { Role, AccessUser, ROLE_HIERARCHY, ROLE_META, canManage, canAddUsers, normalizeRole } from "./adminTypes";
 
 interface Props {
   me: { nickname: string; role: Role };
@@ -24,12 +24,8 @@ export default function AdminAccess({
   accessMsg,
   onRefresh, onAdd, onRemove,
 }: Props) {
-  // Поддержка старых ролей из localStorage до перелогина
-  const rawRole = me.role as string;
-  const myRole: Role = (ROLE_HIERARCHY.includes(rawRole as Role) ? rawRole : rawRole === "super_admin" ? "admin" : "deputy") as Role;
+  const myRole = normalizeRole(me.role as string);
   const canAdd = canAddUsers(myRole);
-
-  // Роли которые текущий пользователь может назначать (строго ниже своей)
   const assignableRoles = ROLE_HIERARCHY.filter(r => canManage(myRole, r));
 
   return (
@@ -52,8 +48,9 @@ export default function AdminAccess({
       ) : (
         <div className="flex flex-col gap-3 mb-6">
           {accessUsers.map((u) => {
-            const meta = ROLE_META[u.role] ?? { label: u.role, short: u.role, color: "text-zinc-400", bg: "bg-zinc-800" };
-            const canDelete = u.nickname !== me.nickname && canManage(myRole, u.role);
+            const normRole = normalizeRole(u.role as string);
+            const meta = ROLE_META[normRole] ?? { label: u.role, hospitalLabel: u.role, short: u.role, color: "text-zinc-400", bg: "bg-zinc-800" };
+            const canDelete = u.nickname !== me.nickname && canManage(myRole, normRole);
             return (
               <div key={u.nickname} className="border border-zinc-800 p-4 flex items-center gap-3">
                 <div className="w-9 h-9 bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
@@ -66,16 +63,19 @@ export default function AdminAccess({
                   </a>
                   <p className="text-xs text-zinc-500">{u.created_by ? `Добавил: ${u.created_by}` : "Основатель"}</p>
                 </div>
-                <span className={`text-xs px-2 py-1 font-semibold uppercase tracking-wider shrink-0 ${meta.bg} ${meta.color}`}>
-                  {meta.short}
-                </span>
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <span className={`text-xs px-2 py-0.5 font-semibold uppercase tracking-wider ${meta.bg} ${meta.color}`}>
+                    {meta.label}
+                  </span>
+                  <span className="text-xs text-zinc-600">{meta.hospitalLabel}</span>
+                </div>
                 {canDelete ? (
                   <button onClick={() => { playClickSound(); onRemove(u.nickname); }}
-                    className="text-zinc-600 hover:text-red-500 transition-colors shrink-0">
+                    className="text-zinc-600 hover:text-red-500 transition-colors shrink-0 ml-1">
                     <Icon name="UserX" size={15} />
                   </button>
                 ) : (
-                  <div className="w-[15px] shrink-0" />
+                  <div className="w-[15px] shrink-0 ml-1" />
                 )}
               </div>
             );
@@ -105,7 +105,7 @@ export default function AdminAccess({
                 className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors"
               >
                 {assignableRoles.map(r => (
-                  <option key={r} value={r}>{ROLE_META[r].label}</option>
+                  <option key={r} value={r}>{ROLE_META[r].label} ({ROLE_META[r].hospitalLabel})</option>
                 ))}
               </select>
             </div>
@@ -120,11 +120,11 @@ export default function AdminAccess({
             </button>
           </div>
           <div className="mt-4 pt-4 border-t border-zinc-800 text-xs text-zinc-500 flex flex-col gap-1.5">
-            <p><span className="text-blue-400 font-semibold">Админ / Куратор</span> — полный доступ, управляют всеми</p>
-            <p><span className="text-green-400 font-semibold">Главный Врач</span> — управляет Куратором ОИ и ниже</p>
-            <p><span className="text-red-400 font-semibold">Куратор ОИ</span> — управляет ЗОИ и ЗЗОИ</p>
-            <p><span className="text-purple-400 font-semibold">ЗОИ</span> — управляет ЗЗОИ</p>
-            <p><span className="text-orange-400 font-semibold">ЗЗОИ</span> — только просмотр кабинета</p>
+            <p><span className="text-blue-400 font-semibold">Суперадмин (Куратор)</span> — полный доступ, управляет всеми</p>
+            <p><span className="text-green-400 font-semibold">Главный Админ (ГВ)</span> — управляет Админом, Модератором, Редактором</p>
+            <p><span className="text-red-400 font-semibold">Админ (Куратор)</span> — управляет Модератором, Редактором</p>
+            <p><span className="text-purple-400 font-semibold">Модератор (ЗОИ)</span> — управляет Редактором</p>
+            <p><span className="text-orange-400 font-semibold">Редактор (ЗЗОИ)</span> — только просмотр кабинета</p>
           </div>
         </div>
       )}
