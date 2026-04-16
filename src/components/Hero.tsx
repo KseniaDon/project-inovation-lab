@@ -182,23 +182,49 @@ export default function Hero() {
           animate="visible"
           custom={0.75}
         >
+          {/* Главная кнопка */}
           <button
             onClick={() => { playClickSound(); navigate("/learn"); }}
-            className="hover-pulse-outline group relative flex items-center justify-center gap-3 bg-red-700 hover:bg-red-800 text-white w-full sm:w-auto px-8 py-3.5 sm:py-4 text-sm uppercase tracking-widest font-bold transition-all duration-300 shadow-lg shadow-red-900/30 hover:shadow-red-800/50 hover:scale-105"
+            className="hover-pulse-outline group relative flex items-center justify-center gap-3 text-white w-full sm:w-auto px-8 py-3.5 sm:py-4 text-sm uppercase tracking-widest font-bold transition-all duration-300 hover:scale-105"
+            style={{
+              background: "linear-gradient(160deg, rgba(185,28,28,0.85) 0%, rgba(127,14,14,0.9) 100%)",
+              border: "1px solid rgba(255,255,255,0.15)",
+              boxShadow: "0 0 18px rgba(220,38,38,0.35), inset 0 1px 0 rgba(255,255,255,0.1)",
+              backdropFilter: "blur(6px)",
+            }}
           >
+            {/* Угловые акценты */}
+            <span className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/40" />
+            <span className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/40" />
+            <span className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/40" />
+            <span className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/40" />
             <Icon name="BookOpen" size={18} className="relative transition-transform duration-300 group-hover:-translate-y-0.5" />
             <span className="relative">{heroData.buttonText}</span>
             <Icon name="ArrowRight" size={16} className="relative transition-transform duration-300 group-hover:translate-x-1" />
           </button>
+
+          {/* Кнопка РС ОИ */}
           <button
             onClick={() => {
               playClickSound();
               const hasSession = localStorage.getItem("admin_token") && localStorage.getItem("admin_nickname");
               navigate(hasSession ? "/admin" : "/admin/login");
             }}
-            className="hover-pulse-outline flex items-center justify-center gap-2 border border-white/30 hover:border-white/60 text-white/60 hover:text-white w-full sm:w-auto px-6 py-3.5 sm:py-4 text-xs uppercase tracking-widest font-medium transition-all duration-300"
+            className="hover-pulse-outline group relative flex items-center justify-center gap-2 text-white/65 hover:text-white/90 w-full sm:w-auto px-6 py-3.5 sm:py-4 text-xs uppercase tracking-widest font-medium transition-all duration-300"
+            style={{
+              background: "linear-gradient(160deg, rgba(0,0,0,0.45) 0%, rgba(10,10,10,0.35) 100%)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              backdropFilter: "blur(6px)",
+            }}
           >
-            <Icon name="UserCog" size={16} />Для РС ОИ
+            <span className="absolute top-0 left-0 w-2.5 h-2.5 border-t border-l border-white/30" />
+            <span className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-white/30" />
+            <span className="absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l border-white/30" />
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r border-white/30" />
+            <div className="w-1.5 h-1.5 rotate-45 bg-red-600/70 shrink-0" />
+            <Icon name="UserCog" size={15} />
+            <span>Для РС ОИ</span>
+            <div className="w-1.5 h-1.5 rotate-45 bg-red-600/70 shrink-0" />
           </button>
         </motion.div>
       </div>
