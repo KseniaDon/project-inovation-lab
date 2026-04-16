@@ -88,10 +88,13 @@ export default function AdminPanel() {
 
   useEffect(() => {
     if (!token()) { navigate("/admin/login"); return; }
-    authFetch(`${API}?action=me`).then(r => r.json()).then(d => {
-      if (d.nickname) setMe({ nickname: d.nickname, role: d.role });
-      else navigate("/admin/login");
-    }).catch(() => navigate("/admin/login"));
+    authFetch(`${API}?action=me`)
+      .then(r => r.json())
+      .then(d => {
+        if (d.nickname) setMe({ nickname: d.nickname, role: d.role });
+        else if (d.error === "Unauthorized") navigate("/admin/login");
+      })
+      .catch(() => {});
   }, [navigate, authFetch]);
 
   useEffect(() => {
@@ -196,7 +199,7 @@ export default function AdminPanel() {
             </div>
           </div>
           <button
-            onClick={() => { playClickSound(); window.open("/", "_blank"); }}
+            onClick={() => { playClickSound(); navigate("/"); }}
             className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 transition-colors"
           >
             <Icon name="Globe" size={13} />
