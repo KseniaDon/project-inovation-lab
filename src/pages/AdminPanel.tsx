@@ -234,34 +234,34 @@ export default function AdminPanel() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white flex flex-col">
+    <div className="min-h-screen bg-zinc-950 text-white flex flex-col font-[Montserrat,sans-serif]">
       {/* Top bar */}
-      <div className="border-b border-zinc-800 px-4 md:px-6 py-3 flex items-center justify-between shrink-0">
+      <div className="border-b border-zinc-800 px-4 md:px-8 py-4 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-2 h-2 bg-red-600 rounded-full" />
           <span className="text-xs uppercase tracking-widest text-zinc-400 hidden sm:block">ЦГБ Невский</span>
-          <span className="text-sm font-semibold">Панель управления</span>
+          <span className="text-base font-bold tracking-wide">Панель управления</span>
         </div>
-        <div className="flex items-center gap-2 md:gap-3">
+        <div className="flex items-center gap-2 md:gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
-              <Icon name="User" size={13} className="text-zinc-400" />
+            <div className="w-8 h-8 bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
+              <Icon name="User" size={14} className="text-zinc-400" />
             </div>
             <div className="hidden md:block">
-              <p className="text-sm font-medium leading-none">vk.ru/{me.nickname}</p>
-              <p className="text-xs text-zinc-500 mt-0.5">{me ? (ROLE_META[normalizeRole(me.role as string)]?.label ?? me.role) : ""}</p>
+              <p className="text-sm font-semibold leading-none">vk.ru/{me.nickname}</p>
+              <p className="text-xs text-zinc-500 mt-0.5 tracking-wide">{me ? (ROLE_META[normalizeRole(me.role as string)]?.label ?? me.role) : ""}</p>
             </div>
           </div>
           <button
             onClick={() => { playClickSound(); navigate("/"); }}
-            className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 transition-colors"
+            className="flex items-center gap-1.5 text-xs px-4 py-2 border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 transition-colors uppercase tracking-widest font-medium"
           >
             <Icon name="Globe" size={13} />
             <span className="hidden sm:inline">На сайт</span>
           </button>
           <button
             onClick={logout}
-            className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-red-800 bg-red-950/40 text-red-400 hover:bg-red-900/60 hover:text-red-300 transition-colors"
+            className="flex items-center gap-1.5 text-xs px-4 py-2 border border-red-800 bg-red-950/40 text-red-400 hover:bg-red-900/60 hover:text-red-300 transition-colors uppercase tracking-widest font-medium"
           >
             <Icon name="LogOut" size={13} />
             <span className="hidden sm:inline">Выйти</span>
@@ -271,18 +271,19 @@ export default function AdminPanel() {
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-14 md:w-52 border-r border-zinc-800 flex flex-col py-2 shrink-0 overflow-y-auto">
+        <aside className="w-14 md:w-56 border-r border-zinc-800 flex flex-col py-3 shrink-0 overflow-y-auto">
           {TABS.filter(t => t.id !== "staff" || canEditContacts).map(t => (
             <button key={t.id} onClick={() => { playClickSound(); setTab(t.id); }}
-              className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${tab === t.id ? "bg-zinc-800 text-white border-r-2 border-red-600" : "text-zinc-400 hover:text-white hover:bg-zinc-900"}`}>
-              <Icon name={t.icon as "Home"} size={15} className="shrink-0" />
-              <span className="hidden md:block text-sm">{t.label}</span>
+              className={`flex items-center gap-3 px-4 py-3 text-sm transition-colors text-left ${tab === t.id ? "bg-zinc-800 text-white border-r-2 border-red-600 font-semibold" : "text-zinc-400 hover:text-white hover:bg-zinc-900"}`}>
+              <Icon name={t.icon as "Home"} size={16} className="shrink-0" />
+              <span className="hidden md:block text-sm tracking-wide">{t.label}</span>
             </button>
           ))}
         </aside>
 
         {/* Content */}
-        <main className="flex-1 overflow-y-auto p-5 md:p-8">
+        <main className="flex-1 overflow-y-auto p-5 md:p-10">
+          <div className="max-w-3xl mx-auto">
           {tab === "home" && (
             <AdminHome
               links={links}
@@ -360,6 +361,7 @@ export default function AdminPanel() {
               onChangePassword={changePassword}
             />
           )}
+          </div>
         </main>
       </div>
     </div>
