@@ -233,136 +233,108 @@ export default function AdminPanel() {
     );
   }
 
+  const visibleTabs = TABS.filter(t => t.id !== "staff" || canEditContacts);
+
+  const TabContent = () => (
+    <>
+      {tab === "home" && (
+        <AdminHome links={links} linksSaving={linksSaving} linksSaved={linksSaved}
+          onUpdateLink={updateLink} onRemoveLink={removeLink} onAddLink={addLink} onSaveLinks={saveLinks} />
+      )}
+      {tab === "whats_new" && (
+        <AdminWhatsNew entries={whatsNew} saving={whatsNewSaving} saved={whatsNewSaved}
+          canEdit={canEditWhatsNew} onUpdate={updateWhatsNew} onRemove={removeWhatsNew} onAdd={addWhatsNew} onSave={saveWhatsNew} />
+      )}
+      {tab === "staff" && (
+        <AdminStaff staff={staff} staffSaving={staffSaving} staffSaved={staffSaved}
+          onUpdate={updateMember} onRemove={removeMember} onAdd={addMember} onSave={saveStaff} />
+      )}
+      {tab === "access" && (
+        <AdminAccess me={me} accessUsers={accessUsers} accessLoading={accessLoading}
+          newAccessNick={newAccessNick} setNewAccessNick={setNewAccessNick}
+          newAccessRole={newAccessRole} setNewAccessRole={setNewAccessRole}
+          newHospitalRole={newHospitalRole} setNewHospitalRole={setNewHospitalRole}
+          accessMsg={accessMsg} onRefresh={loadAccess} onAdd={addAccess} onRemove={removeAccess} onEdit={editAccess} />
+      )}
+      {tab === "audit" && (
+        <AdminAuditLog logs={auditLogs} loading={auditLoading} onRefresh={loadAudit} />
+      )}
+      {tab === "password" && (
+        <AdminPassword pwCurrent={pwCurrent} setPwCurrent={setPwCurrent}
+          pwNew={pwNew} setPwNew={setPwNew} pwConfirm={pwConfirm} setPwConfirm={setPwConfirm}
+          pwMsg={pwMsg} pwLoading={pwLoading} onChangePassword={changePassword} />
+      )}
+    </>
+  );
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white flex flex-col font-[Montserrat,sans-serif]">
       {/* Top bar */}
-      <div className="border-b border-zinc-800 px-4 md:px-8 py-4 flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="w-2 h-2 bg-red-600 rounded-full" />
-          <span className="text-xs uppercase tracking-widest text-zinc-400 hidden sm:block">ЦГБ Невский</span>
-          <span className="text-base font-bold tracking-wide">Панель управления</span>
+      <div className="border-b border-zinc-800 px-4 md:px-8 py-3 flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-red-600 rounded-full shrink-0" />
+          <span className="text-sm font-bold tracking-wide">Панель управления</span>
+          <span className="text-xs uppercase tracking-widest text-zinc-500 hidden sm:block ml-1">· ЦГБ Невский</span>
         </div>
-        <div className="flex items-center gap-2 md:gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
-              <Icon name="User" size={14} className="text-zinc-400" />
+        <div className="flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-2 mr-1">
+            <div className="w-7 h-7 bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
+              <Icon name="User" size={13} className="text-zinc-400" />
             </div>
-            <div className="hidden md:block">
-              <p className="text-sm font-semibold leading-none">vk.ru/{me.nickname}</p>
-              <p className="text-xs text-zinc-500 mt-0.5 tracking-wide">{me ? (ROLE_META[normalizeRole(me.role as string)]?.label ?? me.role) : ""}</p>
+            <div>
+              <p className="text-xs font-semibold leading-none">vk.ru/{me.nickname}</p>
+              <p className="text-[10px] text-zinc-500 mt-0.5 tracking-wide">{ROLE_META[normalizeRole(me.role as string)]?.label ?? me.role}</p>
             </div>
           </div>
           <button
             onClick={() => { playClickSound(); navigate("/"); }}
-            className="flex items-center gap-1.5 text-xs px-4 py-2 border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 transition-colors uppercase tracking-widest font-medium"
+            className="flex items-center gap-1.5 text-xs px-3 py-2 border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 transition-colors"
           >
             <Icon name="Globe" size={13} />
-            <span className="hidden sm:inline">На сайт</span>
+            <span className="hidden sm:inline tracking-wide">На сайт</span>
           </button>
           <button
             onClick={logout}
-            className="flex items-center gap-1.5 text-xs px-4 py-2 border border-red-800 bg-red-950/40 text-red-400 hover:bg-red-900/60 hover:text-red-300 transition-colors uppercase tracking-widest font-medium"
+            className="flex items-center gap-1.5 text-xs px-3 py-2 border border-red-800 bg-red-950/40 text-red-400 hover:bg-red-900/60 hover:text-red-300 transition-colors"
           >
             <Icon name="LogOut" size={13} />
-            <span className="hidden sm:inline">Выйти</span>
+            <span className="hidden sm:inline tracking-wide">Выйти</span>
           </button>
         </div>
       </div>
 
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
-        <aside className="w-14 md:w-56 border-r border-zinc-800 flex flex-col py-3 shrink-0 overflow-y-auto">
-          {TABS.filter(t => t.id !== "staff" || canEditContacts).map(t => (
+      {/* Desktop layout: sidebar + content */}
+      <div className="hidden md:flex flex-1 overflow-hidden">
+        <aside className="w-56 border-r border-zinc-800 flex flex-col py-3 shrink-0 overflow-y-auto">
+          {visibleTabs.map(t => (
             <button key={t.id} onClick={() => { playClickSound(); setTab(t.id); }}
-              className={`flex items-center gap-3 px-4 py-3 text-sm transition-colors text-left ${tab === t.id ? "bg-zinc-800 text-white border-r-2 border-red-600 font-semibold" : "text-zinc-400 hover:text-white hover:bg-zinc-900"}`}>
+              className={`flex items-center gap-3 px-5 py-3 text-sm transition-colors text-left ${tab === t.id ? "bg-zinc-800 text-white border-r-2 border-red-600 font-semibold" : "text-zinc-400 hover:text-white hover:bg-zinc-900"}`}>
               <Icon name={t.icon as "Home"} size={16} className="shrink-0" />
-              <span className="hidden md:block text-sm tracking-wide">{t.label}</span>
+              <span className="tracking-wide">{t.label}</span>
             </button>
           ))}
         </aside>
-
-        {/* Content */}
-        <main className="flex-1 overflow-y-auto p-5 md:p-10">
+        <main className="flex-1 overflow-y-auto p-8">
           <div className="max-w-3xl mx-auto">
-          {tab === "home" && (
-            <AdminHome
-              links={links}
-              linksSaving={linksSaving}
-              linksSaved={linksSaved}
-              onUpdateLink={updateLink}
-              onRemoveLink={removeLink}
-              onAddLink={addLink}
-              onSaveLinks={saveLinks}
-            />
-          )}
-
-          {tab === "whats_new" && (
-            <AdminWhatsNew
-              entries={whatsNew}
-              saving={whatsNewSaving}
-              saved={whatsNewSaved}
-              canEdit={canEditWhatsNew}
-              onUpdate={updateWhatsNew}
-              onRemove={removeWhatsNew}
-              onAdd={addWhatsNew}
-              onSave={saveWhatsNew}
-            />
-          )}
-
-          {tab === "staff" && (
-            <AdminStaff
-              staff={staff}
-              staffSaving={staffSaving}
-              staffSaved={staffSaved}
-              onUpdate={updateMember}
-              onRemove={removeMember}
-              onAdd={addMember}
-              onSave={saveStaff}
-            />
-          )}
-
-          {tab === "access" && (
-            <AdminAccess
-              me={me}
-              accessUsers={accessUsers}
-              accessLoading={accessLoading}
-              newAccessNick={newAccessNick}
-              setNewAccessNick={setNewAccessNick}
-              newAccessRole={newAccessRole}
-              setNewAccessRole={setNewAccessRole}
-              newHospitalRole={newHospitalRole}
-              setNewHospitalRole={setNewHospitalRole}
-              accessMsg={accessMsg}
-              onRefresh={loadAccess}
-              onAdd={addAccess}
-              onRemove={removeAccess}
-              onEdit={editAccess}
-            />
-          )}
-
-          {tab === "audit" && (
-            <AdminAuditLog
-              logs={auditLogs}
-              loading={auditLoading}
-              onRefresh={loadAudit}
-            />
-          )}
-
-          {tab === "password" && (
-            <AdminPassword
-              pwCurrent={pwCurrent}
-              setPwCurrent={setPwCurrent}
-              pwNew={pwNew}
-              setPwNew={setPwNew}
-              pwConfirm={pwConfirm}
-              setPwConfirm={setPwConfirm}
-              pwMsg={pwMsg}
-              pwLoading={pwLoading}
-              onChangePassword={changePassword}
-            />
-          )}
+            <TabContent />
           </div>
         </main>
+      </div>
+
+      {/* Mobile layout: content + bottom nav */}
+      <div className="flex md:hidden flex-col flex-1 overflow-hidden">
+        <main className="flex-1 overflow-y-auto p-4 pb-24">
+          <TabContent />
+        </main>
+        <nav className="fixed bottom-0 left-0 right-0 z-50 bg-zinc-900 border-t border-zinc-800 flex items-stretch">
+          {visibleTabs.map(t => (
+            <button key={t.id} onClick={() => { playClickSound(); setTab(t.id); }}
+              className={`flex-1 flex flex-col items-center justify-center py-2 gap-0.5 transition-colors min-w-0 ${tab === t.id ? "text-red-400 bg-zinc-800" : "text-zinc-500 hover:text-zinc-300"}`}>
+              <Icon name={t.icon as "Home"} size={18} className="shrink-0" />
+              <span className="text-[9px] uppercase tracking-wide leading-tight truncate w-full text-center px-0.5">{t.label}</span>
+            </button>
+          ))}
+        </nav>
       </div>
     </div>
   );

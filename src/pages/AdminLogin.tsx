@@ -18,9 +18,7 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    // Не делаем автоматический редирект — пользователь сам нажмёт на панель
-  }, []);
+  useEffect(() => {}, []);
 
   const cleanNick = (v: string) => {
     let s = v.trim().toLowerCase();
@@ -30,7 +28,6 @@ export default function AdminLogin() {
     return s.replace(/^\/+|\/+$/g, "");
   };
 
-  // Шаг 1: проверяем никнейм
   const checkNick = async () => {
     playClickSound();
     const nick = cleanNick(nickname);
@@ -44,11 +41,7 @@ export default function AdminLogin() {
         body: JSON.stringify({ nickname: nick }),
       });
       const data = await r.json();
-      if (r.status === 403 || data.error === "denied") {
-        setError("denied");
-        setLoading(false);
-        return;
-      }
+      if (r.status === 403 || data.error === "denied") { setError("denied"); setLoading(false); return; }
       if (!r.ok) { setError(data.error || "Ошибка"); setLoading(false); return; }
       setNickname(nick);
       setUserRole(data.role);
@@ -57,7 +50,6 @@ export default function AdminLogin() {
     setLoading(false);
   };
 
-  // Шаг 2а: создаём пароль
   const createPassword = async () => {
     playClickSound();
     if (password.length < 6) { setError("Пароль должен быть не менее 6 символов"); return; }
@@ -77,7 +69,6 @@ export default function AdminLogin() {
     setLoading(false);
   };
 
-  // Шаг 2б: входим с паролем
   const login = async () => {
     playClickSound();
     if (!password) return;
@@ -105,128 +96,169 @@ export default function AdminLogin() {
 
   if (error === "denied") {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center px-4">
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4 font-[Montserrat,sans-serif]">
         <div className="w-full max-w-sm text-center">
-          <div className="text-6xl mb-6">🚫</div>
-          <p className="text-xs uppercase tracking-widest text-red-600 mb-2">ЦГБ Невский</p>
-          <h1 className="text-xl font-bold text-white mb-3">Ой, а вы не администратор…</h1>
-          <p className="text-zinc-500 text-sm mb-8">Этот никнейм ВКонтакте не имеет доступа к панели управления.</p>
-          <button onClick={() => { playClickSound(); setError(""); setNickname(""); setStep("nickname"); }}
-            className="text-zinc-400 hover:text-white text-sm transition-colors mr-6">Попробовать снова</button>
-          <button onClick={() => { playClickSound(); navigate("/"); }}
-            className="text-zinc-600 hover:text-white text-sm transition-colors">На главную</button>
+          <div className="w-16 h-16 bg-red-950/50 border border-red-800 flex items-center justify-center mx-auto mb-6">
+            <Icon name="ShieldOff" size={28} className="text-red-500" />
+          </div>
+          <p className="text-xs uppercase tracking-widest text-red-600 mb-3">Доступ закрыт</p>
+          <h1 className="text-xl font-bold text-white mb-2">Нет доступа к панели</h1>
+          <p className="text-zinc-500 text-sm mb-8 leading-relaxed">Этот никнейм ВКонтакте не имеет доступа к панели управления.</p>
+          <div className="flex flex-col gap-2">
+            <button onClick={() => { playClickSound(); setError(""); setNickname(""); setStep("nickname"); }}
+              className="w-full py-3 border border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-500 text-sm transition-colors uppercase tracking-widest">
+              Попробовать снова
+            </button>
+            <button onClick={() => { playClickSound(); navigate("/"); }}
+              className="w-full py-3 text-zinc-600 hover:text-zinc-400 text-sm transition-colors">
+              На главную
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        <button onClick={() => { playClickSound(); navigate("/"); }}
-          className="flex items-center gap-2 text-zinc-500 hover:text-white text-sm transition-colors mb-8">
-          ← На главную
-        </button>
+    <div
+      className="min-h-screen flex items-center justify-center px-4 font-[Montserrat,sans-serif] relative"
+      style={{ background: "linear-gradient(135deg, #09090b 0%, #18080a 50%, #09090b 100%)" }}
+    >
+      {/* Декоративный фон */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-red-900/10 rounded-full blur-3xl" />
+      </div>
 
-        <div className="text-center mb-8">
-          <p className="text-xs uppercase tracking-widest text-red-600 mb-2">ЦГБ Невский</p>
-          <h1 className="text-2xl font-bold text-white tracking-tight mb-2">Кабинет администратора</h1>
-          {step === "nickname" && <p className="text-zinc-500 text-sm">Введите ваш никнейм ВКонтакте</p>}
-          {step === "create_password" && (
-            <div>
-              <p className="text-zinc-400 text-sm">vk.ru/<span className="text-white font-semibold">{nickname}</span></p>
-              <p className="text-zinc-500 text-xs mt-1">{roleLabel} · Придумайте пароль для входа</p>
+      <div className="relative w-full max-w-sm">
+        {/* Лого */}
+        <div className="flex flex-col items-center mb-8">
+          <img
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/5538aeba-2e9c-4083-8eca-e47726470bbe.png"
+            alt="Герб"
+            className="w-16 h-16 object-contain mb-4"
+            style={{ mixBlendMode: "screen", filter: "brightness(1.1)" }}
+          />
+          <p className="text-xs uppercase tracking-widest text-red-600 mb-1">ЦГБ Невский</p>
+          <h1 className="text-xl font-bold text-white tracking-tight text-center">
+            {step === "nickname" && "Кабинет администратора"}
+            {step === "create_password" && "Создайте пароль"}
+            {step === "enter_password" && "Добро пожаловать"}
+          </h1>
+          {step !== "nickname" && (
+            <div className="mt-2 text-center">
+              <span className="text-zinc-400 text-sm">vk.ru/<span className="text-white font-semibold">{nickname}</span></span>
+              <p className="text-zinc-500 text-xs mt-0.5">{roleLabel}</p>
             </div>
           )}
-          {step === "enter_password" && (
-            <div>
-              <p className="text-zinc-400 text-sm">vk.ru/<span className="text-white font-semibold">{nickname}</span></p>
-              <p className="text-zinc-500 text-xs mt-1">{roleLabel}</p>
-            </div>
+          {step === "nickname" && (
+            <p className="text-zinc-500 text-sm mt-1">Введите ваш никнейм ВКонтакте</p>
           )}
         </div>
 
+        {/* Ошибка */}
         {error && error !== "denied" && (
-          <div className="bg-red-950/40 border border-red-800/50 text-red-400 text-sm px-4 py-3 mb-5 text-center">
+          <div className="flex items-center gap-2 bg-red-950/40 border border-red-800/60 text-red-400 text-sm px-4 py-3 mb-5">
+            <Icon name="AlertCircle" size={15} className="shrink-0" />
             {error}
           </div>
         )}
 
-        {/* ── Шаг 1: никнейм ── */}
+        {/* Шаг 1: никнейм */}
         {step === "nickname" && (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm select-none">vk.ru/</span>
-              <input type="text" placeholder="nickname" value={nickname}
+              <input
+                type="text" placeholder="nickname" value={nickname}
                 onChange={e => setNickname(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && checkNick()}
                 autoComplete="off" autoCapitalize="none"
-                className="w-full bg-zinc-900 border border-zinc-700 text-white pl-14 pr-4 py-3.5 text-sm outline-none focus:border-red-600 transition-colors" />
+                className="w-full bg-zinc-900/80 border border-zinc-700 text-white pl-14 pr-4 py-4 text-sm outline-none focus:border-red-600 transition-colors"
+              />
             </div>
-            <button onClick={checkNick} disabled={loading || !nickname.trim()}
-              className="w-full bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white py-3.5 text-sm uppercase tracking-widest font-semibold transition-colors">
-              {loading ? "Проверяю…" : "Продолжить"}
+            <button
+              onClick={checkNick} disabled={loading || !nickname.trim()}
+              className="w-full bg-red-700 hover:bg-red-600 disabled:opacity-40 text-white py-4 text-sm uppercase tracking-widest font-semibold transition-colors flex items-center justify-center gap-2"
+            >
+              {loading ? <><Icon name="Loader" size={15} className="animate-spin" />Проверяю…</> : "Продолжить"}
             </button>
           </div>
         )}
 
-        {/* ── Шаг 2а: создание пароля ── */}
+        {/* Шаг 2а: создание пароля */}
         {step === "create_password" && (
-          <div className="flex flex-col gap-4">
-            <div className="bg-sky-950/30 border border-sky-700/40 px-4 py-3 text-sm text-sky-300 text-center">
-              Первый вход — придумайте пароль, который закрепится за вашим никнеймом
+          <div className="flex flex-col gap-3">
+            <div className="bg-sky-950/30 border border-sky-700/40 px-4 py-3 text-xs text-sky-300 flex items-start gap-2">
+              <Icon name="Info" size={14} className="shrink-0 mt-0.5" />
+              Первый вход — придумайте пароль для дальнейших входов
             </div>
             <div className="relative">
-              <input type={showPw ? "text" : "password"} placeholder="Придумайте пароль (от 6 символов)"
+              <input
+                type={showPw ? "text" : "password"} placeholder="Пароль (не менее 6 символов)"
                 value={password} onChange={e => setPassword(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && createPassword()}
-                className="w-full bg-zinc-900 border border-zinc-700 text-white px-4 pr-11 py-3.5 text-sm outline-none focus:border-red-600 transition-colors" />
+                className="w-full bg-zinc-900/80 border border-zinc-700 text-white px-4 pr-11 py-4 text-sm outline-none focus:border-red-600 transition-colors"
+              />
               <button onClick={() => setShowPw(v => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors">
-                <Icon name={showPw ? "EyeOff" : "Eye"} size={16} />
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors p-1">
+                <Icon name={showPw ? "EyeOff" : "Eye"} size={15} />
               </button>
             </div>
-            <input type={showPw ? "text" : "password"} placeholder="Повторите пароль"
+            <input
+              type={showPw ? "text" : "password"} placeholder="Повторите пароль"
               value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)}
               onKeyDown={e => e.key === "Enter" && createPassword()}
-              className="w-full bg-zinc-900 border border-zinc-700 text-white px-4 py-3.5 text-sm outline-none focus:border-red-600 transition-colors" />
-            <button onClick={createPassword} disabled={loading || !password || !passwordConfirm}
-              className="w-full bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white py-3.5 text-sm uppercase tracking-widest font-semibold transition-colors">
-              {loading ? "Сохраняю…" : "Установить пароль"}
+              className="w-full bg-zinc-900/80 border border-zinc-700 text-white px-4 py-4 text-sm outline-none focus:border-red-600 transition-colors"
+            />
+            <button
+              onClick={createPassword} disabled={loading || !password || !passwordConfirm}
+              className="w-full bg-red-700 hover:bg-red-600 disabled:opacity-40 text-white py-4 text-sm uppercase tracking-widest font-semibold transition-colors flex items-center justify-center gap-2"
+            >
+              {loading ? <><Icon name="Loader" size={15} className="animate-spin" />Сохраняю…</> : "Установить пароль"}
             </button>
-            <button onClick={() => { setStep("nickname"); setError(""); }}
-              className="text-zinc-600 hover:text-zinc-400 text-xs text-center transition-colors">
-              ← Изменить никнейм
+            <button onClick={() => { playClickSound(); setStep("nickname"); setPassword(""); setPasswordConfirm(""); }}
+              className="text-zinc-500 hover:text-zinc-300 text-xs text-center transition-colors py-1">
+              ← Назад
             </button>
           </div>
         )}
 
-        {/* ── Шаг 2б: ввод пароля ── */}
+        {/* Шаг 2б: ввод пароля */}
         {step === "enter_password" && (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
             <div className="relative">
-              <input type={showPw ? "text" : "password"} placeholder="Пароль"
+              <input
+                type={showPw ? "text" : "password"} placeholder="Ваш пароль"
                 value={password} onChange={e => setPassword(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && login()}
                 autoFocus
-                className="w-full bg-zinc-900 border border-zinc-700 text-white px-4 pr-11 py-3.5 text-sm outline-none focus:border-red-600 transition-colors" />
+                className="w-full bg-zinc-900/80 border border-zinc-700 text-white px-4 pr-11 py-4 text-sm outline-none focus:border-red-600 transition-colors"
+              />
               <button onClick={() => setShowPw(v => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors">
-                <Icon name={showPw ? "EyeOff" : "Eye"} size={16} />
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors p-1">
+                <Icon name={showPw ? "EyeOff" : "Eye"} size={15} />
               </button>
             </div>
-            <button onClick={login} disabled={loading || !password}
-              className="w-full bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white py-3.5 text-sm uppercase tracking-widest font-semibold transition-colors">
-              {loading ? "Вхожу…" : "Войти"}
+            <button
+              onClick={login} disabled={loading || !password}
+              className="w-full bg-red-700 hover:bg-red-600 disabled:opacity-40 text-white py-4 text-sm uppercase tracking-widest font-semibold transition-colors flex items-center justify-center gap-2"
+            >
+              {loading ? <><Icon name="Loader" size={15} className="animate-spin" />Вхожу…</> : <>Войти <Icon name="ArrowRight" size={15} /></>}
             </button>
-            <button onClick={() => { setStep("nickname"); setPassword(""); setError(""); }}
-              className="text-zinc-600 hover:text-zinc-400 text-xs text-center transition-colors">
-              ← Изменить никнейм
+            <button onClick={() => { playClickSound(); setStep("nickname"); setPassword(""); }}
+              className="text-zinc-500 hover:text-zinc-300 text-xs text-center transition-colors py-1">
+              ← Назад
             </button>
           </div>
         )}
 
-        <p className="text-zinc-700 text-xs text-center mt-6">Доступ только для сотрудников администрации ОИ</p>
+        <button
+          onClick={() => { playClickSound(); navigate("/"); }}
+          className="mt-8 flex items-center gap-1.5 text-zinc-600 hover:text-zinc-400 text-xs transition-colors mx-auto"
+        >
+          <Icon name="ArrowLeft" size={12} />
+          На главную
+        </button>
       </div>
     </div>
   );
