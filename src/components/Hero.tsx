@@ -11,53 +11,6 @@ const defaultHero = {
   buttonText: "Перейти к обучению",
 };
 
-const ANIM = `
-@keyframes bcn-l {
-  0%, 100% { opacity: 0.08; box-shadow: 0 0 2px 1px #60c8ff44; }
-  50%       { opacity: 1;    box-shadow: 0 0 6px 3px #60c8ff, 0 0 16px 7px #60c8ffaa, 0 0 28px 12px #60c8ff33; }
-}
-@keyframes bcn-r {
-  0%, 100% { opacity: 1;    box-shadow: 0 0 6px 3px #60c8ff, 0 0 16px 7px #60c8ffaa, 0 0 28px 12px #60c8ff33; }
-  50%       { opacity: 0.08; box-shadow: 0 0 2px 1px #60c8ff44; }
-}
-@keyframes hl {
-  0%, 60%    { opacity: 0; box-shadow: none; }
-  63%, 72%   { opacity: 1; box-shadow: 0 0 5px 2px #ffffffcc, 0 0 14px 5px #ffffff66; }
-  75%, 100%  { opacity: 0; box-shadow: none; }
-}
-`;
-
-/* Пара маячков на одной машине — мигают попеременно */
-function BeaconPair({ left, top }: { left: string; top: string }) {
-  const base: React.CSSProperties = {
-    position: "absolute",
-    width: 5,
-    height: 5,
-    borderRadius: "50%",
-    background: "#60c8ff",
-    transform: "translate(-50%, -50%)",
-  };
-  return (
-    <>
-      <div style={{ ...base, left, top, animation: "bcn-l 0.85s ease-in-out infinite" }} />
-      <div style={{ ...base, left: `calc(${left} + 8px)`, top, animation: "bcn-r 0.85s ease-in-out infinite" }} />
-    </>
-  );
-}
-
-/* Одна фара автобуса */
-function Headlight({ left, top, delay }: { left: string; top: string; delay: string }) {
-  return (
-    <div style={{
-      position: "absolute", left, top,
-      width: 7, height: 4, borderRadius: "2px",
-      background: "#ffffff",
-      transform: "translate(-50%, -50%)",
-      animation: `hl 4s ease-in-out ${delay} infinite`,
-    }} />
-  );
-}
-
 export default function Hero() {
   const heroData = useSiteData("hero", defaultHero);
   const container = useRef<HTMLDivElement>(null);
@@ -73,8 +26,6 @@ export default function Hero() {
       ref={container}
       className="relative flex items-center justify-center h-screen overflow-hidden"
     >
-      <style>{ANIM}</style>
-
       <motion.div
         style={{ y }}
         className="absolute inset-0 w-full h-full"
@@ -83,26 +34,8 @@ export default function Hero() {
           src="https://sun9-14.userapi.com/s/v1/ig2/oh9odkGbAUAKfEAPiLIT71AH3kiwlI3zMF9KfjDou7lJS_7y75faZ-icfreo8zqOMDQhKC2fFVRhwvh4aq7ag5Co.jpg?quality=95&as=32x17,48x25,72x38,108x57,160x85,240x127,360x191,480x255,540x286,640x340,720x382,1080x573,1280x679,1440x764,1919x1018&from=bu&u=EhFT96MoKQ5BFfhQ6lJs2ReadKrPQert1dApP3wydVA&cs=1919x0"
           alt="Background"
           className="w-full h-full object-cover"
-          style={{ filter: "grayscale(35%) brightness(0.42) sepia(20%) hue-rotate(-15deg) saturate(120%)" }}
+          style={{ filter: "grayscale(40%) brightness(0.45)" }}
         />
-
-        {/* Красный оттенок-оверлей */}
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "rgba(80, 0, 0, 0.18)",
-          pointerEvents: "none",
-        }} />
-
-        {/* Маячки АСМП — 3 машины, крыши (дальняя → ближняя, слева направо) */}
-        <BeaconPair left="33%" top="37%" />
-        <BeaconPair left="42%" top="35%" />
-        <BeaconPair left="52%" top="33%" />
-
-        {/* Фары автобуса — 4 лампочки */}
-        <Headlight left="63%"   top="58%" delay="0s" />
-        <Headlight left="65.5%" top="58%" delay="0.05s" />
-        <Headlight left="74%"   top="58%" delay="0.1s" />
-        <Headlight left="76.5%" top="58%" delay="0.15s" />
       </motion.div>
 
       <div className="absolute bottom-6 left-6 z-10 flex items-center gap-2 text-white/80">
