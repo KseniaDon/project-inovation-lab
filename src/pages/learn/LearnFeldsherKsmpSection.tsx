@@ -119,6 +119,38 @@ export default function LearnFeldsherKsmpSection({ go }: Props) {
                 className="w-full rounded-sm border border-border"
                 caption="Скриншот №2: АСМП."
               />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
+                <ImageLightbox
+                  src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/5c6b5b85-0907-48cd-9144-fed2c94d11c7.png"
+                  alt="АСМП вид спереди"
+                  className="w-full rounded-sm border border-border"
+                  caption="Скриншот №2.1: АСМП — вид спереди."
+                />
+                <ImageLightbox
+                  src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/5edfcb60-c4b4-45a3-9032-c63ef3dc6e68.png"
+                  alt="АСМП вид сбоку"
+                  className="w-full rounded-sm border border-border"
+                  caption="Скриншот №2.2: АСМП — вид сбоку."
+                />
+                <ImageLightbox
+                  src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/6bc78c44-1028-4279-a4a5-1519af756b6f.png"
+                  alt="АСМП ночью"
+                  className="w-full rounded-sm border border-border"
+                  caption="Скриншот №2.3: АСМП — ночью."
+                />
+                <ImageLightbox
+                  src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/2cec1ba6-3d6b-498c-9c49-35d9ca13a25e.png"
+                  alt="АСМП на трассе"
+                  className="w-full rounded-sm border border-border"
+                  caption="Скриншот №2.4: АСМП — на трассе."
+                />
+                <ImageLightbox
+                  src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/9a489192-c146-4c5d-9eae-5755200ad3dd.png"
+                  alt="АСМП у ворот"
+                  className="w-full rounded-sm border border-border"
+                  caption="Скриншот №2.5: АСМП — у ворот."
+                />
+              </div>
             </div>
 
             {/* 3. ВСМП */}
