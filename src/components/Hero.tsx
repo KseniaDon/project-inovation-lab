@@ -58,36 +58,26 @@ export default function Hero() {
       <div className="relative z-10 text-center text-white flex flex-col items-center gap-5 sm:gap-7 px-4 sm:px-6 w-full max-w-2xl mx-auto">
 
         {/* Логотипы */}
-        <div className="flex items-center gap-6 sm:gap-10 md:gap-16">
-          <motion.img
+        <motion.div
+          className="flex items-center"
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={0}
+        >
+          <img
             src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/c307311f-f41f-4364-96ce-f301e9e8e2a3.png"
             alt="Герб Санкт-Петербург Невский"
-            className="w-20 sm:w-32 md:w-40 lg:w-48 object-contain drop-shadow-[0_0_22px_rgba(220,38,38,0.4)]"
+            className="w-24 sm:w-36 md:w-44 lg:w-52 object-contain drop-shadow-[0_0_22px_rgba(220,38,38,0.4)]"
             style={{ mixBlendMode: "screen", filter: "brightness(1.15) contrast(1.08)" }}
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            custom={0}
           />
-          <motion.div
-            className="h-16 sm:h-24 md:h-32 w-px"
-            style={{ background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.5), transparent)" }}
-            variants={fadeIn}
-            initial="hidden"
-            animate="visible"
-            custom={0.3}
-          />
-          <motion.img
+          <img
             src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/5538aeba-2e9c-4083-8eca-e47726470bbe.png"
             alt="Герб Министерства Здравоохранения"
-            className="w-20 sm:w-32 md:w-40 lg:w-48 object-contain drop-shadow-[0_0_22px_rgba(220,38,38,0.4)]"
+            className="w-24 sm:w-36 md:w-44 lg:w-52 object-contain drop-shadow-[0_0_22px_rgba(220,38,38,0.4)]"
             style={{ mixBlendMode: "screen", filter: "brightness(1.15) contrast(1.08)" }}
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            custom={0.15}
           />
-        </div>
+        </motion.div>
 
         {/* Табличка */}
         <motion.div
