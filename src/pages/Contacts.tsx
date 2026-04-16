@@ -18,7 +18,7 @@ export default function Contacts() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <div className="max-w-2xl mx-auto px-6 py-16 w-full">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-16 w-full">
         <button
           onClick={() => navigate("/")}
           className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-10"
@@ -29,7 +29,7 @@ export default function Contacts() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
           <p className="text-xs uppercase tracking-widest text-red-600 mb-2">ЦГБ Невский</p>
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-10">Руководящий состав ОИ</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight mb-6 sm:mb-10">Руководящий состав ОИ</h1>
         </motion.div>
 
         <div className="flex flex-col gap-4">
@@ -47,19 +47,19 @@ export default function Contacts() {
             >
               <div className="flex items-stretch">
                 <div className={`w-1 shrink-0 ${person.badgeColor} group-hover:w-1.5 transition-all duration-300`} />
-                <div className="flex-1 px-6 py-5 flex flex-col gap-2">
-                  <p className="text-xs uppercase tracking-widest text-muted-foreground">
+                <div className="flex-1 px-4 sm:px-6 py-4 sm:py-5 flex flex-col gap-1.5 sm:gap-2 min-w-0">
+                  <p className="text-[10px] sm:text-xs uppercase tracking-widest text-muted-foreground">
                     {person.role}
                   </p>
-                  <p className="text-xl md:text-2xl font-bold text-foreground group-hover:text-red-500 transition-colors duration-300">
+                  <p className="text-base sm:text-xl md:text-2xl font-bold text-foreground group-hover:text-red-500 transition-colors duration-300 truncate">
                     {person.name}
                   </p>
                 </div>
-                <div className="flex items-center pr-4 md:pr-6 gap-2 md:gap-3 shrink-0">
-                  <Icon name="ExternalLink" size={15} className="text-muted-foreground group-hover:text-red-400 transition-colors duration-300" />
-                  <span className={`text-xs uppercase tracking-wider text-white px-2 md:px-2.5 py-1 ${person.badgeColor} font-semibold hidden sm:inline`}>
+                <div className="flex items-center pr-3 sm:pr-4 md:pr-6 gap-2 shrink-0">
+                  <span className={`text-xs uppercase tracking-wider text-white px-2 py-1 ${person.badgeColor} font-semibold hidden xs:inline sm:inline`}>
                     {person.badge}
                   </span>
+                  <Icon name="ExternalLink" size={14} className="text-muted-foreground group-hover:text-red-400 transition-colors duration-300" />
                 </div>
               </div>
             </motion.a>

@@ -56,17 +56,16 @@ export default function Learn() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Top bar */}
-      <div className="border-b border-border px-4 md:px-8 xl:px-12 py-3 md:py-4 flex items-center gap-3">
+      <div className="border-b border-border px-3 sm:px-4 md:px-8 xl:px-12 py-2.5 sm:py-3 md:py-4 flex items-center gap-2 sm:gap-3">
         <button
           onClick={() => { playClickSound(); navigate("/"); }}
-          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors shrink-0"
+          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors shrink-0 py-1"
         >
           <Icon name="ArrowLeft" size={16} />
           <span className="hidden sm:inline">На главную</span>
         </button>
         <div className="w-px h-4 bg-border hidden sm:block" />
         <p className="text-xs uppercase tracking-widest text-red-600 truncate">Отделение интернатуры</p>
-
       </div>
 
       <div className="flex flex-1 pb-16 md:pb-0">

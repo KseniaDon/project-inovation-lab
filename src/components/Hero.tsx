@@ -42,42 +42,42 @@ export default function Hero() {
         <span className="text-xs font-bold uppercase tracking-widest text-red-400">#1 MTA PROVINCE</span>
       </div>
 
-      <div className="relative z-10 text-center text-white flex flex-col items-center gap-6 px-6">
-        <div className="flex flex-col items-center gap-3">
-          <div className="flex items-center gap-6">
+      <div className="relative z-10 text-center text-white flex flex-col items-center gap-4 sm:gap-6 px-4 sm:px-6 w-full max-w-lg mx-auto">
+        <div className="flex flex-col items-center gap-2 sm:gap-3 w-full">
+          <div className="flex items-center gap-4 sm:gap-6">
             <img
               src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/c307311f-f41f-4364-96ce-f301e9e8e2a3.png"
               alt="Герб Санкт-Петербург Невский"
-              className="w-24 md:w-32 lg:w-40 object-contain"
+              className="w-16 sm:w-24 md:w-32 lg:w-40 object-contain"
               style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
             />
             <img
               src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/5538aeba-2e9c-4083-8eca-e47726470bbe.png"
               alt="Герб Министерства Здравоохранения"
-              className="w-24 md:w-32 lg:w-40 object-contain"
+              className="w-16 sm:w-24 md:w-32 lg:w-40 object-contain"
               style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
             />
           </div>
           <div
-            className="px-8 py-4 text-white text-center flex flex-col gap-2"
+            className="px-4 sm:px-8 py-3 sm:py-4 text-white text-center flex flex-col gap-1.5 w-full"
             style={{
               background: "rgba(0,0,0,0.08)",
               border: "2px solid transparent",
               borderImage: "linear-gradient(135deg, #7f1d1d, #dc2626, #991b1b, #b91c1c) 1",
             }}
           >
-            <span className="font-bold text-sm md:text-base tracking-wide uppercase">Министерство Здравоохранения</span>
-            <span className="text-xs md:text-sm tracking-wide opacity-90">Центральная Городская Больница города Невский</span>
-            <span className="text-xs tracking-widest opacity-75 uppercase font-medium">Отделение Интернатуры</span>
+            <span className="font-bold text-xs sm:text-sm md:text-base tracking-wide uppercase">Министерство Здравоохранения</span>
+            <span className="text-[10px] sm:text-xs md:text-sm tracking-wide opacity-90">Центральная Городская Больница города Невский</span>
+            <span className="text-[10px] sm:text-xs tracking-widest opacity-75 uppercase font-medium">Отделение Интернатуры</span>
           </div>
         </div>
-        <div className="text-base md:text-lg max-w-xl opacity-90 rich-content text-center">
+        <div className="text-sm sm:text-base md:text-lg max-w-xl opacity-90 rich-content text-center">
           <RichContent html={heroData.subtitle} />
         </div>
-        <div className="flex flex-col sm:flex-row items-center gap-3 mt-2">
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 w-full sm:w-auto">
           <button
             onClick={() => { playClickSound(); navigate("/learn"); }}
-            className="hover-pulse-outline group relative flex items-center gap-3 bg-red-700 hover:bg-red-800 text-white px-10 py-4 text-sm uppercase tracking-widest font-bold transition-all duration-300 shadow-lg shadow-red-900/30 hover:shadow-red-800/50 hover:scale-105"
+            className="hover-pulse-outline group relative flex items-center justify-center gap-3 bg-red-700 hover:bg-red-800 text-white w-full sm:w-auto px-8 py-3.5 sm:py-4 text-sm uppercase tracking-widest font-bold transition-all duration-300 shadow-lg shadow-red-900/30 hover:shadow-red-800/50 hover:scale-105"
           >
             <Icon name="BookOpen" size={18} className="relative transition-transform duration-300 group-hover:-translate-y-0.5" />
             <span className="relative">{heroData.buttonText}</span>
@@ -89,7 +89,7 @@ export default function Hero() {
               const hasSession = localStorage.getItem("admin_token") && localStorage.getItem("admin_nickname");
               navigate(hasSession ? "/admin" : "/admin/login");
             }}
-            className="hover-pulse-outline flex items-center gap-2 border border-white/30 hover:border-white/60 text-white/60 hover:text-white px-6 py-4 text-xs uppercase tracking-widest font-medium transition-all duration-300"
+            className="hover-pulse-outline flex items-center justify-center gap-2 border border-white/30 hover:border-white/60 text-white/60 hover:text-white w-full sm:w-auto px-6 py-3.5 sm:py-4 text-xs uppercase tracking-widest font-medium transition-all duration-300"
           >
             <Icon name="UserCog" size={16} />Для РС ОИ
           </button>
