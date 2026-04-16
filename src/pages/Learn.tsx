@@ -130,6 +130,25 @@ export default function Learn() {
               <div className="text-base text-foreground leading-relaxed rich-content">
                 <RichContent html={internExam.content} />
               </div>
+
+              {/* Блок ПМЭ */}
+              <div className="border border-border rounded-sm px-5 py-4 flex flex-col gap-3">
+                <p className="text-base font-semibold text-foreground">Первичный Медицинский Экзамен (ПМЭ) включает в себя:</p>
+                <ul className="flex flex-col gap-1.5 pl-1">
+                  {[
+                    "Информацию о больнице;",
+                    "Практический экзамен по выдаче препаратов;",
+                    "Вопросы по препаратам;",
+                    "Вопросы по Внутреннему уставу.",
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-sm text-foreground leading-relaxed">
+                      <span className="mt-1.5 w-2 h-2 rounded-full bg-red-500 shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
               <div className="flex flex-col gap-2 mt-2">
                 <a href={internExam.binds_link} target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-sm text-red-500 hover:text-red-400 transition-colors font-medium">
