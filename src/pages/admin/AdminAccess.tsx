@@ -309,12 +309,27 @@ export default function AdminAccess({
             </button>
           </div>
           {canSeeHints && (
-            <div className="mt-4 pt-4 border-t border-zinc-800 text-xs text-zinc-500 flex flex-col gap-1.5">
-              <p><span className="text-blue-400 font-semibold">Суперадмин</span> — полный доступ, управляет всеми</p>
-              <p><span className="text-green-400 font-semibold">Главный Админ</span> — управляет Админом, Модератором, Редактором</p>
-              <p><span className="text-red-400 font-semibold">Админ</span> — управляет Модератором, Редактором</p>
-              <p><span className="text-purple-400 font-semibold">Модератор</span> — управляет Редактором</p>
-              <p><span className="text-orange-400 font-semibold">Редактор</span> — только просмотр кабинета</p>
+            <div className="mt-4 pt-4 border-t border-zinc-800 text-xs text-zinc-500 flex flex-col gap-3">
+              <div className="flex flex-col gap-0.5">
+                <p className="text-blue-400 font-semibold">Суперадмин</p>
+                <p>Полный контроль над всей панелью. Может добавлять и удалять любого участника, включая Главного Админа. Редактирует всех — роли, ссылки, должности. Единственный, кто может редактировать себя самого.</p>
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <p className="text-green-400 font-semibold">Главный Админ</p>
+                <p>Может добавлять и удалять Админа, Модератора, Редактора. Редактирует их роли, ссылки, должности. Не может трогать Суперадмина.</p>
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <p className="text-red-400 font-semibold">Админ</p>
+                <p>Может добавлять и удалять Модератора и Редактора. Не может трогать Суперадмина и Главного Админа.</p>
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <p className="text-purple-400 font-semibold">Модератор</p>
+                <p>Может добавлять и удалять только Редактора. Вкладка «Контакты РС ОИ» недоступна.</p>
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <p className="text-orange-400 font-semibold">Редактор</p>
+                <p>Только просмотр кабинета. Не может добавлять или удалять никого. Вкладка «Контакты РС ОИ» недоступна.</p>
+              </div>
             </div>
           )}
         </div>
