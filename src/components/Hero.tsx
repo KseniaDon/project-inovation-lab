@@ -58,7 +58,14 @@ export default function Hero() {
               style={{ mixBlendMode: "screen", filter: "brightness(1.1) contrast(1.05)" }}
             />
           </div>
-          <div className="border-2 border-red-600 bg-red-700/20 px-8 py-4 text-white text-center flex flex-col gap-2">
+          <div
+            className="px-8 py-4 text-white text-center flex flex-col gap-2"
+            style={{
+              background: "rgba(0,0,0,0.08)",
+              border: "2px solid transparent",
+              borderImage: "linear-gradient(135deg, #7f1d1d, #dc2626, #991b1b, #b91c1c) 1",
+            }}
+          >
             <span className="font-bold text-sm md:text-base tracking-wide uppercase">Министерство Здравоохранения</span>
             <span className="text-xs md:text-sm tracking-wide opacity-90">Центральная Городская Больница города Невский</span>
             <span className="text-xs tracking-widest opacity-75 uppercase font-medium">Отделение Интернатуры</span>
