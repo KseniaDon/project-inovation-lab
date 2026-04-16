@@ -26,7 +26,7 @@ export default function AdminAuditLog({ logs, loading, onRefresh }: Props) {
       <div className="flex items-center justify-between mb-6">
         <div>
           <p className="text-xs uppercase tracking-widest text-zinc-500 mb-1">Управление</p>
-          <h2 className="text-xl font-bold">Журнал правок</h2>
+          <h2 className="text-xl font-bold">Журнал Аудита</h2>
           <p className="text-sm text-zinc-400 mt-1">Последние 50 действий в панели управления</p>
         </div>
         <button onClick={() => { playClickSound(); onRefresh(); }} className="text-zinc-400 hover:text-white transition-colors shrink-0">

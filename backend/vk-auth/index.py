@@ -305,8 +305,11 @@ def handler(event: dict, context) -> dict:
         conn = get_conn()
         cur = conn.cursor()
         s = get_schema()
+        # Авто-очистка записей старше 30 дней
+        cur.execute(f"DELETE FROM {s}.audit_log WHERE created_at < NOW() - INTERVAL '30 days'")
         cur.execute(f"SELECT actor, action, details, created_at FROM {s}.audit_log ORDER BY created_at DESC LIMIT 50")
         rows = cur.fetchall()
+        conn.commit()
         conn.close()
         logs = [{"actor": r[0], "action": r[1], "details": json.loads(r[2]) if r[2] else {}, "created_at": str(r[3])} for r in rows]
         return resp(200, {"logs": logs})

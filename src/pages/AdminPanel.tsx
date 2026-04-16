@@ -7,7 +7,7 @@ import { invalidateSiteCache } from "@/hooks/useSiteData";
 import { Role, AccessUser, ROLE_META, normalizeRole } from "./admin/adminTypes";
 import AdminHome, { HomeLink, DEFAULT_LINKS } from "./admin/AdminHome";
 import AdminStaff, { StaffMember } from "./admin/AdminStaff";
-import AdminAccess from "./admin/AdminAccess";
+import AdminAccess, { HospitalRole } from "./admin/AdminAccess";
 import AdminPassword from "./admin/AdminPassword";
 import AdminAuditLog, { AuditEntry } from "./admin/AdminAuditLog";
 
@@ -19,7 +19,7 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "home",     label: "Главная",        icon: "Home" },
   { id: "staff",    label: "Контакты РС ОИ", icon: "Users" },
   { id: "access",   label: "Доступы",        icon: "Shield" },
-  { id: "audit",    label: "Журнал правок",  icon: "ClipboardList" },
+  { id: "audit",    label: "Журнал Аудита",  icon: "ClipboardList" },
   { id: "password", label: "Мой пароль",     icon: "KeyRound" },
 ];
 
@@ -49,6 +49,7 @@ export default function AdminPanel() {
   const [accessLoading, setAccessLoading] = useState(false);
   const [newAccessNick, setNewAccessNick] = useState("");
   const [newAccessRole, setNewAccessRole] = useState<Role>("editor");
+  const [newHospitalRole, setNewHospitalRole] = useState<HospitalRole>("Нет");
   const [accessMsg, setAccessMsg] = useState("");
 
   // Audit log state
@@ -105,6 +106,9 @@ export default function AdminPanel() {
 
   useEffect(() => { if (tab === "access" && me) loadAccess(); }, [tab, me, loadAccess]);
   useEffect(() => { if (tab === "audit" && me) loadAudit(); }, [tab, me, loadAudit]);
+
+  const myNormRole = me ? normalizeRole(me.role as string) : "editor";
+  const canEditContacts = ["super_admin", "head_admin", "admin"].includes(myNormRole);
 
   const logout = () => { playClickSound(); localStorage.clear(); navigate("/admin/login"); };
 
@@ -230,7 +234,7 @@ export default function AdminPanel() {
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
         <aside className="w-14 md:w-52 border-r border-zinc-800 flex flex-col py-2 shrink-0 overflow-y-auto">
-          {TABS.map(t => (
+          {TABS.filter(t => t.id !== "staff" || canEditContacts).map(t => (
             <button key={t.id} onClick={() => { playClickSound(); setTab(t.id); }}
               className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${tab === t.id ? "bg-zinc-800 text-white border-r-2 border-red-600" : "text-zinc-400 hover:text-white hover:bg-zinc-900"}`}>
               <Icon name={t.icon as "Home"} size={15} className="shrink-0" />
@@ -274,6 +278,8 @@ export default function AdminPanel() {
               setNewAccessNick={setNewAccessNick}
               newAccessRole={newAccessRole}
               setNewAccessRole={setNewAccessRole}
+              newHospitalRole={newHospitalRole}
+              setNewHospitalRole={setNewHospitalRole}
               accessMsg={accessMsg}
               onRefresh={loadAccess}
               onAdd={addAccess}

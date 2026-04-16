@@ -2,6 +2,9 @@ import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
 import { Role, AccessUser, ROLE_HIERARCHY, ROLE_META, canManage, canAddUsers, normalizeRole } from "./adminTypes";
 
+export const HOSPITAL_ROLES = ["Нет", "ГВ", "КОИ", "ЗОИ", "ЗЗОИ"] as const;
+export type HospitalRole = typeof HOSPITAL_ROLES[number];
+
 interface Props {
   me: { nickname: string; role: Role };
   accessUsers: AccessUser[];
@@ -10,6 +13,8 @@ interface Props {
   setNewAccessNick: (v: string) => void;
   newAccessRole: Role;
   setNewAccessRole: (v: Role) => void;
+  newHospitalRole: HospitalRole;
+  setNewHospitalRole: (v: HospitalRole) => void;
   accessMsg: string;
   onRefresh: () => void;
   onAdd: () => void;
@@ -21,6 +26,7 @@ export default function AdminAccess({
   accessUsers, accessLoading,
   newAccessNick, setNewAccessNick,
   newAccessRole, setNewAccessRole,
+  newHospitalRole, setNewHospitalRole,
   accessMsg,
   onRefresh, onAdd, onRemove,
 }: Props) {
@@ -87,27 +93,42 @@ export default function AdminAccess({
         <div className="border border-zinc-700/40 bg-zinc-900/40 p-5">
           <p className="text-sm font-semibold mb-3 text-zinc-300">Добавить пользователя</p>
           <div className="flex flex-col gap-3">
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs select-none">vk.ru/</span>
+              <input
+                type="text"
+                placeholder="nickname"
+                value={newAccessNick}
+                onChange={e => setNewAccessNick(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && onAdd()}
+                className="w-full bg-zinc-900 border border-zinc-700 text-white pl-12 pr-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors"
+              />
+            </div>
             <div className="flex gap-2">
-              <div className="relative flex-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs select-none">vk.ru/</span>
-                <input
-                  type="text"
-                  placeholder="nickname"
-                  value={newAccessNick}
-                  onChange={e => setNewAccessNick(e.target.value)}
-                  onKeyDown={e => e.key === "Enter" && onAdd()}
-                  className="w-full bg-zinc-900 border border-zinc-700 text-white pl-12 pr-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors"
-                />
+              <div className="flex flex-col gap-1 flex-1">
+                <label className="text-xs text-zinc-500">Роль в системе</label>
+                <select
+                  value={newAccessRole}
+                  onChange={e => setNewAccessRole(e.target.value as Role)}
+                  className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-sm outline-none focus:border-red-600 transition-colors"
+                >
+                  {assignableRoles.map(r => (
+                    <option key={r} value={r}>{ROLE_META[r].label}</option>
+                  ))}
+                </select>
               </div>
-              <select
-                value={newAccessRole}
-                onChange={e => setNewAccessRole(e.target.value as Role)}
-                className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors"
-              >
-                {assignableRoles.map(r => (
-                  <option key={r} value={r}>{ROLE_META[r].label} ({ROLE_META[r].hospitalLabel})</option>
-                ))}
-              </select>
+              <div className="flex flex-col gap-1 flex-1">
+                <label className="text-xs text-zinc-500">Должность в больнице</label>
+                <select
+                  value={newHospitalRole}
+                  onChange={e => setNewHospitalRole(e.target.value as HospitalRole)}
+                  className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-sm outline-none focus:border-red-600 transition-colors"
+                >
+                  {HOSPITAL_ROLES.map(r => (
+                    <option key={r} value={r}>{r}</option>
+                  ))}
+                </select>
+              </div>
             </div>
             {accessMsg && (
               <p className={`text-xs ${accessMsg.includes("!") ? "text-green-400" : "text-red-400"}`}>{accessMsg}</p>
