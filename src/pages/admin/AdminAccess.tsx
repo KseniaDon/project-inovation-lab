@@ -24,7 +24,9 @@ export default function AdminAccess({
   accessMsg,
   onRefresh, onAdd, onRemove,
 }: Props) {
-  const myRole = me.role;
+  // Поддержка старых ролей из localStorage до перелогина
+  const rawRole = me.role as string;
+  const myRole: Role = (ROLE_HIERARCHY.includes(rawRole as Role) ? rawRole : rawRole === "super_admin" ? "admin" : "deputy") as Role;
   const canAdd = canAddUsers(myRole);
 
   // Роли которые текущий пользователь может назначать (строго ниже своей)
