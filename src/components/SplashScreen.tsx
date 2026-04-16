@@ -119,11 +119,26 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
       });
     };
 
-    ac.resume().then(() => {
-      scheduleBeats();
-    });
+    const tryPlay = () => {
+      ac.resume().then(() => {
+        scheduleBeats();
+      });
+      document.removeEventListener("pointerdown", tryPlay);
+      document.removeEventListener("keydown", tryPlay);
+    };
 
-    return () => { ac.close(); };
+    if (ac.state === "running") {
+      scheduleBeats();
+    } else {
+      document.addEventListener("pointerdown", tryPlay, { once: true });
+      document.addEventListener("keydown", tryPlay, { once: true });
+    }
+
+    return () => {
+      document.removeEventListener("pointerdown", tryPlay);
+      document.removeEventListener("keydown", tryPlay);
+      ac.close();
+    };
   }, []);
 
   // ── Canvas ────────────────────────────────────────────────────
