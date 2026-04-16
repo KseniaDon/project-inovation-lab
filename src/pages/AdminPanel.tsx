@@ -1,84 +1,37 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
-import { toast } from "sonner";
 
-import {
-  Role, Tab, AccessUser,
-  Section, StaffMember, Command, Floor, Department, CharterDoc, Report,
-  HeroData, AbbrItem, RadioCommand, RadioRule, IntroData, InternExam, SimplePageData,
-  defaultHero, defaultSections, defaultStaff, defaultCommands, defaultFloors,
-  defaultDepartments, defaultCharter, defaultOathLines, defaultMaleReports,
-  defaultFemaleReports, defaultSchedule, defaultAbbr, defaultRadioCommands,
-  defaultRadioRules, defaultActivityData, defaultIntroData, defaultInternExam,
-  defaultBindsPage, defaultReportPage, defaultMisPage, defaultEvidencePage, defaultFeldsherPage,
-} from "./admin/adminTypes";
-import AdminSiteContent from "./admin/AdminSiteContent";
-import AdminAccessPassword from "./admin/AdminAccessPassword";
+import { Role, AccessUser } from "./admin/adminTypes";
 
 const API = "https://functions.poehali.dev/ee0c9d49-3da0-4e2e-a2ab-1f68f29a1405";
 
-const ALL_TABS: { id: Tab; label: string; icon: string; superOnly?: boolean }[] = [
-  { id: "hero",           label: "Главная",      icon: "Home",          superOnly: true },
-  { id: "staff",          label: "Состав",       icon: "Users",         superOnly: true },
-  { id: "intro",          label: "Вступление",   icon: "Flag",          superOnly: true },
-  { id: "intern_exam",    label: "Интерн",       icon: "GraduationCap", superOnly: true },
-  { id: "binds_page",     label: "Бинды",        icon: "Keyboard",      superOnly: true },
-  { id: "report_page",    label: "Подг. к пов.", icon: "ArrowRight",    superOnly: true },
-  { id: "evidence_page",  label: "Доказат.",     icon: "Camera",        superOnly: true },
-  { id: "mis_page",       label: "МИС",          icon: "MonitorCheck",  superOnly: true },
-  { id: "feldsher_page",  label: "Фельдшер",     icon: "Stethoscope",   superOnly: true },
-  { id: "sections",       label: "Обучение",     icon: "BookOpen" },
-  { id: "commands",       label: "Команды",      icon: "Terminal",      superOnly: true },
-  { id: "radio",          label: "Рация",        icon: "Radio",         superOnly: true },
-  { id: "reports",        label: "Доклады",      icon: "Megaphone",     superOnly: true },
-  { id: "abbr",           label: "Аббревиат.",   icon: "BookOpen",      superOnly: true },
-  { id: "schedule",       label: "Расписание",   icon: "Calendar",      superOnly: true },
-  { id: "floors",         label: "Этажи",        icon: "Building2",     superOnly: true },
-  { id: "activity",       label: "ЖА",           icon: "ClipboardList", superOnly: true },
-  { id: "departments",    label: "Отделения",    icon: "Network",       superOnly: true },
-  { id: "charter",        label: "Уставы",       icon: "ScrollText",    superOnly: true },
-  { id: "oath",           label: "Клятва",       icon: "Star",          superOnly: true },
-  { id: "access",         label: "Доступы",      icon: "Shield",        superOnly: true },
-  { id: "password",       label: "Мой пароль",   icon: "KeyRound" },
+type Tab = "staff" | "access" | "password";
+
+const TABS: { id: Tab; label: string; icon: string }[] = [
+  { id: "staff",    label: "Контакты РС ОИ", icon: "Users" },
+  { id: "access",   label: "Доступы",         icon: "Shield" },
+  { id: "password", label: "Мой пароль",      icon: "KeyRound" },
+];
+
+type StaffMember = { role: string; name: string; nickname: string; href: string; badge: string; badgeColor: string };
+
+const defaultStaff: StaffMember[] = [
+  { role: "Куратор Отделения Интернатуры", name: "Ksenia Donskaya", nickname: "Ksenia_Donskaya", href: "https://vk.ru/soul__shu", badge: "Куратор", badgeColor: "bg-red-600" },
+  { role: "Заместитель Заведующего ОИ", name: "Egor Maslow", nickname: "Egor_Maslow", href: "https://vk.ru/cccuvigon", badge: "Зам. Зав.", badgeColor: "bg-zinc-700" },
+  { role: "Заместитель Заведующего ОИ", name: "Andrei Schmidt", nickname: "Andrei_Schmidt", href: "https://vk.com/id392167605", badge: "Зам. Зав.", badgeColor: "bg-zinc-700" },
 ];
 
 export default function AdminPanel() {
   const navigate = useNavigate();
   const [me, setMe] = useState<{ nickname: string; role: Role } | null>(null);
-  const [tab, setTab] = useState<Tab>(localStorage.getItem("admin_role") === "editor" ? "sections" : "hero");
-  const [saved, setSaved] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
-  const [previewPage, setPreviewPage] = useState("/");
-  const [mobilePreview, setMobilePreview] = useState(false);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [tab, setTab] = useState<Tab>("staff");
 
-  // Site content state
-  const [hero, setHero] = useState<HeroData>(defaultHero);
-  const [sections, setSections] = useState<Section[]>(defaultSections);
+  // Staff state
   const [staff, setStaff] = useState<StaffMember[]>(defaultStaff);
-  const [commands, setCommands] = useState<Command[]>(defaultCommands);
-  const [floors, setFloors] = useState<Floor[]>(defaultFloors);
-  const [departments, setDepartments] = useState<Department[]>(defaultDepartments);
-  const [charter, setCharter] = useState<CharterDoc[]>(defaultCharter);
-  const [newItem, setNewItem] = useState<Record<string, string>>({});
-  const [oathLines, setOathLines] = useState<string[]>(defaultOathLines);
-  const [maleReports, setMaleReports] = useState<Report[]>(defaultMaleReports);
-  const [femaleReports, setFemaleReports] = useState<Report[]>(defaultFemaleReports);
-  const [schedule, setSchedule] = useState(defaultSchedule);
-  const [abbr, setAbbr] = useState<AbbrItem[]>(defaultAbbr);
-  const [radioCommands, setRadioCommands] = useState<RadioCommand[]>(defaultRadioCommands);
-  const [radioRules, setRadioRules] = useState<RadioRule[]>(defaultRadioRules);
-  const [activityData, setActivityData] = useState(defaultActivityData);
-  const [introData, setIntroData] = useState<IntroData>(defaultIntroData);
-  const [internExam, setInternExam] = useState<InternExam>(defaultInternExam);
-  const [bindsPage, setBindsPage] = useState<SimplePageData>(defaultBindsPage);
-  const [reportPage, setReportPage] = useState<SimplePageData>(defaultReportPage);
-  const [misPage, setMisPage] = useState<SimplePageData>(defaultMisPage);
-  const [evidencePage, setEvidencePage] = useState<SimplePageData>(defaultEvidencePage);
-  const [feldsherPage, setFeldsherPage] = useState<SimplePageData>(defaultFeldsherPage);
+  const [staffSaving, setStaffSaving] = useState(false);
+  const [staffSaved, setStaffSaved] = useState(false);
 
   // Access state
   const [accessUsers, setAccessUsers] = useState<AccessUser[]>([]);
@@ -98,26 +51,6 @@ export default function AdminPanel() {
   const authFetch = useCallback((url: string, opts?: RequestInit) =>
     fetch(url, { ...opts, headers: { ...(opts?.headers || {}), "X-Authorization": `Bearer ${token()}`, "Content-Type": "application/json" } }), []);
 
-  const showSaved = () => { setSaved(true); setTimeout(() => setSaved(false), 2200); };
-  const saveBlock = async (key: string, value: unknown) => {
-    setSaving(true);
-    await authFetch(`${API}?action=save_site_data`, { method: "POST", body: JSON.stringify({ key, value }) });
-    setSaving(false);
-    showSaved();
-    toast.success("Сохранено", { description: "Изменения опубликованы на сайте", duration: 2500 });
-    iframeRef.current?.contentWindow?.postMessage("site_data_updated", "*");
-  };
-
-  // Выбор страницы превью по вкладке
-  const getPreviewPage = (t: Tab): string => {
-    if (t === "hero" || t === "staff") return "/";
-    if (t === "sections" || t === "intro" || t === "intern_exam" || t === "commands" ||
-        t === "radio" || t === "reports" || t === "abbr" || t === "schedule" ||
-        t === "floors" || t === "activity" || t === "departments" || t === "charter" || t === "oath" ||
-        t === "binds_page" || t === "report_page" || t === "mis_page" || t === "evidence_page" || t === "feldsher_page") return "/learn";
-    return "/";
-  };
-
   useEffect(() => {
     if (!token()) { navigate("/admin/login"); return; }
     authFetch(`${API}?action=me`).then(r => r.json()).then(d => {
@@ -129,33 +62,9 @@ export default function AdminPanel() {
   useEffect(() => {
     if (!me) return;
     authFetch(`${API}?action=site_data`).then(r => r.json()).then(d => {
-      if (!d.data) return;
-      if (d.data.hero) setHero(d.data.hero);
-      if (d.data.sections) setSections(d.data.sections);
-      if (d.data.staff) setStaff(d.data.staff);
-      if (d.data.commands) setCommands(d.data.commands);
-      if (d.data.floors) setFloors(d.data.floors);
-      if (d.data.departments) setDepartments(d.data.departments);
-      if (d.data.charter) setCharter(d.data.charter);
-      if (d.data.schedule) setSchedule(d.data.schedule);
-      if (d.data.oath_lines) setOathLines(d.data.oath_lines);
-      if (d.data.reports_male) setMaleReports(d.data.reports_male);
-      if (d.data.reports_female) setFemaleReports(d.data.reports_female);
-      if (d.data.abbr) setAbbr(d.data.abbr);
-      if (d.data.radio_commands) setRadioCommands(d.data.radio_commands);
-      if (d.data.radio_rules) setRadioRules(d.data.radio_rules);
-      if (d.data.activity) setActivityData(d.data.activity);
-      if (d.data.intro_data) setIntroData(d.data.intro_data);
-      if (d.data.intern_exam) setInternExam(d.data.intern_exam);
-      if (d.data.binds_page) setBindsPage(d.data.binds_page);
-      if (d.data.report_page) setReportPage(d.data.report_page);
-      if (d.data.mis_page) setMisPage(d.data.mis_page);
-      if (d.data.evidence_page) setEvidencePage(d.data.evidence_page);
-      if (d.data.feldsher_page) setFeldsherPage(d.data.feldsher_page);
+      if (d.data?.staff) setStaff(d.data.staff);
     });
   }, [me, authFetch]);
-
-  const logout = () => { playClickSound(); localStorage.clear(); navigate("/admin/login"); };
 
   const loadAccess = useCallback(() => {
     setAccessLoading(true);
@@ -167,12 +76,60 @@ export default function AdminPanel() {
   useEffect(() => { if (tab === "access" && me) loadAccess(); }, [tab, me, loadAccess]);
 
   const isSuperAdmin = me?.role === "super_admin";
-  const TABS = ALL_TABS.filter(t => !t.superOnly || isSuperAdmin);
+  const logout = () => { playClickSound(); localStorage.clear(); navigate("/admin/login"); };
 
-  const handleTabChange = (t: Tab) => {
-    playClickSound();
-    setTab(t);
-    setPreviewPage(getPreviewPage(t));
+  const saveStaff = async () => {
+    setStaffSaving(true);
+    await authFetch(`${API}?action=save_site_data`, { method: "POST", body: JSON.stringify({ key: "staff", value: staff }) });
+    setStaffSaving(false);
+    setStaffSaved(true);
+    setTimeout(() => setStaffSaved(false), 2200);
+  };
+
+  const addAccess = async () => {
+    if (!newAccessNick.trim()) return;
+    setAccessMsg("");
+    const r = await authFetch(`${API}?action=add_access`, { method: "POST", body: JSON.stringify({ nickname: newAccessNick.trim(), role: newAccessRole }) });
+    const d = await r.json();
+    if (d.ok) { setNewAccessNick(""); loadAccess(); setAccessMsg("Добавлено!"); setTimeout(() => setAccessMsg(""), 2000); }
+    else setAccessMsg(d.error || "Ошибка");
+  };
+
+  const removeAccess = async (nick: string) => {
+    const r = await authFetch(`${API}?action=remove_access`, { method: "POST", body: JSON.stringify({ nickname: nick }) });
+    const d = await r.json();
+    if (d.ok) loadAccess();
+    else setAccessMsg(d.error || "Ошибка");
+  };
+
+  const changePassword = async () => {
+    setPwMsg("");
+    if (!pwNew || pwNew !== pwConfirm) { setPwMsg("Пароли не совпадают"); return; }
+    if (pwNew.length < 6) { setPwMsg("Минимум 6 символов"); return; }
+    setPwLoading(true);
+    const checkR = await fetch(`${API}?action=login`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nickname: me!.nickname, password: pwCurrent }),
+    });
+    const checkD = await checkR.json();
+    if (!checkD.token) { setPwMsg("Неверный текущий пароль"); setPwLoading(false); return; }
+    const r = await authFetch(`${API}?action=set_password`, { method: "POST", body: JSON.stringify({ nickname: me!.nickname, password: pwNew }) });
+    const d = await r.json();
+    if (d.ok) { setPwMsg("Пароль успешно изменён!"); setPwCurrent(""); setPwNew(""); setPwConfirm(""); }
+    else setPwMsg(d.error || "Ошибка");
+    setPwLoading(false);
+  };
+
+  const updateMember = (i: number, field: keyof StaffMember, val: string) => {
+    setStaff(prev => prev.map((m, idx) => idx === i ? { ...m, [field]: val } : m));
+  };
+
+  const removeMember = (i: number) => {
+    setStaff(prev => prev.filter((_, idx) => idx !== i));
+  };
+
+  const addMember = () => {
+    setStaff(prev => [...prev, { role: "", name: "", nickname: "", href: "", badge: "", badgeColor: "bg-zinc-700" }]);
   };
 
   if (!me) {
@@ -193,14 +150,6 @@ export default function AdminPanel() {
           <span className="text-sm font-semibold">Панель управления</span>
         </div>
         <div className="flex items-center gap-3 md:gap-4">
-          {/* Кнопка превью */}
-          <button
-            onClick={() => { playClickSound(); setShowPreview(v => !v); }}
-            className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border transition-colors ${showPreview ? "border-red-600 text-red-400 bg-red-600/10" : "border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500"}`}
-          >
-            <Icon name={showPreview ? "EyeOff" : "Eye"} size={13} />
-            <span className="hidden sm:inline">{showPreview ? "Скрыть превью" : "Превью сайта"}</span>
-          </button>
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
               <Icon name="User" size={13} className="text-zinc-400" />
@@ -218,10 +167,10 @@ export default function AdminPanel() {
       </div>
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar — скрыт на мобильных в режиме превью */}
-        <aside className={`w-14 md:w-52 border-r border-zinc-800 flex flex-col py-2 shrink-0 overflow-y-auto ${showPreview ? "hidden sm:flex" : "flex"}`}>
+        {/* Sidebar */}
+        <aside className="w-14 md:w-52 border-r border-zinc-800 flex flex-col py-2 shrink-0 overflow-y-auto">
           {TABS.map(t => (
-            <button key={t.id} onClick={() => handleTabChange(t.id)}
+            <button key={t.id} onClick={() => { playClickSound(); setTab(t.id); }}
               className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${tab === t.id ? "bg-zinc-800 text-white border-r-2 border-red-600" : "text-zinc-400 hover:text-white hover:bg-zinc-900"}`}>
               <Icon name={t.icon as "Home"} size={15} className="shrink-0" />
               <span className="hidden md:block text-sm">{t.label}</span>
@@ -229,108 +178,226 @@ export default function AdminPanel() {
           ))}
         </aside>
 
-        {/* Content — скрыт на мобильных в режиме превью */}
-        <main className={`overflow-y-auto p-5 md:p-8 ${showPreview ? "hidden sm:block w-full sm:w-[420px] sm:shrink-0" : "flex-1"}`}>
-          <AdminSiteContent
-            tab={tab}
-            saved={saved}
-            saving={saving}
-            saveBlock={saveBlock}
-            hero={hero} setHero={setHero}
-            staff={staff} setStaff={setStaff}
-            sections={sections} setSections={setSections}
-            newItem={newItem} setNewItem={setNewItem}
-            commands={commands} setCommands={setCommands}
-            schedule={schedule} setSchedule={setSchedule}
-            floors={floors} setFloors={setFloors}
-            departments={departments} setDepartments={setDepartments}
-            charter={charter} setCharter={setCharter}
-            oathLines={oathLines} setOathLines={setOathLines}
-            maleReports={maleReports} setMaleReports={setMaleReports}
-            femaleReports={femaleReports} setFemaleReports={setFemaleReports}
-            abbr={abbr} setAbbr={setAbbr}
-            radioCommands={radioCommands} setRadioCommands={setRadioCommands}
-            radioRules={radioRules} setRadioRules={setRadioRules}
-            activityData={activityData} setActivityData={setActivityData}
-            introData={introData} setIntroData={setIntroData}
-            internExam={internExam} setInternExam={setInternExam}
-            bindsPage={bindsPage} setBindsPage={setBindsPage}
-            reportPage={reportPage} setReportPage={setReportPage}
-            misPage={misPage} setMisPage={setMisPage}
-            evidencePage={evidencePage} setEvidencePage={setEvidencePage}
-            feldsherPage={feldsherPage} setFeldsherPage={setFeldsherPage}
-          />
-          <AdminAccessPassword
-            tab={tab}
-            me={me}
-            isSuperAdmin={isSuperAdmin}
-            authFetch={authFetch}
-            accessUsers={accessUsers}
-            accessLoading={accessLoading}
-            newAccessNick={newAccessNick} setNewAccessNick={setNewAccessNick}
-            newAccessRole={newAccessRole} setNewAccessRole={setNewAccessRole}
-            accessMsg={accessMsg} setAccessMsg={setAccessMsg}
-            loadAccess={loadAccess}
-            pwCurrent={pwCurrent} setPwCurrent={setPwCurrent}
-            pwNew={pwNew} setPwNew={setPwNew}
-            pwConfirm={pwConfirm} setPwConfirm={setPwConfirm}
-            pwMsg={pwMsg} setPwMsg={setPwMsg}
-            pwLoading={pwLoading} setPwLoading={setPwLoading}
-          />
-        </main>
+        {/* Content */}
+        <main className="flex-1 overflow-y-auto p-5 md:p-8">
 
-        {/* Live Preview iframe */}
-        {showPreview && (
-          <div className="flex-1 flex flex-col border-l border-zinc-800 bg-zinc-900 min-w-0">
-            {/* Preview топбар */}
-            <div className="flex items-center gap-2 px-3 py-2 border-b border-zinc-800 shrink-0">
-              <div className="flex gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-red-500/60" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
-                <div className="w-3 h-3 rounded-full bg-green-500/60" />
+          {/* ── КОНТАКТЫ РС ОИ ── */}
+          {tab === "staff" && (
+            <div className="max-w-2xl flex flex-col gap-6">
+              <div>
+                <p className="text-xs uppercase tracking-widest text-zinc-500 mb-1">Управление</p>
+                <h2 className="text-xl font-bold">Контакты РС ОИ</h2>
+                <p className="text-sm text-zinc-400 mt-1">Изменения мгновенно отображаются на странице контактов.</p>
               </div>
-              <div className="flex-1 flex items-center gap-2 bg-zinc-800 rounded px-3 py-1 text-xs text-zinc-400 font-mono">
-                <Icon name="Globe" size={11} className="shrink-0" />
-                <span className="truncate">{window.location.origin}{previewPage}</span>
-              </div>
-              <div className="flex gap-1 shrink-0">
-                {["/", "/learn", "/contacts"].map(p => (
-                  <button
-                    key={p}
-                    onClick={() => setPreviewPage(p)}
-                    className={`text-xs px-2 py-1 rounded transition-colors ${previewPage === p ? "bg-red-600 text-white" : "text-zinc-500 hover:text-white"}`}
-                  >
-                    {p === "/" ? "Главная" : p === "/learn" ? "Обучение" : "Контакты"}
-                  </button>
+
+              <div className="flex flex-col gap-4">
+                {staff.map((member, i) => (
+                  <div key={i} className="border border-zinc-800 p-5 flex flex-col gap-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-xs uppercase tracking-widest text-zinc-500">Сотрудник {i + 1}</p>
+                      <button onClick={() => removeMember(i)} className="text-zinc-600 hover:text-red-500 transition-colors">
+                        <Icon name="Trash2" size={14} />
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="flex flex-col gap-1">
+                        <label className="text-xs text-zinc-500">Должность</label>
+                        <input
+                          value={member.role}
+                          onChange={e => updateMember(i, "role", e.target.value)}
+                          className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-sm outline-none focus:border-red-600 transition-colors"
+                          placeholder="Куратор Отделения Интернатуры"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-xs text-zinc-500">Имя (отображается)</label>
+                        <input
+                          value={member.name}
+                          onChange={e => updateMember(i, "name", e.target.value)}
+                          className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-sm outline-none focus:border-red-600 transition-colors"
+                          placeholder="Ivan Petrov"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-xs text-zinc-500">Ник VK (без vk.ru/)</label>
+                        <input
+                          value={member.nickname}
+                          onChange={e => updateMember(i, "nickname", e.target.value)}
+                          className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-sm outline-none focus:border-red-600 transition-colors"
+                          placeholder="ivan_petrov"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-xs text-zinc-500">Ссылка VK (полная)</label>
+                        <input
+                          value={member.href}
+                          onChange={e => updateMember(i, "href", e.target.value)}
+                          className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-sm outline-none focus:border-red-600 transition-colors"
+                          placeholder="https://vk.ru/ivan_petrov"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-xs text-zinc-500">Бейдж (текст)</label>
+                        <input
+                          value={member.badge}
+                          onChange={e => updateMember(i, "badge", e.target.value)}
+                          className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-sm outline-none focus:border-red-600 transition-colors"
+                          placeholder="Куратор"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-xs text-zinc-500">Цвет бейджа (CSS класс)</label>
+                        <select
+                          value={member.badgeColor}
+                          onChange={e => updateMember(i, "badgeColor", e.target.value)}
+                          className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-sm outline-none focus:border-red-600 transition-colors"
+                        >
+                          <option value="bg-red-600">Красный (Куратор)</option>
+                          <option value="bg-zinc-700">Серый (Зам. Зав.)</option>
+                          <option value="bg-blue-700">Синий</option>
+                          <option value="bg-orange-600">Оранжевый</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                 ))}
+              </div>
+
+              <div className="flex items-center gap-3">
                 <button
-                  onClick={() => setMobilePreview(v => !v)}
-                  className={`transition-colors p-1 ${mobilePreview ? "text-red-400" : "text-zinc-500 hover:text-white"}`}
-                  title={mobilePreview ? "Десктоп" : "Мобильный"}
+                  onClick={() => { playClickSound(); addMember(); }}
+                  className="flex items-center gap-2 border border-zinc-700 hover:border-zinc-500 text-zinc-400 hover:text-white px-4 py-2.5 text-xs uppercase tracking-wider font-semibold transition-colors"
                 >
-                  <Icon name={mobilePreview ? "Monitor" : "Smartphone"} size={12} />
+                  <Icon name="Plus" size={13} />Добавить сотрудника
                 </button>
                 <button
-                  onClick={() => { iframeRef.current?.contentWindow?.location.reload(); }}
-                  className="text-zinc-500 hover:text-white transition-colors p-1"
-                  title="Обновить"
+                  onClick={() => { playClickSound(); saveStaff(); }}
+                  disabled={staffSaving}
+                  className={`flex items-center gap-2 px-4 py-2.5 text-xs uppercase tracking-wider font-semibold transition-colors ${staffSaved ? "bg-green-700 text-white" : "bg-red-600 hover:bg-red-500 text-white"}`}
                 >
-                  <Icon name="RefreshCw" size={12} />
+                  <Icon name={staffSaved ? "Check" : "Save"} size={13} />
+                  {staffSaving ? "Сохранение..." : staffSaved ? "Сохранено" : "Сохранить"}
                 </button>
               </div>
             </div>
-            {/* iframe */}
-            <div className={`flex-1 overflow-auto ${mobilePreview ? "flex justify-center bg-zinc-950 py-4" : ""}`}>
-              <iframe
-                ref={iframeRef}
-                src={previewPage}
-                className="bg-white h-full"
-                style={mobilePreview ? { width: 390, minHeight: "100%", height: "auto", borderRadius: 12, border: "1px solid #3f3f46" } : { width: "100%", height: "100%" }}
-                title="Превью сайта"
-              />
+          )}
+
+          {/* ── ДОСТУПЫ ── */}
+          {tab === "access" && (
+            <div className="max-w-xl">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <p className="text-xs uppercase tracking-widest text-zinc-500 mb-1">Управление</p>
+                  <h2 className="text-xl font-bold">Список доступов</h2>
+                  <p className="text-sm text-zinc-400 mt-1">Кто имеет доступ к панели управления</p>
+                </div>
+                <button onClick={() => { playClickSound(); loadAccess(); }} className="text-zinc-400 hover:text-white transition-colors shrink-0">
+                  <Icon name="RefreshCw" size={15} />
+                </button>
+              </div>
+
+              {accessLoading ? (
+                <div className="flex justify-center py-10"><div className="w-6 h-6 border-2 border-red-600 border-t-transparent rounded-full animate-spin" /></div>
+              ) : (
+                <div className="flex flex-col gap-3 mb-6">
+                  {accessUsers.map((u) => (
+                    <div key={u.nickname} className="border border-zinc-800 p-4 flex items-center gap-3">
+                      <div className="w-9 h-9 bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
+                        <Icon name="User" size={15} className="text-zinc-400" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <a href={`https://vk.ru/${u.nickname}`} target="_blank" rel="noopener noreferrer"
+                          className="font-semibold text-sm hover:text-red-400 transition-colors block">
+                          vk.ru/{u.nickname}
+                        </a>
+                        <p className="text-xs text-zinc-500">{u.created_by ? `Добавил: ${u.created_by}` : "Основатель"}</p>
+                      </div>
+                      <span className={`text-xs px-2 py-1 font-semibold uppercase tracking-wider shrink-0 ${u.role === "super_admin" ? "bg-red-900/50 text-red-400" : "bg-zinc-800 text-zinc-400"}`}>
+                        {u.role === "super_admin" ? "Гл. Адм." : "Редактор"}
+                      </span>
+                      {isSuperAdmin && u.nickname !== me.nickname && (
+                        <button onClick={() => { playClickSound(); removeAccess(u.nickname); }}
+                          className="text-zinc-600 hover:text-red-500 transition-colors shrink-0">
+                          <Icon name="UserX" size={15} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {isSuperAdmin && (
+                <div className="border border-zinc-700/40 bg-zinc-900/40 p-5">
+                  <p className="text-sm font-semibold mb-3 text-zinc-300">Добавить пользователя</p>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs select-none">vk.ru/</span>
+                        <input type="text" placeholder="nickname" value={newAccessNick}
+                          onChange={e => setNewAccessNick(e.target.value)}
+                          onKeyDown={e => e.key === "Enter" && addAccess()}
+                          className="w-full bg-zinc-900 border border-zinc-700 text-white pl-12 pr-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors" />
+                      </div>
+                      <select value={newAccessRole} onChange={e => setNewAccessRole(e.target.value as Role)}
+                        className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors">
+                        <option value="editor">Редактор</option>
+                        <option value="super_admin">Гл. Адм.</option>
+                      </select>
+                    </div>
+                    {accessMsg && <p className={`text-xs ${accessMsg.includes("!") ? "text-green-400" : "text-red-400"}`}>{accessMsg}</p>}
+                    <button onClick={() => { playClickSound(); addAccess(); }}
+                      className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2.5 text-xs uppercase tracking-wider font-semibold transition-colors">
+                      <Icon name="Plus" size={13} />Добавить
+                    </button>
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-zinc-800 text-xs text-zinc-500 flex flex-col gap-1">
+                    <p><span className="text-red-400 font-semibold">Гл. Администратор</span> — полный доступ ко всему сайту</p>
+                    <p><span className="text-zinc-300 font-semibold">Редактор</span> — только свой пароль</p>
+                    <p className="mt-1 text-zinc-600">Новый пользователь установит пароль при первом входе</p>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        )}
+          )}
+
+          {/* ── МОЙ ПАРОЛЬ ── */}
+          {tab === "password" && (
+            <div className="max-w-md">
+              <div className="mb-6">
+                <p className="text-xs uppercase tracking-widest text-zinc-500 mb-1">Управление</p>
+                <h2 className="text-xl font-bold">Мой пароль</h2>
+                <p className="text-sm text-zinc-400 mt-1">Смена пароля для входа в панель</p>
+              </div>
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs text-zinc-400 uppercase tracking-wider">Текущий пароль</label>
+                  <input type="password" value={pwCurrent} onChange={e => setPwCurrent(e.target.value)}
+                    className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors" />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs text-zinc-400 uppercase tracking-wider">Новый пароль</label>
+                  <input type="password" value={pwNew} onChange={e => setPwNew(e.target.value)}
+                    className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors" />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs text-zinc-400 uppercase tracking-wider">Повторите новый пароль</label>
+                  <input type="password" value={pwConfirm} onChange={e => setPwConfirm(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && changePassword()}
+                    className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors" />
+                </div>
+                {pwMsg && (
+                  <p className={`text-sm ${pwMsg.includes("успешно") ? "text-green-400" : "text-red-400"}`}>{pwMsg}</p>
+                )}
+                <button onClick={() => { playClickSound(); changePassword(); }} disabled={pwLoading}
+                  className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white px-4 py-2.5 text-xs uppercase tracking-wider font-semibold transition-colors">
+                  {pwLoading ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Icon name="KeyRound" size={13} />}
+                  Изменить пароль
+                </button>
+              </div>
+            </div>
+          )}
+
+        </main>
       </div>
     </div>
   );

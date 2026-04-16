@@ -153,52 +153,7 @@ export default function Learn() {
                 </button>
               </div>
 
-              {/* Шаг 1 */}
-              {([
-                { step: "Шаг 1: Подготовка", items: [
-                  { id: "intern-binds" as SectionId,    num: "1.1", label: "Настройка биндов",    icon: "Keyboard" },
-                  { id: "intern-radio" as SectionId,    num: "1.2", label: "Использование рации", icon: "Radio" },
-                  { id: "intern-reports" as SectionId,  num: "1.3", label: "Доклады в рацию",     icon: "Megaphone" },
-                  { id: "intern-commands" as SectionId, num: "1.4", label: "Основные команды",    icon: "Terminal" },
-                  { id: "intern-abbr" as SectionId,     num: "1.5", label: "Аббревиатуры",        icon: "BookOpen" },
-                  { id: "intern-hierarchy" as SectionId,num: "1.6", label: "Иерархия",            icon: "Crown" },
-                ]},
-                { step: "Шаг 2: Устав и правила", items: [
-                  { id: "intern-schedule" as SectionId,    num: "2.1", label: "График работы",           icon: "CalendarDays" },
-                  { id: "intern-floors" as SectionId,      num: "2.2", label: "Распределение этажей",    icon: "Building2" },
-                  { id: "intern-activity" as SectionId,    num: "2.3", label: "Журнал активности (ЖА)",  icon: "ClipboardList" },
-                  { id: "intern-charter" as SectionId,     num: "2.4", label: "Уставная документация",   icon: "ScrollText" },
-                ]},
-                { step: "Шаг 3: Экзамен", items: [
-                  { id: "intern-departments" as SectionId, num: "3.1", label: "Отделения ЦГБ-Н",        icon: "Network" },
-                  { id: "intern-drugs" as SectionId,       num: "3.2", label: "Препараты",               icon: "Pill" },
-                  { id: "intern-oath" as SectionId,        num: "3.3", label: "Клятва врача",            icon: "GraduationCap" },
-                ]},
-                { step: "Шаг 4: Отчет на повышение", items: [
-                  { id: "intern-report" as SectionId,   num: "4.1", label: "Подготовка к повышению",  icon: "ClipboardCheck" },
-                  { id: "intern-evidence" as SectionId, num: "4.2", label: "Фиксация доказательств",  icon: "Camera" },
-                  { id: "intern-mis" as SectionId,      num: "4.3", label: "МИС «Здоровье»",          icon: "MonitorCheck" },
-                  { id: "intern-gov" as SectionId,      num: "4.4", label: "Госпортал",               icon: "Globe" },
-                ]},
-              ] as { step: string; items: { id: SectionId; num: string; label: string; icon: string }[] }[]).map(({ step, items }) => (
-                <div key={step} className="flex flex-col gap-3 pt-4 border-t border-border">
-                  <p className="text-xs uppercase tracking-widest text-zinc-500 select-none">{step}</p>
-                  <div className="flex flex-col gap-1">
-                    {items.map((item) => (
-                      <button
-                        key={item.id}
-                        onClick={() => go(item.id)}
-                        className="group flex items-center gap-3 px-3 py-2.5 border border-border hover:border-red-600/50 hover:bg-red-600/5 transition-all duration-200 text-left"
-                      >
-                        <span className="text-xs font-bold text-muted-foreground w-7 shrink-0">{item.num}</span>
-                        <Icon name={item.icon as "Flag"} size={14} className="text-muted-foreground group-hover:text-red-500 transition-colors shrink-0" />
-                        <span className="text-sm text-foreground group-hover:text-red-500 transition-colors font-medium">{item.label}</span>
-                        <Icon name="ChevronRight" size={13} className="ml-auto text-muted-foreground group-hover:text-red-400 transition-colors shrink-0" />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
+
             </div>
           )}
 
