@@ -87,12 +87,18 @@ export default function AdminPanel() {
     fetch(url, { ...opts, headers: { ...(opts?.headers || {}), "X-Authorization": `Bearer ${token()}`, "Content-Type": "application/json" } }), []);
 
   useEffect(() => {
-    if (!token()) { navigate("/admin/login"); return; }
+    const t = token();
+    const nick = localStorage.getItem("admin_nickname");
+    const role = localStorage.getItem("admin_role") as Role | null;
+    if (!t || !nick || !role) { navigate("/admin/login"); return; }
+    // Восстанавливаем сессию из localStorage сразу, без лишнего запроса
+    setMe({ nickname: nick, role });
+    // Фоновая проверка токена — только выбрасываем если явный Unauthorized
     authFetch(`${API}?action=me`)
       .then(r => r.json())
       .then(d => {
         if (d.nickname) setMe({ nickname: d.nickname, role: d.role });
-        else if (d.error === "Unauthorized") navigate("/admin/login");
+        else if (d.error === "Unauthorized") { localStorage.clear(); navigate("/admin/login"); }
       })
       .catch(() => {});
   }, [navigate, authFetch]);
