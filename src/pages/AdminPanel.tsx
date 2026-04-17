@@ -140,7 +140,8 @@ export default function AdminPanel() {
   };
 
   const addWhatsNew = () => {
-    setWhatsNew(prev => [...prev, { id: `wn_${Date.now()}`, date: "", title: "", desc: "", link: "", linkLabel: "", linkExternal: false }]);
+    const today = new Date().toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }).replace(" г.", "");
+    setWhatsNew(prev => [...prev, { id: `wn_${Date.now()}`, date: today, title: "", desc: "", link: "", linkLabel: "Перейти к разделу", linkExternal: false }]);
   };
 
   const saveLinks = async () => {
