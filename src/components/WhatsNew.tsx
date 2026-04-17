@@ -5,6 +5,7 @@ import { useSiteData } from "@/hooks/useSiteData";
 import Icon from "@/components/ui/icon";
 
 export type WhatsNewEntry = {
+  id?: string;
   date: string;
   title: string;
   desc: string;

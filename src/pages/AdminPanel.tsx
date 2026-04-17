@@ -140,7 +140,7 @@ export default function AdminPanel() {
   };
 
   const addWhatsNew = () => {
-    setWhatsNew(prev => [...prev, { date: "", title: "", desc: "", link: "", linkLabel: "", linkExternal: false }]);
+    setWhatsNew(prev => [...prev, { id: `wn_${Date.now()}`, date: "", title: "", desc: "", link: "", linkLabel: "", linkExternal: false }]);
   };
 
   const saveLinks = async () => {
