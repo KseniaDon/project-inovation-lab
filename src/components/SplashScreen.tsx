@@ -129,9 +129,6 @@ export const MEDICAL_FACTS = [
   "Группа крови передаётся по наследству: два родителя с 0 не могут иметь ребёнка с AB.",
 ];
 
-function getRandomFact(): string {
-  return MEDICAL_FACTS[Math.floor(Math.random() * MEDICAL_FACTS.length)];
-}
 
 export default function SplashScreen({ onFinish }: SplashScreenProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -139,7 +136,6 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
   const startRef  = useRef<number>(0);
   const [visible, setVisible]   = useState(false);
   const [fadeOut, setFadeOut]   = useState(false);
-  const [fact]                  = useState<string>(getRandomFact);
 
   useEffect(() => {
     const t0 = setTimeout(() => setVisible(true),   100);
@@ -349,26 +345,6 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
         <canvas ref={canvasRef} className="w-full h-full" />
       </div>
 
-      {/* Медицинский факт */}
-      <div
-        className="relative z-10 text-center px-8 mt-5 select-none max-w-xl"
-        style={{
-          opacity: visible ? 1 : 0,
-          transition: "opacity 0.8s ease-in 0.6s",
-        }}
-      >
-        <p
-          style={{
-            fontSize: "clamp(0.7rem, 2vw, 0.95rem)",
-            color: "rgba(255,150,150,0.75)",
-            letterSpacing: "0.04em",
-            lineHeight: 1.6,
-            fontStyle: "italic",
-          }}
-        >
-          💡 {fact}
-        </p>
-      </div>
     </div>
   );
 }
