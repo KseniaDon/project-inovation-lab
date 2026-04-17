@@ -21,9 +21,9 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "home",      label: "Главная",        icon: "Home" },
   { id: "whats_new", label: "Что нового",     icon: "Sparkles" },
   { id: "staff",     label: "Контакты РС ОИ", icon: "Users" },
-  { id: "access",    label: "Доступы",        icon: "Shield" },
+  { id: "access",    label: "Доступы",        icon: "KeyRound" },
   { id: "audit",     label: "Журнал изменений", icon: "ClipboardList" },
-  { id: "password",  label: "Мой пароль",     icon: "KeyRound" },
+  { id: "password",  label: "Мой пароль",     icon: "Shield" },
 ];
 
 const defaultStaff: StaffMember[] = [

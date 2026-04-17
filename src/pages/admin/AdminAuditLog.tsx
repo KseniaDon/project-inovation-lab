@@ -13,7 +13,6 @@ const ACTION_META: Record<string, { label: string; icon: string; color: string }
   remove_access:   { label: "Удалил доступ",         icon: "UserMinus",  color: "text-red-400" },
   edit_access:     { label: "Изменил участника",     icon: "UserCog",    color: "text-blue-400" },
   edit_content:    { label: "Изменил контент",       icon: "Pencil",     color: "text-zinc-400" },
-  change_password: { label: "Сменил пароль",         icon: "KeyRound",   color: "text-yellow-400" },
 };
 
 const CONTENT_KEY_LABELS: Record<string, string> = {
@@ -46,8 +45,7 @@ export default function AdminAuditLog({ logs, loading, onRefresh }: Props) {
         <p className="text-zinc-400 font-semibold mb-1">Журнал записывает:</p>
         <p>✅ Добавление / удаление пользователя в доступы;</p>
         <p>✅ Изменение роли / должности / ссылки участника;</p>
-        <p>✅ Сохранение контактов РС ОИ, ссылок на главной, блока «Что нового»;</p>
-        <p>✅ Смена пароля.</p>
+        <p>✅ Сохранение контактов РС ОИ, ссылок на главной, блока «Что нового».</p>
       </div>
 
       {loading ? (
