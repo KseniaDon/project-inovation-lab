@@ -139,6 +139,15 @@ export default function AdminPanel() {
     setWhatsNew(prev => prev.filter((_, idx) => idx !== i));
   };
 
+  const reorderWhatsNew = (oldIndex: number, newIndex: number) => {
+    setWhatsNew(prev => {
+      const next = [...prev];
+      const [moved] = next.splice(oldIndex, 1);
+      next.splice(newIndex, 0, moved);
+      return next;
+    });
+  };
+
   const addWhatsNew = () => {
     const today = new Date().toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }).replace(" г.", "");
     setWhatsNew(prev => [...prev, { id: `wn_${Date.now()}`, date: today, title: "", desc: "", link: "", linkLabel: "Перейти к разделу", linkExternal: false }]);
@@ -244,7 +253,7 @@ export default function AdminPanel() {
       )}
       {tab === "whats_new" && (
         <AdminWhatsNew entries={whatsNew} saving={whatsNewSaving} saved={whatsNewSaved}
-          canEdit={canEditWhatsNew} onUpdate={updateWhatsNew} onRemove={removeWhatsNew} onAdd={addWhatsNew} onSave={saveWhatsNew} />
+          canEdit={canEditWhatsNew} onUpdate={updateWhatsNew} onRemove={removeWhatsNew} onAdd={addWhatsNew} onSave={saveWhatsNew} onReorder={reorderWhatsNew} />
       )}
       {tab === "staff" && (
         <AdminStaff staff={staff} staffSaving={staffSaving} staffSaved={staffSaved}
