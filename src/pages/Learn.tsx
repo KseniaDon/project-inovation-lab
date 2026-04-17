@@ -34,6 +34,7 @@ import LearnFeldsherKsmpSection from "./learn/LearnFeldsherKsmpSection";
 import LearnFeldsherPrmoSection from "./learn/LearnFeldsherPrmoSection";
 import LearnFeldsherMedhelpSection from "./learn/LearnFeldsherMedhelpSection";
 import LearnFeldsherWardsSection from "./learn/LearnFeldsherWardsSection";
+import LearnTkmSection from "./learn/LearnTkmSection";
 
 export default function Learn() {
   const [active, setActive] = useState<SectionId>("intro");
@@ -234,6 +235,9 @@ export default function Learn() {
 
           {/* ФЕЛЬДШЕР — РАБОТА ОТДЕЛЕНИЙ */}
           {active === "feldsher-wards" && <LearnFeldsherWardsSection go={go} />}
+
+          {/* ТКМ */}
+          {active === "tkm" && <LearnTkmSection />}
 
         </motion.div>
         </AnimatePresence>
