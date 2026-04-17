@@ -368,7 +368,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
         className="relative z-10 text-center px-8 mt-4 select-none max-w-2xl"
         style={{
           opacity: visible ? 1 : 0,
-          transition: "opacity 1s ease-in 1s",
+          transition: "opacity 0.4s ease-in",
         }}
       >
         <p
@@ -381,7 +381,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
             marginBottom: "0.4rem",
           }}
         >
-          Факт дня
+          Интересные факты
         </p>
         <p
           style={{
