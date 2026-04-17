@@ -62,8 +62,8 @@ const SMOOTH_BEAT = buildBeatPoints(160);
 const BEAT_W_PX  = 520;   // шире — крупнее диаграмма
 const AMPLITUDE  = 90;    // выше амплитуда
 const BEAT_MS    = 1300;  // ~46 уд/мин — медленно и чётко
-const BEAT_TIMES = [500, 1800, 3100, 4400, 5700]; // ms
-const TOTAL_MS   = 7500;
+const BEAT_TIMES = [300, 1200, 2100, 3000, 3900]; // ms
+const TOTAL_MS   = 5000;
 
 // Приятное сердцебиение: двойной удар «lub-dub»
 function playHeartbeat(ac: AudioContext, t: number) {
