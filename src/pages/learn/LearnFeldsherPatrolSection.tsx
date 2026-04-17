@@ -245,6 +245,36 @@ export default function LearnFeldsherPatrolSection({ go }: Props) {
           </div>
         )}
       </div>
+
+      <p className="text-base leading-relaxed">
+        Патрулирование отличается лишь тем, что Вы не стоите на месте, а ездите по городу, соблюдая ПДД. Вы также молниеносно реагируете на помощь гражданам, делаете доклады о состоянии патрулирования как и на посту.
+      </p>
+
+      <p className="text-sm text-muted-foreground">
+        Информационный раздел нашей больницы о постах:{" "}
+        <a
+          href="https://forum.gtaprovince.ru/topic/995733-cgb-g-nevskiy-informacionnyy-razdel/?do=findComment&comment=6982162"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+        >
+          Раздел 7. Посты АСМП.
+          <Icon name="ExternalLink" size={13} />
+        </a>
+      </p>
+
+      <p className="text-sm text-muted-foreground">
+        Законодательная база Республики Провинции на госпортале:{" "}
+        <a
+          href="https://forum.gtaprovince.ru/topic/639262-pravila-dorozhnogo-dvizheniya-respubliki/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+        >
+          Правила Дорожного Движения (ПДД).
+          <Icon name="ExternalLink" size={13} />
+        </a>
+      </p>
     </div>
   );
 }
