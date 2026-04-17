@@ -5,9 +5,9 @@ export const ROLE_HIERARCHY: Role[] = ["super_admin", "head_admin", "admin", "mo
 export const ROLE_META: Record<Role, { label: string; hospitalLabel: string; short: string; color: string; bg: string }> = {
   super_admin: { label: "Суперадмин", hospitalLabel: "Куратор",      short: "Суперадмин", color: "text-blue-400",   bg: "bg-blue-900/50" },
   head_admin:  { label: "Главный админ", hospitalLabel: "ГВ",         short: "Гл. Админ",  color: "text-green-400",  bg: "bg-green-900/50" },
-  admin:       { label: "Админ",       hospitalLabel: "Куратор",      short: "Админ",      color: "text-red-400",    bg: "bg-red-900/50" },
-  moderator:   { label: "Модератор",   hospitalLabel: "ЗОИ",          short: "Модератор",  color: "text-purple-400", bg: "bg-purple-900/50" },
-  editor:      { label: "Редактор",    hospitalLabel: "ЗЗОИ",         short: "Редактор",   color: "text-orange-400", bg: "bg-orange-900/50" },
+  admin:       { label: "Старший Админ",  hospitalLabel: "Куратор",      short: "Ст. Админ",   color: "text-red-400",    bg: "bg-red-900/50" },
+  moderator:   { label: "Админ",          hospitalLabel: "ЗОИ",          short: "Админ",       color: "text-purple-400", bg: "bg-purple-900/50" },
+  editor:      { label: "Младший Админ",  hospitalLabel: "ЗЗОИ",         short: "Мл. Админ",   color: "text-orange-400", bg: "bg-orange-900/50" },
 };
 
 export function roleRank(role: Role): number {
