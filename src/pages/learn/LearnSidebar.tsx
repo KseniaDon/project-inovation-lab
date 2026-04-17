@@ -22,7 +22,8 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
     setOpenGroups((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const topItems = NAV.filter((item) => !item.parent && !ACCORDION_PARENTS.includes(item.id));
+  const topItems = NAV.filter((item) => !item.parent && !ACCORDION_PARENTS.includes(item.id) && item.id !== "tkm");
+  const bottomItems = NAV.filter((item) => item.id === "tkm");
 
   const handleGo = (id: SectionId) => {
     go(id);
@@ -163,6 +164,28 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
           </div>
         )}
       </div>
+
+      {/* Нижние пункты (ТКМ и др.) */}
+      {bottomItems.map((item) => {
+        const isActive = active === item.id;
+        return (
+          <button
+            key={item.id}
+            onClick={() => handleGo(item.id)}
+            className={`w-full flex items-center gap-3 px-3 py-3 text-base font-semibold transition-colors text-left rounded-none
+              ${isActive
+                ? "bg-[hsl(var(--red-border)/0.1)] text-[hsl(var(--red-border))] border-l-2 border-[hsl(var(--red-border))]"
+                : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
+              }`}
+          >
+            <span className="relative flex shrink-0">
+              {isActive && <span className="absolute inset-0 animate-ping rounded-full bg-[hsl(var(--red-border))] opacity-30" />}
+              <Icon name={item.icon as "Flag"} size={18} className={isActive ? "text-[hsl(var(--red-border))]" : ""} />
+            </span>
+            {item.label}
+          </button>
+        );
+      })}
     </nav>
   );
 }
