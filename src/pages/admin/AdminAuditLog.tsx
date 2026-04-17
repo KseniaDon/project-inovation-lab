@@ -9,10 +9,17 @@ export type AuditEntry = {
 };
 
 const ACTION_META: Record<string, { label: string; icon: string; color: string }> = {
-  add_access:    { label: "Добавил доступ",    icon: "UserPlus",   color: "text-green-400" },
-  remove_access: { label: "Удалил доступ",     icon: "UserMinus",  color: "text-red-400" },
-  edit_access:   { label: "Изменил участника", icon: "UserCog",    color: "text-blue-400" },
-  edit_content:  { label: "Изменил контент",   icon: "Pencil",     color: "text-zinc-400" },
+  add_access:      { label: "Добавил доступ",       icon: "UserPlus",   color: "text-green-400" },
+  remove_access:   { label: "Удалил доступ",         icon: "UserMinus",  color: "text-red-400" },
+  edit_access:     { label: "Изменил участника",     icon: "UserCog",    color: "text-blue-400" },
+  edit_content:    { label: "Изменил контент",       icon: "Pencil",     color: "text-zinc-400" },
+  change_password: { label: "Сменил пароль",         icon: "KeyRound",   color: "text-yellow-400" },
+};
+
+const CONTENT_KEY_LABELS: Record<string, string> = {
+  staff:      "Контакты РС ОИ",
+  home_links: "Ссылки на главной",
+  whats_new:  "Что нового",
 };
 
 interface Props {
@@ -27,7 +34,7 @@ export default function AdminAuditLog({ logs, loading, onRefresh }: Props) {
       <div className="flex items-center justify-between mb-4">
         <div>
           <p className="text-xs uppercase tracking-widest text-zinc-500 mb-1">Управление</p>
-          <h2 className="text-xl font-bold">Журнал Аудита</h2>
+          <h2 className="text-xl font-bold">Журнал изменений</h2>
           <p className="text-sm text-zinc-400 mt-1">Последние 50 действий в панели управления</p>
         </div>
         <button onClick={() => { playClickSound(); onRefresh(); }} className="text-zinc-400 hover:text-white transition-colors shrink-0">
@@ -36,12 +43,11 @@ export default function AdminAuditLog({ logs, loading, onRefresh }: Props) {
       </div>
 
       <div className="border border-zinc-800 bg-zinc-900/40 px-4 py-3 flex flex-col gap-1.5 mb-6 text-xs text-zinc-500">
-        <p className="text-zinc-400 font-semibold mb-1">Журнал Аудита записывает:</p>
-        <p>✅ Добавление пользователя в доступы;</p>
-        <p>✅ Удаление пользователя из доступов;</p>
+        <p className="text-zinc-400 font-semibold mb-1">Журнал записывает:</p>
+        <p>✅ Добавление / удаление пользователя в доступы;</p>
         <p>✅ Изменение роли / должности / ссылки участника;</p>
-        <p>✅ Сохранение контактов РС ОИ;</p>
-        <p>✅ Изменение ссылок на главной.</p>
+        <p>✅ Сохранение контактов РС ОИ, ссылок на главной, блока «Что нового»;</p>
+        <p>✅ Смена пароля.</p>
       </div>
 
       {loading ? (
@@ -58,9 +64,7 @@ export default function AdminAuditLog({ logs, loading, onRefresh }: Props) {
             const dateStr = date.toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", year: "2-digit", hour: "2-digit", minute: "2-digit" });
 
             let detailText = "";
-            if (entry.action === "add_access") {
-              detailText = `vk.ru/${entry.details.nickname}` + (entry.details.role ? ` · ${entry.details.role}` : "");
-            } else if (entry.action === "remove_access") {
+            if (entry.action === "add_access" || entry.action === "remove_access") {
               detailText = `vk.ru/${entry.details.nickname}` + (entry.details.role ? ` · ${entry.details.role}` : "");
             } else if (entry.action === "edit_access") {
               detailText = `vk.ru/${entry.details.nickname}`;
@@ -71,11 +75,9 @@ export default function AdminAuditLog({ logs, loading, onRefresh }: Props) {
                 detailText += ` · должность: ${entry.details.hospital_role}`;
               }
             } else if (entry.action === "edit_content") {
-              const keyLabels: Record<string, string> = {
-                staff: "Контакты РС ОИ",
-                home_links: "Ссылки на главной",
-              };
-              detailText = keyLabels[entry.details.key] ?? entry.details.key;
+              detailText = CONTENT_KEY_LABELS[entry.details.key] ?? entry.details.key;
+            } else if (entry.action === "change_password") {
+              detailText = `vk.ru/${entry.details.nickname}`;
             }
 
             return (

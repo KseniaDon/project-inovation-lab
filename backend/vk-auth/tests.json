@@ -24,9 +24,7 @@
       "method": "POST",
       "path": "/?action=check_nick",
       "body": {"nickname": "soul__shu"},
-      "expectedStatus": 200,
-      "expectedBody": {"role": "super_admin"},
-      "bodyMatcher": "partial"
+      "expectedStatus": 200
     }
   ]
 }

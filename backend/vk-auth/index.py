@@ -161,6 +161,11 @@ def handler(event: dict, context) -> dict:
                 conn.close()
                 return resp(403, {"error": "Можно менять только свой пароль"})
         cur.execute(f"UPDATE {s}.access_list SET password_hash = %s WHERE nickname = %s", (hash_pw(password), nick))
+        actor = user.get("nick", nick) if user else nick
+        cur.execute(
+            f"INSERT INTO {s}.audit_log (actor, action, details) VALUES (%s, %s, %s)",
+            (actor, "change_password", json.dumps({"nickname": nick}, ensure_ascii=False))
+        )
         conn.commit()
         conn.close()
         return resp(200, {"ok": True})

@@ -22,7 +22,7 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "whats_new", label: "Что нового",     icon: "Sparkles" },
   { id: "staff",     label: "Контакты РС ОИ", icon: "Users" },
   { id: "access",    label: "Доступы",        icon: "Shield" },
-  { id: "audit",     label: "Журнал Аудита",  icon: "ClipboardList" },
+  { id: "audit",     label: "Журнал изменений", icon: "ClipboardList" },
   { id: "password",  label: "Мой пароль",     icon: "KeyRound" },
 ];
 
