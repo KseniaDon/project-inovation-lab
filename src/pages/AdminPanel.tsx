@@ -11,18 +11,20 @@ import AdminAccess, { HospitalRole } from "./admin/AdminAccess";
 import AdminPassword from "./admin/AdminPassword";
 import AdminAuditLog, { AuditEntry } from "./admin/AdminAuditLog";
 import AdminWhatsNew from "./admin/AdminWhatsNew";
+import AdminTkm from "./admin/AdminTkm";
 import { WhatsNewEntry } from "@/components/WhatsNew";
 
 const API = "https://functions.poehali.dev/ee0c9d49-3da0-4e2e-a2ab-1f68f29a1405";
 
-type Tab = "home" | "whats_new" | "staff" | "access" | "audit" | "password";
+type Tab = "home" | "whats_new" | "staff" | "access" | "tkm" | "audit" | "password";
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "home",      label: "Главная",        icon: "Home" },
   { id: "whats_new", label: "Что нового",     icon: "Sparkles" },
   { id: "staff",     label: "Контакты РС ОИ", icon: "Users" },
   { id: "access",    label: "Доступы",        icon: "KeyRound" },
-  { id: "audit",     label: "Журнал изменений", icon: "ClipboardList" },
+  { id: "tkm",       label: "ТКМ",            icon: "ClipboardList" },
+  { id: "audit",     label: "Журнал изменений", icon: "ScrollText" },
   { id: "password",  label: "Мой пароль",     icon: "Shield" },
 ];
 
@@ -51,6 +53,11 @@ export default function AdminPanel() {
   const [staff, setStaff] = useState<StaffMember[]>(defaultStaff);
   const [staffSaving, setStaffSaving] = useState(false);
   const [staffSaved, setStaffSaved] = useState(false);
+
+  // TKM allowed list
+  const [tkmAllowed, setTkmAllowed] = useState<string[]>([]);
+  const [tkmSaving, setTkmSaving] = useState(false);
+  const [tkmSaved, setTkmSaved] = useState(false);
 
   // Access state
   const [accessUsers, setAccessUsers] = useState<AccessUser[]>([]);
@@ -96,6 +103,7 @@ export default function AdminPanel() {
       if (d.data?.staff) setStaff(d.data.staff);
       if (d.data?.home_links) setLinks(d.data.home_links);
       if (d.data?.whats_new) setWhatsNew(d.data.whats_new.map((e: WhatsNewEntry) => ({ ...e, id: e.id || `wn_${Math.random().toString(36).slice(2)}` })));
+      if (d.data?.tkm_allowed) setTkmAllowed(d.data.tkm_allowed);
     });
   }, [me, authFetch]);
 
@@ -182,6 +190,16 @@ export default function AdminPanel() {
     setTimeout(() => setStaffSaved(false), 2200);
   };
 
+  const saveTkm = async (list: string[]) => {
+    setTkmSaving(true);
+    await authFetch(`${API}?action=save_site_data`, { method: "POST", body: JSON.stringify({ key: "tkm_allowed", value: list }) });
+    setTkmAllowed(list);
+    setTkmSaving(false);
+    setTkmSaved(true);
+    invalidateSiteCache();
+    setTimeout(() => setTkmSaved(false), 2200);
+  };
+
   const addAccess = async () => {
     if (!newAccessNick.trim()) return;
     setAccessMsg("");
@@ -243,7 +261,11 @@ export default function AdminPanel() {
     );
   }
 
-  const visibleTabs = TABS.filter(t => t.id !== "staff" || canEditContacts);
+  const visibleTabs = TABS.filter(t => {
+    if (t.id === "staff") return canEditContacts;
+    if (t.id === "tkm") return canEditContacts;
+    return true;
+  });
 
   const tabContent = (
     <>
@@ -265,6 +287,9 @@ export default function AdminPanel() {
           newAccessRole={newAccessRole} setNewAccessRole={setNewAccessRole}
           newHospitalRole={newHospitalRole} setNewHospitalRole={setNewHospitalRole}
           accessMsg={accessMsg} onRefresh={loadAccess} onAdd={addAccess} onRemove={removeAccess} onEdit={editAccess} />
+      )}
+      {tab === "tkm" && (
+        <AdminTkm allowed={tkmAllowed} saving={tkmSaving} saved={tkmSaved} onSave={saveTkm} />
       )}
       {tab === "audit" && (
         <AdminAuditLog logs={auditLogs} loading={auditLoading} onRefresh={loadAudit} />

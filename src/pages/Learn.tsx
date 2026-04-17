@@ -36,6 +36,8 @@ import LearnFeldsherMedhelpSection from "./learn/LearnFeldsherMedhelpSection";
 import LearnFeldsherWardsSection from "./learn/LearnFeldsherWardsSection";
 import LearnTkmSection from "./learn/LearnTkmSection";
 
+const ADMIN_ROLES = ["super_admin", "head_admin", "admin", "moderator", "editor", "curator", "head_doctor", "curator_oi", "ward_head", "deputy"];
+
 export default function Learn() {
   const [active, setActive] = useState<SectionId>("intro");
   const navigate = useNavigate();
@@ -53,6 +55,12 @@ export default function Learn() {
   const introData = useSiteData("intro_data", defaultIntroData);
   const internExam = useSiteData("intern_exam", defaultInternExam);
   const feldsherPage = useSiteData<SimplePageData>("feldsher_page", defaultFeldsherPage);
+  const tkmAllowed = useSiteData<string[]>("tkm_allowed", []);
+
+  const myNick = (localStorage.getItem("admin_nickname") || "").toLowerCase();
+  const myRole = localStorage.getItem("admin_role") || "";
+  const isAdmin = ADMIN_ROLES.includes(myRole);
+  const hasTkmAccess = isAdmin || tkmAllowed.map(n => n.toLowerCase()).includes(myNick);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -70,7 +78,7 @@ export default function Learn() {
       </div>
 
       <div className="flex flex-1 pb-16 md:pb-0">
-        <LearnSidebar active={active} go={go} />
+        <LearnSidebar active={active} go={go} hasTkmAccess={hasTkmAccess} />
 
         {/* ── Content ── */}
         <main className={`flex-1 px-4 md:px-10 xl:px-16 py-6 md:py-10 min-w-0 mx-auto w-full ${active === "intern-binds" || active === "intern-evidence" || active === "intern-mis" || active === "intern-gov" ? "max-w-6xl" : "max-w-4xl"}`}>
@@ -237,7 +245,7 @@ export default function Learn() {
           {active === "feldsher-wards" && <LearnFeldsherWardsSection go={go} />}
 
           {/* ТКМ */}
-          {active === "tkm" && <LearnTkmSection />}
+          {active === "tkm" && hasTkmAccess && <LearnTkmSection />}
 
         </motion.div>
         </AnimatePresence>

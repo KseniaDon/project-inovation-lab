@@ -5,11 +5,12 @@ import { SectionId, NAV } from "./learnConfig";
 interface LearnSidebarProps {
   active: SectionId;
   go: (id: SectionId) => void;
+  hasTkmAccess?: boolean;
 }
 
 const ACCORDION_PARENTS: SectionId[] = ["intern", "feldsher"];
 
-function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: SectionId) => void; onClose?: () => void }) {
+function SidebarContent({ active, go, onClose, hasTkmAccess }: { active: SectionId; go: (id: SectionId) => void; onClose?: () => void; hasTkmAccess?: boolean }) {
   const isInternActive = NAV.some((n) => n.parent === "intern" && n.id === active) || active === "intern";
   const isFeldsherActive = NAV.some((n) => n.parent === "feldsher" && n.id === active) || active === "feldsher";
 
@@ -23,7 +24,7 @@ function SidebarContent({ active, go, onClose }: { active: SectionId; go: (id: S
   };
 
   const topItems = NAV.filter((item) => !item.parent && !ACCORDION_PARENTS.includes(item.id) && item.id !== "tkm");
-  const bottomItems = NAV.filter((item) => item.id === "tkm");
+  const bottomItems = NAV.filter((item) => item.id === "tkm" && hasTkmAccess);
 
   const handleGo = (id: SectionId) => {
     go(id);
@@ -247,7 +248,7 @@ function SidebarSearch({ go }: { go: (id: SectionId) => void }) {
   );
 }
 
-export default function LearnSidebar({ active, go }: LearnSidebarProps) {
+export default function LearnSidebar({ active, go, hasTkmAccess }: LearnSidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const activeLabel = NAV.find((n) => n.id === active)?.label ?? "Меню";
@@ -258,7 +259,7 @@ export default function LearnSidebar({ active, go }: LearnSidebarProps) {
       <aside className="hidden md:flex w-72 xl:w-80 shrink-0 border-r border-border flex-col py-6 sticky top-0 h-screen overflow-y-auto">
         <p className="px-5 text-xs uppercase tracking-widest text-muted-foreground mb-3">Разделы</p>
         <SidebarSearch go={go} />
-        <SidebarContent active={active} go={go} />
+        <SidebarContent active={active} go={go} hasTkmAccess={hasTkmAccess} />
       </aside>
 
       {/* Mobile: bottom bar button */}
@@ -291,7 +292,7 @@ export default function LearnSidebar({ active, go }: LearnSidebarProps) {
               </button>
             </div>
             <div className="py-4">
-              <SidebarContent active={active} go={go} onClose={() => setMobileOpen(false)} />
+              <SidebarContent active={active} go={go} onClose={() => setMobileOpen(false)} hasTkmAccess={hasTkmAccess} />
             </div>
           </div>
         </div>
