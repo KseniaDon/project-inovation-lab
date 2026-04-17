@@ -91,12 +91,35 @@ function playHeartbeat(ac: AudioContext, t: number) {
   thump(t + 0.22, 95, 0.18, 0.09);
 }
 
+const MEDICAL_FACTS = [
+  "Сердце взрослого человека бьётся около 100 000 раз в сутки.",
+  "Мозг потребляет около 20% всего кислорода в организме, хотя весит лишь 2% от массы тела.",
+  "Печень — единственный орган, способный полностью восстановиться даже после удаления 75% своей ткани.",
+  "Длина капилляров в теле человека — около 100 000 км. Это почти 2,5 оборота вокруг Земли.",
+  "Лёгкие расправлены площадью около 70 м² — размером теннисного корта.",
+  "Скелет взрослого человека содержит 206 костей, а у новорождённого их около 270.",
+  "Кровь совершает полный кругооборот по телу примерно за 60 секунд.",
+  "Желудок полностью обновляет слизистую оболочку каждые 3–4 дня, иначе переварил бы сам себя.",
+  "Роговица глаза — единственная ткань в теле без кровеносных сосудов: она питается прямо из воздуха.",
+  "Нейроны в мозге могут передавать импульс со скоростью до 430 км/ч.",
+  "Ухо человека различает более 400 000 различных звуков.",
+  "Ногти на руках растут примерно в 4 раза быстрее ногтей на ногах.",
+  "Тело взрослого человека содержит около 37 триллионов клеток.",
+  "Слюнные железы вырабатывают до 1,5 литра слюны в сутки.",
+  "Давление крови при систоле создаётся силой, достаточной, чтобы поднять струю на высоту 2,5 метра.",
+];
+
+function getRandomFact(): string {
+  return MEDICAL_FACTS[Math.floor(Math.random() * MEDICAL_FACTS.length)];
+}
+
 export default function SplashScreen({ onFinish }: SplashScreenProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef    = useRef<number>(0);
   const startRef  = useRef<number>(0);
   const [visible, setVisible]   = useState(false);
   const [fadeOut, setFadeOut]   = useState(false);
+  const [fact]                  = useState<string>(getRandomFact);
 
   useEffect(() => {
     const t0 = setTimeout(() => setVisible(true),   100);
@@ -304,6 +327,27 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
       {/* ECG — крупная полоса по центру */}
       <div className="relative z-10 w-full" style={{ height: "clamp(160px, 28vh, 260px)" }}>
         <canvas ref={canvasRef} className="w-full h-full" />
+      </div>
+
+      {/* Медицинский факт */}
+      <div
+        className="relative z-10 text-center px-8 mt-5 select-none max-w-xl"
+        style={{
+          opacity: visible ? 1 : 0,
+          transition: "opacity 0.8s ease-in 0.6s",
+        }}
+      >
+        <p
+          style={{
+            fontSize: "clamp(0.7rem, 2vw, 0.95rem)",
+            color: "rgba(255,150,150,0.75)",
+            letterSpacing: "0.04em",
+            lineHeight: 1.6,
+            fontStyle: "italic",
+          }}
+        >
+          💡 {fact}
+        </p>
       </div>
     </div>
   );
