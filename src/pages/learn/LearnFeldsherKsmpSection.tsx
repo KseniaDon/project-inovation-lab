@@ -161,7 +161,46 @@ export default function LearnFeldsherKsmpSection({ go }: Props) {
         )}
       </div>
 
-      {/* Основные правила */}
+      {/* Основные правила - блок */}
+      <div className="flex flex-col gap-4">
+        <p className="text-base font-semibold">Основные правила:</p>
+        <div className="flex flex-col gap-3">
+          <div className="flex items-start gap-3 text-base">
+            <span className="font-semibold shrink-0">1.</span>
+            <p className="leading-relaxed">Обязательно соблюдайте Правила Дорожного Движения;</p>
+          </div>
+          <div className="flex items-start gap-3 text-base">
+            <span className="font-semibold shrink-0">2.</span>
+            <p className="leading-relaxed">При выезде на вызов и госпитализации, при включенном СГУ — Вы можете отходить от ПДД, но не забывайте следить за дорогой, маневрировать, чтобы не было от Ваших последствий еще пострадавших;</p>
+          </div>
+          <div className="flex items-start gap-3 text-base">
+            <span className="font-semibold shrink-0">3.</span>
+            <p className="leading-relaxed">В случае, если Вы попали в ДТП во время обработки вызова, где Вы не виноваты, но есть пострадавшие — вызываете на место ДТП вторую РАСМП и едете дальше на свой вызов;</p>
+          </div>
+          <div className="flex items-start gap-3 text-base">
+            <span className="font-semibold shrink-0">4.</span>
+            <div className="flex flex-col gap-2">
+              <p className="leading-relaxed">Включать СГУ просто так — <span className="text-red-600 font-semibold">запрещено</span>; СГУ включается:</p>
+              <div className="flex flex-col gap-1.5 pl-1">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
+                  <span>При обработке вызова;</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
+                  <span>При госпитализации;</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
+                  <span>С разрешения Главного Врача и Первого Заместителя Главного Врача.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Ссылка на ОУМЗ */}
       <p className="text-sm text-left leading-relaxed">
         <span className="text-foreground">Основные правила работы на рабочем транспорте Вы можете посмотреть в официальном источнике ОУМЗ на госпортале:{" "}</span>
         <a
@@ -184,6 +223,19 @@ export default function LearnFeldsherKsmpSection({ go }: Props) {
           className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
         >
           Раздел 12. Автопарк.
+          <Icon name="ExternalLink" size={13} />
+        </a>
+      </p>
+
+      <p className="text-sm text-muted-foreground">
+        Законодательная база Республики Провинции на госпортале:{" "}
+        <a
+          href="https://forum.gtaprovince.ru/topic/639262-pravila-dorozhnogo-dvizheniya-respubliki/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+        >
+          Правила Дорожного Движения (ПДД).
           <Icon name="ExternalLink" size={13} />
         </a>
       </p>
