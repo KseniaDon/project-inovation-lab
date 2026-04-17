@@ -63,7 +63,7 @@ export default function AdminWhatsNew({ entries, saving, saved, canEdit, onUpdat
           <p className="text-sm text-zinc-500 py-4 text-center border border-zinc-800">Записей нет — блок скрыт на сайте</p>
         )}
         {entries.map((entry, i) => (
-          <div key={entry.id ?? i} className="border border-zinc-800 p-5 flex flex-col gap-3">
+          <div key={entry.id} className="border border-zinc-800 p-5 flex flex-col gap-3">
             <div className="flex items-center justify-between gap-2">
               <p className="text-xs uppercase tracking-widest text-zinc-500">Запись {i + 1}</p>
               {canEdit && (
@@ -132,6 +132,7 @@ export default function AdminWhatsNew({ entries, saving, saved, canEdit, onUpdat
                                 type="button"
                                 onClick={() => {
                                   onUpdate(i, "link", `/learn#${s.id}`);
+                                  onUpdate(i, "title", s.label);
                                   setOpenSelect(null);
                                 }}
                                 className="text-left text-xs text-zinc-300 hover:text-white hover:bg-zinc-800 px-3 py-2 transition-colors"

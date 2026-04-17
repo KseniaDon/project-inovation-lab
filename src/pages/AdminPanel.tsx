@@ -95,7 +95,7 @@ export default function AdminPanel() {
     authFetch(`${API}?action=site_data`).then(r => r.json()).then(d => {
       if (d.data?.staff) setStaff(d.data.staff);
       if (d.data?.home_links) setLinks(d.data.home_links);
-      if (d.data?.whats_new) setWhatsNew(d.data.whats_new);
+      if (d.data?.whats_new) setWhatsNew(d.data.whats_new.map((e: WhatsNewEntry) => ({ ...e, id: e.id || `wn_${Math.random().toString(36).slice(2)}` })));
     });
   }, [me, authFetch]);
 
