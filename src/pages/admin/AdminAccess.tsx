@@ -3,7 +3,7 @@ import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
 import { Role, AccessUser, ROLE_HIERARCHY, ROLE_META, canManage, canAddUsers, normalizeRole, roleRank } from "./adminTypes";
 
-export const HOSPITAL_ROLES = ["Нет", "ГВ", "КОИ", "ЗОИ", "ЗЗОИ"] as const;
+export const HOSPITAL_ROLES = ["Нет", "ГВ", "ПЗГВ", "КОИ", "ЗОИ", "ЗЗОИ"] as const;
 export type HospitalRole = typeof HOSPITAL_ROLES[number];
 
 interface EditState {
