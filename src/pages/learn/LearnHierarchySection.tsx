@@ -108,18 +108,18 @@ export default function LearnHierarchySection({ go }: Props) {
       </p>
 
       {/* Ссылка на госпортал */}
-      <div className="flex flex-col gap-2">
-        <p className="text-sm text-muted-foreground">Официальный раздел на госпортале по иерархии:</p>
+      <p className="text-sm text-muted-foreground">
+        Официальный раздел на госпортале по иерархии:{" "}
         <a
           href="https://forum.gtaprovince.ru/topic/853594-mz-faq-po-ministerstvu-zdravoohraneniya/?do=findComment&comment=5950234"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-base text-red-500 hover:text-red-400 transition-colors font-semibold"
+          className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
         >
-          <Icon name="ExternalLink" size={16} />
-          3. Иерархия
+          3. Иерархия.
+          <Icon name="ExternalLink" size={13} />
         </a>
-      </div>
+      </p>
     </div>
   );
 }
