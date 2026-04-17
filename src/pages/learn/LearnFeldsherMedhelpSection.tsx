@@ -119,6 +119,10 @@ export default function LearnFeldsherMedhelpSection({ go }: Props) {
       {/* Заголовок Процедуры */}
       <p className="text-center text-red-600 dark:text-red-400 font-bold text-lg">Процедуры</p>
 
+      <p className="text-base text-muted-foreground leading-relaxed">
+        Автору пока лень заполнять. Перезвоните попозже.
+      </p>
+
     </div>
   );
 }
