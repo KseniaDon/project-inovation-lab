@@ -61,12 +61,38 @@ export default function LearnFeldsherPrmoSection({ go }: Props) {
       </p>
 
       {/* Предупреждение */}
-      <div className="flex items-start gap-3 rounded-lg border border-orange-300 bg-orange-50 px-4 py-4">
-        <Icon name="TriangleAlert" size={18} className="text-orange-500 shrink-0 mt-0.5" />
-        <p className="text-sm leading-relaxed text-orange-900">
-          <span className="font-semibold">ВАЖНО:</span> При выезде на ПРМО мы не используем СГУ, едем согласно ПДД. Исключение: Вы наткнулись во время своего пути в больницу на пострадавшего и после оказания ПМП пострадавшему — Вы его госпитализируете в ближайшую больницу с соответствующим докладом.
+      <div className="flex items-start gap-3 bg-orange-500/10 border border-orange-500/40 px-4 py-3">
+        <Icon name="TriangleAlert" size={16} className="text-orange-400 shrink-0 mt-0.5" />
+        <p className="text-sm text-orange-300 leading-relaxed">
+          <span className="font-bold">ВАЖНО:</span> При выезде на ПРМО мы не используем СГУ, едем согласно ПДД. Исключение: Вы наткнулись во время своего пути в больницу на пострадавшего и после оказания ПМП пострадавшему — Вы его госпитализируете в ближайшую больницу с соответствующим докладом.
         </p>
       </div>
+
+      <p className="text-sm text-muted-foreground">
+        Таблица записанных машинистов на ПРМО:{" "}
+        <a
+          href="https://docs.google.com/spreadsheets/d/1clf7pSUqxYC3BVKM9IFOq_2vq7mpOnnK-G8F3YGF09s/edit?gid=175447097#gid=175447097"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+        >
+          Таблица ПРМО.
+          <Icon name="ExternalLink" size={13} />
+        </a>
+      </p>
+
+      <p className="text-sm text-muted-foreground">
+        Форма для записи на ПРМО для проводящих:{" "}
+        <a
+          href="https://docs.google.com/forms/d/e/1FAIpQLSdPJae6zew8YucW7JHeA18fUPZlj9rOrgDJgNHj6WIlFBdzSQ/closedform"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+        >
+          Форма для записи на ПРМО.
+          <Icon name="ExternalLink" size={13} />
+        </a>
+      </p>
 
       <p className="text-sm text-muted-foreground">
         Информационный раздел нашей больницы по ПРМО:{" "}
