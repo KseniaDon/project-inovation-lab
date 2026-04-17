@@ -286,7 +286,9 @@ export default function AdminPanel() {
           newAccessNick={newAccessNick} setNewAccessNick={setNewAccessNick}
           newAccessRole={newAccessRole} setNewAccessRole={setNewAccessRole}
           newHospitalRole={newHospitalRole} setNewHospitalRole={setNewHospitalRole}
-          accessMsg={accessMsg} onRefresh={loadAccess} onAdd={addAccess} onRemove={removeAccess} onEdit={editAccess} />
+          accessMsg={accessMsg} tkmAllowed={tkmAllowed}
+          onRefresh={loadAccess} onAdd={addAccess} onRemove={removeAccess} onEdit={editAccess}
+          onSaveTkm={async (list) => { await saveTkm(list); }} />
       )}
       {tab === "tkm" && (
         <AdminTkm allowed={tkmAllowed} saving={tkmSaving} saved={tkmSaved} onSave={saveTkm} />

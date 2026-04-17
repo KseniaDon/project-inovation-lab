@@ -10,6 +10,7 @@ interface EditState {
   role: Role;
   href: string;
   hospital_role: string;
+  tkm: boolean;
 }
 
 interface Props {
@@ -23,10 +24,12 @@ interface Props {
   newHospitalRole: HospitalRole;
   setNewHospitalRole: (v: HospitalRole) => void;
   accessMsg: string;
+  tkmAllowed: string[];
   onRefresh: () => void;
   onAdd: () => void;
   onRemove: (nick: string) => void;
   onEdit: (nick: string, data: { role?: Role; href?: string; hospital_role?: string }) => Promise<void>;
+  onSaveTkm: (list: string[]) => Promise<void>;
 }
 
 export default function AdminAccess({
@@ -36,7 +39,8 @@ export default function AdminAccess({
   newAccessRole, setNewAccessRole,
   newHospitalRole, setNewHospitalRole,
   accessMsg,
-  onRefresh, onAdd, onRemove, onEdit,
+  tkmAllowed,
+  onRefresh, onAdd, onRemove, onEdit, onSaveTkm,
 }: Props) {
   const myRole = normalizeRole(me.role as string);
   const canAdd = canAddUsers(myRole);
@@ -44,7 +48,7 @@ export default function AdminAccess({
   const canSeeHints = ["super_admin", "head_admin", "admin"].includes(myRole);
 
   const [editingNick, setEditingNick] = useState<string | null>(null);
-  const [editState, setEditState] = useState<EditState>({ role: "editor", href: "", hospital_role: "" });
+  const [editState, setEditState] = useState<EditState>({ role: "editor", href: "", hospital_role: "", tkm: false });
   const [editSaving, setEditSaving] = useState(false);
 
   // Локальный порядок карточек
@@ -92,7 +96,13 @@ export default function AdminAccess({
   const startEdit = (u: AccessUser) => {
     playClickSound();
     setEditingNick(u.nickname);
-    setEditState({ role: normalizeRole(u.role as string), href: u.href || "", hospital_role: u.hospital_role || "Нет" });
+    const nick = u.nickname.toLowerCase();
+    setEditState({
+      role: normalizeRole(u.role as string),
+      href: u.href || "",
+      hospital_role: u.hospital_role || "Нет",
+      tkm: tkmAllowed.map(n => n.toLowerCase()).includes(nick),
+    });
   };
 
   const cancelEdit = () => { setEditingNick(null); };
@@ -101,6 +111,14 @@ export default function AdminAccess({
     if (!editingNick) return;
     setEditSaving(true);
     await onEdit(editingNick, { role: editState.role, href: editState.href, hospital_role: editState.hospital_role });
+    const nick = editingNick.toLowerCase();
+    const currentTkm = tkmAllowed.map(n => n.toLowerCase());
+    const hasTkm = currentTkm.includes(nick);
+    if (editState.tkm && !hasTkm) {
+      await onSaveTkm([...tkmAllowed, editingNick]);
+    } else if (!editState.tkm && hasTkm) {
+      await onSaveTkm(tkmAllowed.filter(n => n.toLowerCase() !== nick));
+    }
     setEditSaving(false);
     setEditingNick(null);
   };
@@ -176,6 +194,9 @@ export default function AdminAccess({
                       {u.hospital_role && u.hospital_role !== "Нет" && u.hospital_role !== "" && (
                         <span className="ml-2 text-zinc-600">· {u.hospital_role}</span>
                       )}
+                      {tkmAllowed.map(n => n.toLowerCase()).includes(u.nickname.toLowerCase()) && (
+                        <span className="ml-2 text-blue-500">· ТКМ</span>
+                      )}
                     </p>
                   </div>
 
@@ -241,6 +262,15 @@ export default function AdminAccess({
                         className="bg-zinc-900 border border-zinc-700 text-white px-2.5 py-1.5 text-xs outline-none focus:border-red-600 transition-colors"
                       />
                     </div>
+                    <label className="flex items-center gap-2.5 cursor-pointer select-none w-fit">
+                      <input
+                        type="checkbox"
+                        checked={editState.tkm}
+                        onChange={e => setEditState(s => ({ ...s, tkm: e.target.checked }))}
+                        className="w-3.5 h-3.5 accent-red-600"
+                      />
+                      <span className="text-xs text-zinc-300">Допуск к ТКМ</span>
+                    </label>
                     <button
                       onClick={saveEdit}
                       disabled={editSaving}
