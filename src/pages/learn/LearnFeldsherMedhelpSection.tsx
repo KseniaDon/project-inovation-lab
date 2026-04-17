@@ -50,7 +50,7 @@ export default function LearnFeldsherMedhelpSection({ go }: Props) {
         {/* Рентген */}
         <div>
           <span className="text-red-600 dark:text-red-400 font-semibold">Рентген</span>
-          <span className="text-base text-foreground leading-relaxed"> — выполняется при подозрении закрытых переломах, а также при открытых переломах, чтобы выявить, есть ли в теле человека раздробленные кости, которых не видно невооруженным глазом.</span>
+          <span className="text-base text-foreground leading-relaxed"> — выполняется при подозрении закрытых переломах, а также при открытых переломах, чтобы выявить, есть ли в теле человека раздробленные кости, которых не видно невооруженным глазом. Если к Вам придут и спросят: «Можно ли делать повторный снимок рентгена, если снимок был сделан 5 минут назад?» — говорите, что <span className="text-red-600 dark:text-red-400 font-semibold">не рекомендуется</span>.</span>
         </div>
 
         {/* ЭКГ */}
