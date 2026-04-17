@@ -201,10 +201,8 @@ export default function Hero() {
             <span className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-white/30" />
             <span className="absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l border-white/30" />
             <span className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r border-white/30" />
-            <div className="w-1.5 h-1.5 rotate-45 bg-red-600/70 shrink-0" />
             <Icon name="UserCog" size={15} />
             <span>Для РС ОИ</span>
-            <div className="w-1.5 h-1.5 rotate-45 bg-red-600/70 shrink-0" />
           </button>
         </motion.div>
 
