@@ -199,6 +199,48 @@ export default function LearnFeldsherPatrolSection({ go }: Props) {
               />
             </div>
 
+            {/* 11. Табачный завод */}
+            <div className="flex flex-col gap-3 pt-4 border-t border-border">
+              <div className="flex items-start gap-3">
+                <span className="text-base font-semibold shrink-0">11.</span>
+                <p className="text-base leading-relaxed">Табачный завод</p>
+              </div>
+              <ImageLightbox
+                src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/60dd36ee-5bc5-4e5f-83e4-5d1492eac85d.png"
+                alt="Табачный завод"
+                className="w-full rounded-sm border border-border"
+                caption="Скриншот №11: Табачный завод."
+              />
+            </div>
+
+            {/* 12. ТТУ */}
+            <div className="flex flex-col gap-3 pt-4 border-t border-border">
+              <div className="flex items-start gap-3">
+                <span className="text-base font-semibold shrink-0">12.</span>
+                <p className="text-base leading-relaxed">ТТУ</p>
+              </div>
+              <ImageLightbox
+                src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/a2aaa6b3-cf83-4584-83fa-4f912592bd80.png"
+                alt="ТТУ"
+                className="w-full rounded-sm border border-border"
+                caption="Скриншот №12: ТТУ."
+              />
+            </div>
+
+            {/* 13. Футбольное поле ПГТ Волчанск */}
+            <div className="flex flex-col gap-3 pt-4 border-t border-border">
+              <div className="flex items-start gap-3">
+                <span className="text-base font-semibold shrink-0">13.</span>
+                <p className="text-base leading-relaxed">Футбольное поле ПГТ Волчанск</p>
+              </div>
+              <ImageLightbox
+                src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/40a867b2-5a94-498b-ade5-4a61476430b4.png"
+                alt="Футбольное поле ПГТ Волчанск"
+                className="w-full rounded-sm border border-border"
+                caption="Скриншот №13: Футбольное поле ПГТ Волчанск."
+              />
+            </div>
+
           </div>
         )}
       </div>
