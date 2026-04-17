@@ -131,27 +131,27 @@ export default function AdminPanel() {
     setTimeout(() => setWhatsNewSaved(false), 2200);
   };
 
-  const updateWhatsNew = (i: number, field: keyof WhatsNewEntry, val: string | boolean) => {
+  const updateWhatsNew = useCallback((i: number, field: keyof WhatsNewEntry, val: string | boolean) => {
     setWhatsNew(prev => prev.map((e, idx) => idx === i ? { ...e, [field]: val } : e));
-  };
+  }, []);
 
-  const removeWhatsNew = (i: number) => {
+  const removeWhatsNew = useCallback((i: number) => {
     setWhatsNew(prev => prev.filter((_, idx) => idx !== i));
-  };
+  }, []);
 
-  const reorderWhatsNew = (oldIndex: number, newIndex: number) => {
+  const reorderWhatsNew = useCallback((oldIndex: number, newIndex: number) => {
     setWhatsNew(prev => {
       const next = [...prev];
       const [moved] = next.splice(oldIndex, 1);
       next.splice(newIndex, 0, moved);
       return next;
     });
-  };
+  }, []);
 
-  const addWhatsNew = () => {
+  const addWhatsNew = useCallback(() => {
     const today = new Date().toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }).replace(" г.", "");
     setWhatsNew(prev => [...prev, { id: `wn_${Date.now()}`, date: today, title: "", desc: "", link: "", linkLabel: "Перейти к разделу", linkExternal: false }]);
-  };
+  }, []);
 
   const saveLinks = async () => {
     setLinksSaving(true);

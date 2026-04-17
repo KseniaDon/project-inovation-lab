@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import {
   DndContext,
   closestCenter,
@@ -64,13 +64,12 @@ interface SortableItemProps {
   entry: WhatsNewEntry;
   i: number;
   canEdit: boolean;
-  openSelect: number | null;
-  setOpenSelect: (v: number | null) => void;
   onUpdate: (i: number, field: keyof WhatsNewEntry, val: string | boolean) => void;
   onRemove: (i: number) => void;
 }
 
-function SortableItem({ entry, i, canEdit, openSelect, setOpenSelect, onUpdate, onRemove }: SortableItemProps) {
+const SortableItem = memo(function SortableItem({ entry, i, canEdit, onUpdate, onRemove }: SortableItemProps) {
+  const [openSelect, setOpenSelect] = useState(false);
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: entry.id! });
 
   const style = {
@@ -145,13 +144,13 @@ function SortableItem({ entry, i, canEdit, openSelect, setOpenSelect, onUpdate, 
                 <div className="relative">
                   <button
                     type="button"
-                    onClick={() => setOpenSelect(openSelect === i ? null : i)}
+                    onClick={() => setOpenSelect(v => !v)}
                     className="h-full px-2 bg-zinc-800 border border-zinc-700 hover:border-zinc-500 text-zinc-400 hover:text-white transition-colors"
                     title="Выбрать раздел обучения"
                   >
                     <Icon name="BookOpen" size={13} />
                   </button>
-                  {openSelect === i && (
+                  {openSelect && (
                     <div className="absolute right-0 top-full mt-1 z-50 bg-zinc-900 border border-zinc-700 shadow-xl w-64 max-h-64 overflow-y-auto flex flex-col">
                       <p className="text-xs text-zinc-500 px-3 py-2 border-b border-zinc-800">Разделы обучения</p>
                       {LEARN_SECTIONS.map(s => (
@@ -161,7 +160,7 @@ function SortableItem({ entry, i, canEdit, openSelect, setOpenSelect, onUpdate, 
                           onClick={() => {
                             onUpdate(i, "link", `/learn#${s.id}`);
                             onUpdate(i, "title", s.label);
-                            setOpenSelect(null);
+                            setOpenSelect(false);
                           }}
                           className="text-left text-xs text-zinc-300 hover:text-white hover:bg-zinc-800 px-3 py-2 transition-colors"
                         >
@@ -205,10 +204,9 @@ function SortableItem({ entry, i, canEdit, openSelect, setOpenSelect, onUpdate, 
       )}
     </div>
   );
-}
+});
 
 export default function AdminWhatsNew({ entries, saving, saved, canEdit, onUpdate, onRemove, onAdd, onSave, onReorder }: Props) {
-  const [openSelect, setOpenSelect] = useState<number | null>(null);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
@@ -245,8 +243,6 @@ export default function AdminWhatsNew({ entries, saving, saved, canEdit, onUpdat
                 entry={entry}
                 i={i}
                 canEdit={canEdit}
-                openSelect={openSelect}
-                setOpenSelect={setOpenSelect}
                 onUpdate={onUpdate}
                 onRemove={onRemove}
               />
