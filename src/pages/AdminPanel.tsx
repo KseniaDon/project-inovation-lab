@@ -223,17 +223,17 @@ export default function AdminPanel() {
     setPwLoading(false);
   };
 
-  const updateMember = (i: number, field: keyof StaffMember, val: string) => {
+  const updateMember = useCallback((i: number, field: keyof StaffMember, val: string) => {
     setStaff(prev => prev.map((m, idx) => idx === i ? { ...m, [field]: val } : m));
-  };
+  }, []);
 
-  const removeMember = (i: number) => {
+  const removeMember = useCallback((i: number) => {
     setStaff(prev => prev.filter((_, idx) => idx !== i));
-  };
+  }, []);
 
-  const addMember = () => {
+  const addMember = useCallback(() => {
     setStaff(prev => [...prev, { role: "", name: "", nickname: "", href: "", badge: "", badgeColor: "bg-zinc-700" }]);
-  };
+  }, []);
 
   if (!me) {
     return (
@@ -245,7 +245,7 @@ export default function AdminPanel() {
 
   const visibleTabs = TABS.filter(t => t.id !== "staff" || canEditContacts);
 
-  const TabContent = () => (
+  const tabContent = (
     <>
       {tab === "home" && (
         <AdminHome links={links} linksSaving={linksSaving} linksSaved={linksSaved}
@@ -326,7 +326,7 @@ export default function AdminPanel() {
         </aside>
         <main className="flex-1 overflow-y-auto p-8">
           <div className="max-w-3xl mx-auto">
-            <TabContent />
+            {tabContent}
           </div>
         </main>
       </div>
@@ -334,7 +334,7 @@ export default function AdminPanel() {
       {/* Mobile layout: content + bottom nav */}
       <div className="flex md:hidden flex-col flex-1 overflow-hidden">
         <main className="flex-1 overflow-y-auto p-4 pb-24">
-          <TabContent />
+          {tabContent}
         </main>
         <nav className="fixed bottom-0 left-0 right-0 z-50 bg-zinc-900 border-t border-zinc-800 flex items-stretch">
           {visibleTabs.map(t => (
