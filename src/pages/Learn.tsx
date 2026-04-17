@@ -36,7 +36,7 @@ import LearnFeldsherMedhelpSection from "./learn/LearnFeldsherMedhelpSection";
 import LearnFeldsherWardsSection from "./learn/LearnFeldsherWardsSection";
 import LearnTkmSection from "./learn/LearnTkmSection";
 
-const ADMIN_ROLES = ["super_admin", "head_admin", "admin", "moderator", "editor", "curator", "head_doctor", "curator_oi", "ward_head", "deputy"];
+const ADMIN_ROLES = ["super_admin", "head_admin", "admin", "moderator", "editor"];
 
 export default function Learn() {
   const [active, setActive] = useState<SectionId>("intro");
