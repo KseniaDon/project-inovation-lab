@@ -180,7 +180,7 @@ export default function LearnFeldsherKsmpSection({ go }: Props) {
           <div className="flex items-start gap-3 text-base">
             <span className="font-semibold shrink-0">4.</span>
             <div className="flex flex-col gap-2">
-              <p className="leading-relaxed">Включать СГУ просто так — <span className="text-red-600 font-semibold">запрещено</span>; СГУ включается:</p>
+              <p className="leading-relaxed">Включать СГУ просто так — <span className="text-red-600 font-semibold">запрещено</span>. СГУ включается только в этих случаях:</p>
               <div className="flex flex-col gap-1.5 pl-1">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
@@ -192,7 +192,7 @@ export default function LearnFeldsherKsmpSection({ go }: Props) {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
-                  <span>С разрешения Главного Врача и Первого Заместителя Главного Врача.</span>
+                  <span>С разрешения Главного Врача или Первого Заместителя Главного Врача.</span>
                 </div>
               </div>
             </div>
@@ -202,7 +202,7 @@ export default function LearnFeldsherKsmpSection({ go }: Props) {
 
       {/* Ссылка на ОУМЗ */}
       <p className="text-sm text-left leading-relaxed">
-        <span className="text-foreground">Основные правила работы на рабочем транспорте Вы можете посмотреть в официальном источнике ОУМЗ на госпортале:{" "}</span>
+        <span className="text-foreground">Все правила работы на рабочем транспорте Вы можете посмотреть в официальном источнике ОУМЗ на госпортале:{" "}</span>
         <a
           href="https://forum.gtaprovince.ru/topic/853771-mz-obschiy-ustav-ministerstva-zdravoohraneniya/"
           target="_blank"
