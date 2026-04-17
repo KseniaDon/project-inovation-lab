@@ -38,6 +38,7 @@ export default function LearnFeldsherPatrolSection({ go }: Props) {
         <span className="text-red-600 font-semibold">категорически запрещено!</span> Исключением может служить только
         поступивший вызов и госпитализация во время Вашего поста или патруля. Минимальное время поста и патруля —{" "}
         <span className="text-red-600 font-semibold">10 минут</span>.
+        {" "}Каждые 10 минут вы должны делать доклад о состоянии Вашей работы. Максимальное время поста и патруля не ограничено.
       </p>
 
       <div className="border border-border rounded-lg overflow-hidden">
