@@ -129,6 +129,76 @@ export default function LearnFeldsherPatrolSection({ go }: Props) {
               />
             </div>
 
+            {/* 6. Банк */}
+            <div className="flex flex-col gap-3 pt-4 border-t border-border">
+              <div className="flex items-start gap-3">
+                <span className="text-base font-semibold shrink-0">6.</span>
+                <p className="text-base leading-relaxed">Банк</p>
+              </div>
+              <ImageLightbox
+                src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/d71df6b8-5a0e-4819-9027-0dcc25636464.png"
+                alt="Банк"
+                className="w-full rounded-sm border border-border"
+                caption="Скриншот №6: Парковка у банка Невского."
+              />
+            </div>
+
+            {/* 7. Водная школа */}
+            <div className="flex flex-col gap-3 pt-4 border-t border-border">
+              <div className="flex items-start gap-3">
+                <span className="text-base font-semibold shrink-0">7.</span>
+                <p className="text-base leading-relaxed">Водная школа</p>
+              </div>
+              <ImageLightbox
+                src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/672373a4-b283-4618-b2ce-1abbc655ab8b.png"
+                alt="Водная школа"
+                className="w-full rounded-sm border border-border"
+                caption="Скриншот №7: Водная школа."
+              />
+            </div>
+
+            {/* 8. Завод Красный октябрь */}
+            <div className="flex flex-col gap-3 pt-4 border-t border-border">
+              <div className="flex items-start gap-3">
+                <span className="text-base font-semibold shrink-0">8.</span>
+                <p className="text-base leading-relaxed">Завод "Красный октябрь"</p>
+              </div>
+              <ImageLightbox
+                src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/011939f0-9429-44b5-b353-26b705599df8.png"
+                alt='Завод "Красный октябрь"'
+                className="w-full rounded-sm border border-border"
+                caption='Скриншот №8: Завод "Красный октябрь".'
+              />
+            </div>
+
+            {/* 9. Речной вокзал */}
+            <div className="flex flex-col gap-3 pt-4 border-t border-border">
+              <div className="flex items-start gap-3">
+                <span className="text-base font-semibold shrink-0">9.</span>
+                <p className="text-base leading-relaxed">Речной вокзал</p>
+              </div>
+              <ImageLightbox
+                src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/28267791-9344-43b4-9f59-05d26db7563f.png"
+                alt="Речной вокзал"
+                className="w-full rounded-sm border border-border"
+                caption="Скриншот №9: Речной вокзал."
+              />
+            </div>
+
+            {/* 10. СТО */}
+            <div className="flex flex-col gap-3 pt-4 border-t border-border">
+              <div className="flex items-start gap-3">
+                <span className="text-base font-semibold shrink-0">10.</span>
+                <p className="text-base leading-relaxed">СТО</p>
+              </div>
+              <ImageLightbox
+                src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/beb48cbb-2d60-46dc-8463-1d0cde780b56.png"
+                alt="СТО"
+                className="w-full rounded-sm border border-border"
+                caption="Скриншот №10: СТО."
+              />
+            </div>
+
           </div>
         )}
       </div>
