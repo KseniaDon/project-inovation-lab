@@ -167,18 +167,22 @@ export default function LearnFeldsherKsmpSection({ go }: Props) {
         <div className="flex flex-col gap-3">
           <div className="flex items-start gap-3 text-base">
             <span className="font-semibold shrink-0">1.</span>
-            <p className="leading-relaxed">Обязательно соблюдайте Правила Дорожного Движения;</p>
+            <p className="leading-relaxed">Обрабатывать вызовы, выезжать на посты и патрули можно только с должности Лаборанта и выше. Сейчас Вам можно выезжать на вызовы, посты и патрули только в качестве напарника с опытным врачом (Лаборант и выше), где Вы сидите на пассажирском сидении;</p>
           </div>
           <div className="flex items-start gap-3 text-base">
             <span className="font-semibold shrink-0">2.</span>
-            <p className="leading-relaxed">При выезде на вызов и госпитализации, при включенном СГУ — Вы можете отходить от ПДД, но не забывайте следить за дорогой, маневрировать, чтобы не было от Ваших последствий еще пострадавших;</p>
+            <p className="leading-relaxed">Обязательно соблюдайте Правила Дорожного Движения;</p>
           </div>
           <div className="flex items-start gap-3 text-base">
             <span className="font-semibold shrink-0">3.</span>
-            <p className="leading-relaxed">В случае, если Вы попали в ДТП во время обработки вызова, где Вы не виноваты, но есть пострадавшие — вызываете на место ДТП вторую РАСМП и едете дальше на свой вызов;</p>
+            <p className="leading-relaxed">При выезде на вызов и госпитализации, при включенном СГУ — Вы можете отходить от ПДД, но не забывайте следить за дорогой, маневрировать, чтобы не было от Ваших последствий еще пострадавших;</p>
           </div>
           <div className="flex items-start gap-3 text-base">
             <span className="font-semibold shrink-0">4.</span>
+            <p className="leading-relaxed">В случае, если Вы попали в ДТП во время обработки вызова, где Вы не виноваты, но есть пострадавшие — вызываете на место ДТП вторую РАСМП и едете дальше на свой вызов;</p>
+          </div>
+          <div className="flex items-start gap-3 text-base">
+            <span className="font-semibold shrink-0">5.</span>
             <div className="flex flex-col gap-2">
               <p className="leading-relaxed">Включать СГУ просто так — <span className="text-red-600 font-semibold">запрещено</span>. СГУ включается только в этих случаях:</p>
               <div className="flex flex-col gap-1.5 pl-1">
