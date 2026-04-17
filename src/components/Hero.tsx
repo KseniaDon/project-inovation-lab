@@ -1,10 +1,11 @@
 import { useScroll, useTransform, motion } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { playClickSound } from "@/hooks/useSound";
 import { useSiteData } from "@/hooks/useSiteData";
 import Icon from "@/components/ui/icon";
 import RichContent from "@/components/ui/rich-content";
+import { MEDICAL_FACTS } from "@/components/SplashScreen";
 
 const defaultHero = {
   subtitle: "Методическое пособие для сотрудников отделения. Всё, что нужно знать с первого дня службы.",
@@ -32,6 +33,7 @@ export default function Hero() {
   const heroData = useSiteData("hero", defaultHero);
   const container = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const [fact] = useState<string>(() => MEDICAL_FACTS[Math.floor(Math.random() * MEDICAL_FACTS.length)]);
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ["start start", "end start"],
@@ -206,6 +208,44 @@ export default function Hero() {
           </button>
         </motion.div>
 
+        {/* Медицинский факт дня */}
+        <motion.div
+          variants={fadeIn}
+          initial="hidden"
+          animate="visible"
+          custom={1.1}
+          className="flex items-start gap-3 max-w-xl w-full px-4 py-3"
+          style={{
+            background: "linear-gradient(160deg, rgba(0,0,0,0.45) 0%, rgba(10,10,10,0.35) 100%)",
+            border: "1px solid rgba(220,38,38,0.2)",
+            backdropFilter: "blur(8px)",
+          }}
+        >
+          <span style={{ fontSize: "1.1rem", lineHeight: 1.4, flexShrink: 0 }}>💡</span>
+          <div className="flex flex-col gap-0.5">
+            <span
+              style={{
+                fontSize: "0.6rem",
+                letterSpacing: "0.3em",
+                textTransform: "uppercase",
+                color: "rgba(220,38,38,0.85)",
+                fontWeight: 600,
+              }}
+            >
+              Факт дня
+            </span>
+            <p
+              style={{
+                fontSize: "clamp(0.72rem, 2vw, 0.85rem)",
+                color: "rgba(255,255,255,0.75)",
+                lineHeight: 1.6,
+                fontStyle: "italic",
+              }}
+            >
+              {fact}
+            </p>
+          </div>
+        </motion.div>
 
       </div>
     </div>
