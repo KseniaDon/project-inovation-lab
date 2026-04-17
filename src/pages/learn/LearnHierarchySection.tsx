@@ -48,11 +48,9 @@ export default function LearnHierarchySection({ go }: Props) {
       {/* Ранги */}
       <div className="flex flex-col gap-2">
         {ranks.map((r) => (
-          <div key={r.num} className="flex items-center gap-3">
-            <div className="shrink-0 w-7 h-7 rounded-full bg-red-600 flex items-center justify-center">
-              <span className="text-xs font-bold text-white">{r.num}</span>
-            </div>
-            <span className="text-sm text-foreground">{r.title}</span>
+          <div key={r.num} className="flex items-center gap-2">
+            <div className="shrink-0 w-2 h-2 rounded-full bg-red-600" />
+            <span className="text-sm text-foreground">{r.title} [{r.num}]</span>
           </div>
         ))}
       </div>
@@ -98,14 +96,9 @@ export default function LearnHierarchySection({ go }: Props) {
 
       <div className="flex flex-col gap-2">
         {departmentRanks.map((r, i) => (
-          <div key={i} className="flex items-start gap-3">
-            <div className="shrink-0 w-7 h-7 rounded-full bg-red-600 flex items-center justify-center mt-0.5">
-              <span className="text-xs font-bold text-white">{i + 1}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold text-foreground">{r.title}</span>
-              <span className="text-xs text-muted-foreground">{r.range}</span>
-            </div>
+          <div key={i} className="flex items-center gap-2">
+            <div className="shrink-0 w-2 h-2 rounded-full bg-red-600" />
+            <span className="text-sm text-foreground">{r.title} {r.range}</span>
           </div>
         ))}
       </div>
