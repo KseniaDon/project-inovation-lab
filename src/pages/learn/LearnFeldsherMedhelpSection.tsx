@@ -73,12 +73,12 @@ export default function LearnFeldsherMedhelpSection({ go }: Props) {
           </div>
           <ul className="flex flex-col gap-1.5 ml-2">
             {[
-              { red: true,  text: "Эпилепсия" },
-              { red: false, text: "Панические атаки" },
-              { red: false, text: "Обмороки и потеря сознания" },
-              { red: false, text: "Изучение смены фаз сна и бодрствования" },
-              { red: false, text: "Диагностирование нарушения сна (бессонница, лунатизм, апноэ и др.)" },
-              { red: false, text: "Оценивание степени повреждения тканей мозга после травм, инсультов" },
+              { red: true, text: "Эпилепсия" },
+              { red: true, text: "Панические атаки" },
+              { red: true, text: "Обмороки и потеря сознания" },
+              { red: true, text: "Изучение смены фаз сна и бодрствования" },
+              { red: true, text: "Диагностирование нарушения сна (бессонница, лунатизм, апноэ и др.)" },
+              { red: true, text: "Оценивание степени повреждения тканей мозга после травм, инсультов" },
             ].map(({ red, text }, i) => (
               <li key={i} className="flex items-start gap-2 text-base text-foreground leading-relaxed">
                 <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${red ? "bg-red-600" : "bg-foreground/60"}`} />
