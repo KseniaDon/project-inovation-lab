@@ -1,6 +1,37 @@
+import { useState } from "react";
 import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
 import { WhatsNewEntry } from "@/components/WhatsNew";
+
+const LEARN_SECTIONS = [
+  { id: "intern", label: "Интерн" },
+  { id: "intern-binds", label: "Настройка биндов" },
+  { id: "intern-radio", label: "Использование рации" },
+  { id: "intern-reports", label: "Доклады в рацию" },
+  { id: "intern-commands", label: "Основные команды" },
+  { id: "intern-abbr", label: "Аббревиатуры" },
+  { id: "intern-hierarchy", label: "Иерархия" },
+  { id: "intern-schedule", label: "График работы" },
+  { id: "intern-floors", label: "Распределение этажей" },
+  { id: "intern-activity", label: "Журнал активности (ЖА)" },
+  { id: "intern-charter", label: "Уставная документация" },
+  { id: "intern-departments", label: "Отделения ЦГБ-Н" },
+  { id: "intern-drugs", label: "Препараты" },
+  { id: "intern-oath", label: "Клятва врача" },
+  { id: "intern-report", label: "Подготовка к повышению" },
+  { id: "intern-evidence", label: "Фиксация доказательств" },
+  { id: "intern-mis", label: "МИС «Здоровье»" },
+  { id: "intern-gov", label: "Госпортал" },
+  { id: "feldsher", label: "Фельдшер" },
+  { id: "feldsher-ksmp", label: "Рабочий транспорт" },
+  { id: "feldsher-radio", label: "Работа с рацией (Фельдшер)" },
+  { id: "feldsher-pmp", label: "ПМП" },
+  { id: "feldsher-mzportal", label: "МЗ Портал" },
+  { id: "feldsher-patrol", label: "Пост и патрулирование" },
+  { id: "feldsher-prmo", label: "ПРМО" },
+  { id: "feldsher-medhelp", label: "Оказание врачебной помощи" },
+  { id: "feldsher-wards", label: "Специализация отделений" },
+];
 
 interface Props {
   entries: WhatsNewEntry[];
@@ -14,6 +45,8 @@ interface Props {
 }
 
 export default function AdminWhatsNew({ entries, saving, saved, canEdit, onUpdate, onRemove, onAdd, onSave }: Props) {
+  const [openSelect, setOpenSelect] = useState<number | null>(null);
+
   return (
     <div className="max-w-2xl flex flex-col gap-6">
       <div>
@@ -74,12 +107,43 @@ export default function AdminWhatsNew({ entries, saving, saved, canEdit, onUpdat
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="flex flex-col gap-1">
                     <label className="text-xs text-zinc-500">Ссылка (необязательно)</label>
-                    <input
-                      value={entry.link || ""}
-                      onChange={e => onUpdate(i, "link", e.target.value)}
-                      className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-sm outline-none focus:border-red-600 transition-colors"
-                      placeholder="/learn#intern-hierarchy"
-                    />
+                    <div className="flex gap-1">
+                      <input
+                        value={entry.link || ""}
+                        onChange={e => onUpdate(i, "link", e.target.value)}
+                        className="bg-zinc-900 border border-zinc-700 text-white px-3 py-2 text-sm outline-none focus:border-red-600 transition-colors flex-1 min-w-0"
+                        placeholder="/learn#intern-hierarchy"
+                      />
+                      <div className="relative">
+                        <button
+                          type="button"
+                          onClick={() => setOpenSelect(openSelect === i ? null : i)}
+                          className="h-full px-2 bg-zinc-800 border border-zinc-700 hover:border-zinc-500 text-zinc-400 hover:text-white transition-colors"
+                          title="Выбрать раздел обучения"
+                        >
+                          <Icon name="BookOpen" size={13} />
+                        </button>
+                        {openSelect === i && (
+                          <div className="absolute right-0 top-full mt-1 z-50 bg-zinc-900 border border-zinc-700 shadow-xl w-64 max-h-64 overflow-y-auto flex flex-col">
+                            <p className="text-xs text-zinc-500 px-3 py-2 border-b border-zinc-800">Разделы обучения</p>
+                            {LEARN_SECTIONS.map(s => (
+                              <button
+                                key={s.id}
+                                type="button"
+                                onClick={() => {
+                                  onUpdate(i, "link", `/learn#${s.id}`);
+                                  setOpenSelect(null);
+                                }}
+                                className="text-left text-xs text-zinc-300 hover:text-white hover:bg-zinc-800 px-3 py-2 transition-colors"
+                              >
+                                {s.label}
+                                <span className="block text-zinc-600 text-[10px]">/learn#{s.id}</span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-xs text-zinc-500">Текст кнопки</label>
