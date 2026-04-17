@@ -20,10 +20,10 @@ const ranks = [
 ];
 
 const departmentRanks = [
-  { range: "[1–2] для ОИ или [3–6] для терапевтических отделений и ОПРС", title: "Сотрудники отделения" },
-  { range: "[7]", title: "Заместитель Заведующего Отделением (Врач-хирург)" },
-  { range: "[8]", title: "Заведующий Отделением" },
-  { range: "[9]", title: "Куратор Отделения (Заместитель Главного Врача)" },
+  { label: "Сотрудников отделения 1–2 рангов (ОИ) или 3–6 ранги (терапевтические отделения и ОПРС);" },
+  { label: "Заместителя Заведующего Отделением (Врач-хирург) [7];" },
+  { label: "Заведующего Отделением [8];" },
+  { label: "Куратора Отделения (Заместитель Главного Врача) [9]." },
 ];
 
 export default function LearnHierarchySection({ go }: Props) {
@@ -98,7 +98,7 @@ export default function LearnHierarchySection({ go }: Props) {
         {departmentRanks.map((r, i) => (
           <div key={i} className="flex items-center gap-2">
             <div className="shrink-0 w-2 h-2 rounded-full bg-red-600" />
-            <span className="text-sm text-foreground">{r.title} {r.range}</span>
+            <span className="text-sm text-foreground">{r.label}</span>
           </div>
         ))}
       </div>
