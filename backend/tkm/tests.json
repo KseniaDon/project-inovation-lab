@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "Получить список заявок",
+      "method": "GET",
+      "path": "/?action=list",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Отправить ответы ТКМ",
+      "method": "POST",
+      "path": "/?action=submit",
+      "body": {
+        "nickname": "Test_User",
+        "vk_link": "https://vk.com/test",
+        "department": "ОИК",
+        "answers": {"q1": "Тестовый ответ"}
+      },
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    }
+  ]
+}
