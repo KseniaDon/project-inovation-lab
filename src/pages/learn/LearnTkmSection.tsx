@@ -18,6 +18,7 @@ interface Meta {
   nickname: string;
   vkLink: string;
   department: string;
+  activationCode: string;
 }
 
 const SECTION_LABELS: Record<Stage, string> = {
@@ -38,8 +39,8 @@ export default function LearnTkmSection() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
-  const handleDepartmentSelected = (dept: string, info: { nickname: string; vkLink: string }) => {
-    setMeta({ nickname: info.nickname, vkLink: info.vkLink, department: dept });
+  const handleDepartmentSelected = (dept: string, info: { nickname: string; vkLink: string; activationCode: string }) => {
+    setMeta({ nickname: info.nickname, vkLink: info.vkLink, department: dept, activationCode: info.activationCode });
     setAnswers({});
     setStage("section2");
   };
@@ -61,13 +62,17 @@ export default function LearnTkmSection() {
           nickname: meta.nickname,
           vk_link: meta.vkLink,
           department: meta.department,
+          activation_code: meta.activationCode,
           answers,
         }),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Ошибка при отправке");
+      }
       setStage("done");
-    } catch {
-      setSubmitError("Ошибка при отправке. Попробуйте ещё раз.");
+    } catch (e: unknown) {
+      setSubmitError(e instanceof Error ? e.message : "Ошибка при отправке. Попробуйте ещё раз.");
     }
     setSubmitting(false);
   };

@@ -12,7 +12,7 @@ const DEPARTMENTS = [
 ];
 
 interface TkmFormProps {
-  onDepartmentSelected: (dept: string, meta: { nickname: string; vkLink: string }) => void;
+  onDepartmentSelected: (dept: string, meta: { nickname: string; vkLink: string; activationCode: string }) => void;
 }
 
 export default function TkmForm({ onDepartmentSelected }: TkmFormProps) {
@@ -33,7 +33,7 @@ export default function TkmForm({ onDepartmentSelected }: TkmFormProps) {
     if (code.trim() !== ACTIVATION_CODE) { setCodeError("Неверный код активации. Узнайте его у куратора/заведующего/заместителя заведующего отделением интернатуры"); return; }
     if (!department) { setError("Выберите отделение"); return; }
 
-    onDepartmentSelected(department, { nickname: nickname.trim(), vkLink: vkLink.trim() });
+    onDepartmentSelected(department, { nickname: nickname.trim(), vkLink: vkLink.trim(), activationCode: code.trim() });
   };
 
   return (

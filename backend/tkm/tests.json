@@ -8,19 +8,20 @@
       "bodyMatcher": "partial"
     },
     {
-      "name": "Отправить ответы ТКМ",
+      "name": "Отправить ответы с неверным кодом активации",
       "method": "POST",
       "path": "/?action=submit",
       "body": {
         "nickname": "Test_User",
         "vk_link": "https://vk.com/test",
         "department": "ОИК",
+        "activation_code": "000",
         "answers": {"q1": "Тестовый ответ"}
       },
-      "expectedStatus": 200,
+      "expectedStatus": 403,
       "bodyMatcher": "partial"
-    }
-    ,{
+    },
+    {
       "name": "Загрузить макс. баллы",
       "method": "GET",
       "path": "/?action=scores",
