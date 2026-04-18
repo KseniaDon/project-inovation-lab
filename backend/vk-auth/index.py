@@ -97,21 +97,33 @@ def clean_nick(raw: str) -> str:
             raw = raw[len(prefix):]
     return raw.strip("/").strip()
 
-def parse_jsonb_details(val):
-    """JSONB из PostgreSQL psycopg2 отдаёт как dict; старые строки могли быть TEXT — тогда str."""
+def pg_json_cell(val):
+    """
+    Значение из колонки TEXT / JSON / JSONB после SELECT.
+    psycopg2 для JSONB часто отдаёт уже dict/list — json.loads() на нём даёт TypeError.
+    """
     if val is None:
-        return {}
-    if isinstance(val, dict):
+        return None
+    if isinstance(val, (dict, list)):
         return val
     if isinstance(val, str):
-        if not val:
-            return {}
+        if not val.strip():
+            return None
         try:
             return json.loads(val)
         except json.JSONDecodeError:
-            return {"_parse_error": True, "raw": val[:500]}
-    if isinstance(val, list):
-        return {"items": val}
+            return None
+    return None
+
+def parse_jsonb_details(val):
+    """Поле audit_log.details для ответа API: всегда объект dict."""
+    v = pg_json_cell(val)
+    if v is None:
+        return {}
+    if isinstance(v, dict):
+        return v
+    if isinstance(v, list):
+        return {"items": v}
     return {}
 
 def handler(event: dict, context) -> dict:
@@ -349,7 +361,7 @@ def handler(event: dict, context) -> dict:
         cur.execute(f"SELECT key, value FROM {s}.site_content")
         rows = cur.fetchall()
         conn.close()
-        data = {r[0]: json.loads(r[1]) for r in rows}
+        data = {r[0]: pg_json_cell(r[1]) for r in rows}
         return resp(200, {"data": data})
 
     # ── POST save_site_data ───────────────────────────────────────────────────
