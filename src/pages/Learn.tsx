@@ -250,7 +250,34 @@ export default function Learn() {
           {active === "feldsher-wards" && <LearnFeldsherWardsSection go={go} />}
 
           {/* ТКМ */}
-          {active === "tkm" && <LearnTkmSection onActiveChange={setIsTkmActive} />}
+          {active === "tkm" && (() => {
+            const myEntry = tkmAllowed.find(e =>
+              (typeof e === "string" ? e.toLowerCase() : e.nick.toLowerCase()) === myNick
+            );
+            const hasAttempts = typeof myEntry === "object" ? myEntry.attempts > 0 : myEntry !== undefined;
+            if (!hasAttempts) {
+              return (
+                <div className="flex flex-col gap-5 max-w-2xl">
+                  <div>
+                    <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Раздел</p>
+                    <h1 className="text-2xl sm:text-3xl font-bold">ТКМ</h1>
+                  </div>
+                  <div className="rounded-xl border border-red-700/40 bg-red-900/10 p-6 flex flex-col gap-3">
+                    <div className="flex items-center gap-3">
+                      <Icon name="Lock" size={20} className="text-red-400 shrink-0" />
+                      <p className="text-base font-bold text-red-400">Нет доступа к ТКМ</p>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {myEntry === undefined
+                        ? "Вас нет в списке допущенных к ТКМ. Обратитесь к куратору."
+                        : "Попытки исчерпаны. Обратитесь к куратору для получения дополнительной попытки."}
+                    </p>
+                  </div>
+                </div>
+              );
+            }
+            return <LearnTkmSection onActiveChange={setIsTkmActive} />;
+          })()}
 
         </motion.div>
         </AnimatePresence>
