@@ -8,6 +8,7 @@ import {
   OPEN_MAX_SCORES,
   formatDate,
   checkAnswer,
+  getQuestionType,
   groupAnswersBySection,
 } from "./TkmReviewTypes";
 import TkmReviewModal from "./TkmReviewModal";
@@ -56,7 +57,10 @@ export default function AdminTkmReviews({ reviewerNick }: Props) {
       setSelected(data);
       const initScores: Record<string, string> = {};
       for (const key of Object.keys(data.answers || {})) {
-        if (OPEN_MAX_SCORES[key] !== undefined) {
+        const qType = getQuestionType(key, data.department);
+        const isOpenScored = OPEN_MAX_SCORES[key] !== undefined;
+        const isWrongMulti = qType === "multi" && checkAnswer(key, data.answers[key], data.department) === "wrong";
+        if (isOpenScored || isWrongMulti) {
           initScores[key] = "0";
         }
       }

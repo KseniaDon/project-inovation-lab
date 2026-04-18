@@ -6,6 +6,7 @@ import {
   TKM_SECTION4_RADIO,
   TKM_SECTION4_RADIO2,
   TKM_SECTION4_MULTI,
+  TKM_SECTION4_STYLED,
   TKM_SECTION5_MULTI,
   TKM_SECTION6_SINGLE,
   TKM_SECTION6_MULTI,
@@ -65,9 +66,32 @@ function getMultiQuestions(): TkmMultiQuestion[] {
   return [
     ...TKM_SECTION3_MULTI,
     ...TKM_SECTION4_MULTI,
+    ...TKM_SECTION4_STYLED,
     ...TKM_SECTION5_MULTI,
     ...TKM_SECTION6_MULTI,
   ];
+}
+
+export function getQuestionOptions(key: string, dept: string): string[] | null {
+  const singles = getSingleQuestions(dept);
+  const single = singles.find(q => q.key === key);
+  if (single) return single.options;
+
+  const multis = getMultiQuestions();
+  const multi = multis.find(q => q.key === key);
+  if (multi) return multi.options;
+
+  return null;
+}
+
+export function getQuestionType(key: string, dept: string): "single" | "multi" | "open" {
+  const singles = getSingleQuestions(dept);
+  if (singles.find(q => q.key === key)) return "single";
+
+  const multis = getMultiQuestions();
+  if (multis.find(q => q.key === key)) return "multi";
+
+  return "open";
 }
 
 export function checkAnswer(key: string, answer: string, dept: string): "correct" | "wrong" | "open" | "unknown" {

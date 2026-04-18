@@ -5,6 +5,8 @@ import {
   OPEN_MAX_SCORES,
   formatDate,
   checkAnswer,
+  getCorrectAnswer,
+  getQuestionType,
   groupAnswersBySection,
 } from "./TkmReviewTypes";
 
@@ -98,17 +100,23 @@ export default function TkmReviewModal({
                   </button>
                   {isOpen && (
                     <div className="px-5 pb-4 flex flex-col gap-2">
-                      {group.keys.map(k => (
-                        <AnswerRow
-                          key={k}
-                          qKey={k}
-                          answer={selected.answers[k] || ""}
-                          dept={selected.department}
-                          manualScore={manualScores[k] ?? "0"}
-                          maxScore={OPEN_MAX_SCORES[k] ?? 2}
-                          onManualScore={v => onManualScore(k, v)}
-                        />
-                      ))}
+                      {group.keys.map(k => {
+                        const qType = getQuestionType(k, selected.department);
+                        const correctAns = getCorrectAnswer(k, selected.department);
+                        const multiMax = qType === "multi" && Array.isArray(correctAns) ? correctAns.length : 2;
+                        const maxScore = OPEN_MAX_SCORES[k] ?? (qType === "multi" ? multiMax : 2);
+                        return (
+                          <AnswerRow
+                            key={k}
+                            qKey={k}
+                            answer={selected.answers[k] || ""}
+                            dept={selected.department}
+                            manualScore={manualScores[k] ?? "0"}
+                            maxScore={maxScore}
+                            onManualScore={v => onManualScore(k, v)}
+                          />
+                        );
+                      })}
                     </div>
                   )}
                 </div>
