@@ -9,17 +9,15 @@ import AdminHome, { HomeLink, DEFAULT_LINKS } from "./admin/AdminHome";
 import AdminStaff, { StaffMember } from "./admin/AdminStaff";
 import AdminAccess, { HospitalRole } from "./admin/AdminAccess";
 import AdminPassword from "./admin/AdminPassword";
-import AdminAuditLog, { AuditEntry } from "./admin/AdminAuditLog";
 import AdminWhatsNew from "./admin/AdminWhatsNew";
 import AdminTkm from "./admin/AdminTkm";
 import AdminTkmReviews from "./admin/AdminTkmReviews";
-import AdminTkmEditor from "./admin/AdminTkmEditor";
 import { WhatsNewEntry } from "@/components/WhatsNew";
 
 const API = "https://functions.poehali.dev/ee0c9d49-3da0-4e2e-a2ab-1f68f29a1405";
 
-type Tab = "home" | "whats_new" | "staff" | "access" | "tkm" | "audit" | "password";
-type TkmSubTab = "access" | "reviews" | "editor";
+type Tab = "home" | "whats_new" | "staff" | "access" | "tkm" | "password";
+type TkmSubTab = "access" | "reviews";
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "home",      label: "Главная",        icon: "Home" },
@@ -27,14 +25,13 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "staff",     label: "Контакты РС ОИ", icon: "Users" },
   { id: "access",    label: "Доступы",        icon: "KeyRound" },
   { id: "tkm",       label: "ТКМ",            icon: "ClipboardList" },
-  { id: "audit",     label: "Журнал изменений", icon: "ScrollText" },
+
   { id: "password",  label: "Мой пароль",     icon: "Shield" },
 ];
 
 const TKM_SUB_TABS: { id: TkmSubTab; label: string }[] = [
   { id: "access",  label: "Доступ" },
   { id: "reviews", label: "Проверка" },
-  { id: "editor",  label: "Редактирование" },
 ];
 
 const defaultStaff: StaffMember[] = [
@@ -76,10 +73,6 @@ export default function AdminPanel() {
   const [newAccessRole, setNewAccessRole] = useState<Role>("editor");
   const [newHospitalRole, setNewHospitalRole] = useState<HospitalRole>("Нет");
   const [accessMsg, setAccessMsg] = useState("");
-
-  // Audit log state
-  const [auditLogs, setAuditLogs] = useState<AuditEntry[]>([]);
-  const [auditLoading, setAuditLoading] = useState(false);
 
   // Password state
   const [pwCurrent, setPwCurrent] = useState("");
@@ -136,20 +129,11 @@ export default function AdminPanel() {
     }).finally(() => setAccessLoading(false));
   }, [authFetch]);
 
-  const loadAudit = useCallback(() => {
-    setAuditLoading(true);
-    authFetch(`${API}?action=audit_log`).then(r => r.json()).then(d => {
-      if (d.logs) setAuditLogs(d.logs);
-    }).finally(() => setAuditLoading(false));
-  }, [authFetch]);
-
   useEffect(() => { if (tab === "access" && me) loadAccess(); }, [tab, me, loadAccess]);
-  useEffect(() => { if (tab === "audit" && me) loadAudit(); }, [tab, me, loadAudit]);
 
   const myNormRole = me ? normalizeRole(me.role as string) : "editor";
   const canEditContacts = ["super_admin", "head_admin", "admin"].includes(myNormRole);
   const canManageTkmAccess = ["super_admin", "head_admin", "admin", "moderator", "editor"].includes(myNormRole);
-  const canEditTkm = ["super_admin", "head_admin", "admin"].includes(myNormRole);
   const canEditWhatsNew = myNormRole === "super_admin";
 
   const logout = () => { playClickSound(); localStorage.clear(); navigate("/admin/login"); };
@@ -318,7 +302,6 @@ export default function AdminPanel() {
           <div className="flex gap-1 border-b border-zinc-800 pb-0">
             {TKM_SUB_TABS.filter(s => {
               if (s.id === "access") return canManageTkmAccess;
-              if (s.id === "editor") return canEditTkm;
               return true;
             }).map(s => (
               <button
@@ -340,13 +323,7 @@ export default function AdminPanel() {
           {tkmSubTab === "reviews" && (
             <AdminTkmReviews reviewerNick={me.nickname} />
           )}
-          {tkmSubTab === "editor" && (
-            <AdminTkmEditor />
-          )}
         </div>
-      )}
-      {tab === "audit" && (
-        <AdminAuditLog logs={auditLogs} loading={auditLoading} onRefresh={loadAudit} />
       )}
       {tab === "password" && (
         <AdminPassword pwCurrent={pwCurrent} setPwCurrent={setPwCurrent}
