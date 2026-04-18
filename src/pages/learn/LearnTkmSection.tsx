@@ -127,23 +127,14 @@ export default function LearnTkmSection({ onActiveChange }: LearnTkmSectionProps
       </div>
 
       {expired && stage !== "done" && (
-        <div className="flex flex-col gap-3">
-          <div className="rounded-xl border border-red-700/40 bg-red-900/10 p-4 flex items-start gap-3">
-            <Icon name="AlertTriangle" size={18} className="text-red-400 mt-0.5 shrink-0" />
-            <p className="text-sm text-red-300">
-              {submitting
-                ? "Время истекло. Ваши ответы автоматически отправляются..."
-                : submitError
-                ? "Время истекло. Ответы не удалось отправить."
-                : "Время истекло. Ваши ответы автоматически отправляются..."}
-            </p>
+        <div className="rounded-xl border border-green-700/40 bg-green-900/10 p-5 flex flex-col gap-2">
+          <div className="flex items-center gap-3">
+            <Icon name="CheckCircle" size={20} className="text-green-400 shrink-0" />
+            <p className="text-sm font-semibold text-green-400">Ответы отправлены на проверку</p>
           </div>
-          {submitError && (
-            <p className="text-sm text-red-500 flex items-start gap-2">
-              <Icon name="AlertCircle" size={15} className="mt-0.5 shrink-0" />
-              {submitError}
-            </p>
-          )}
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Время истекло, ваши ответы автоматически записаны. Ожидайте проверки — после этого куратор выдаст следующую попытку, если потребуется.
+          </p>
         </div>
       )}
 
