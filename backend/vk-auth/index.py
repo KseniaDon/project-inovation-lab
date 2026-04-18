@@ -382,24 +382,40 @@ def handler(event: dict, context) -> dict:
         user = get_current_user(event)
         if not user:
             return resp(401, {"error": "Unauthorized"})
-        conn = get_conn()
-        cur = conn.cursor()
-        s = get_schema()
-        # Авто-очистка записей старше 30 дней
-        cur.execute(f"DELETE FROM {s}.audit_log WHERE created_at < NOW() - INTERVAL '30 days'")
-        cur.execute(f"SELECT actor, action, details, created_at FROM {s}.audit_log ORDER BY created_at DESC LIMIT 50")
-        rows = cur.fetchall()
-        conn.commit()
-        conn.close()
-        logs = [
-            {
-                "actor": r[0],
-                "action": r[1],
-                "details": parse_jsonb_details(r[2]),
-                "created_at": str(r[3]),
-            }
-            for r in rows
-        ]
-        return resp(200, {"logs": logs})
+        conn = None
+        try:
+            conn = get_conn()
+            cur = conn.cursor()
+            s = get_schema()
+            # Авто-очистка записей старше 30 дней
+            cur.execute(f"DELETE FROM {s}.audit_log WHERE created_at < NOW() - INTERVAL '30 days'")
+            cur.execute(
+                f"SELECT actor, action, details, created_at FROM {s}.audit_log ORDER BY created_at DESC LIMIT 50"
+            )
+            rows = cur.fetchall()
+            conn.commit()
+            logs = [
+                {
+                    "actor": r[0],
+                    "action": r[1],
+                    "details": parse_jsonb_details(r[2]),
+                    "created_at": str(r[3]),
+                }
+                for r in rows
+            ]
+            return resp(200, {"logs": logs})
+        except Exception as e:
+            if conn is not None:
+                try:
+                    conn.rollback()
+                except Exception:
+                    pass
+            return resp(500, {"error": "audit_log", "message": str(e)[:500]})
+        finally:
+            if conn is not None:
+                try:
+                    conn.close()
+                except Exception:
+                    pass
 
     return resp(400, {"error": "Укажите action"})
