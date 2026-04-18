@@ -88,12 +88,14 @@ def handler(event: dict, context) -> dict:
 
         # Проверка VK ссылки против списка допущенных
         allowed = get_tkm_allowed(cur, s)
-        if allowed:  # если список не пуст — проверяем
-            vk_nick = normalize_vk(vk_link)
-            allowed_normalized = [normalize_vk(a) for a in allowed]
-            if vk_nick not in allowed_normalized:
-                conn.close()
-                return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Ваша страница ВКонтакте не найдена в списке допущенных к ТКМ. Обратитесь к куратору."})}
+        if not allowed:
+            conn.close()
+            return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Список допущенных к ТКМ пуст. Обратитесь к куратору."})}
+        vk_nick = normalize_vk(vk_link)
+        allowed_normalized = [normalize_vk(a) for a in allowed]
+        if vk_nick not in allowed_normalized:
+            conn.close()
+            return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Ваша страница ВКонтакте не найдена в списке допущенных к ТКМ. Обратитесь к куратору."})}
 
         cur.execute(
             f"INSERT INTO {s}.tkm_submissions (nickname, vk_link, department, answers) VALUES (%s, %s, %s, %s) RETURNING id",
@@ -171,7 +173,7 @@ def handler(event: dict, context) -> dict:
         allowed = get_tkm_allowed(cur, s)
         conn.close()
         if not allowed:
-            return {"statusCode": 200, "headers": CORS, "body": json.dumps({"ok": True})}
+            return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Список допущенных к ТКМ пуст. Обратитесь к куратору."})}
         vk_nick = normalize_vk(vk_link)
         allowed_normalized = [normalize_vk(a) for a in allowed]
         if vk_nick not in allowed_normalized:
