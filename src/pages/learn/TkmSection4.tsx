@@ -2,8 +2,13 @@ import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import {
   TKM_SECTION4_RADIO,
+  TKM_SECTION4_RADIO2,
   TKM_SECTION4_MULTI,
+  TKM_SECTION4_STYLED,
+  TKM_SECTION4_OPEN,
   TkmMultiQuestion,
+  TkmStyledMultiQuestion,
+  TkmSection4OpenQuestion,
 } from "./tkmAnswerKey";
 
 interface RadioQuestionProps {
@@ -80,6 +85,83 @@ function MultiQuestion({ q, value, onChange }: MultiQuestionProps) {
   );
 }
 
+interface StyledMultiQuestionProps {
+  q: TkmStyledMultiQuestion;
+  value: string[];
+  onChange: (v: string[]) => void;
+}
+
+function StyledMultiQuestion({ q, value, onChange }: StyledMultiQuestionProps) {
+  const toggle = (opt: string) => {
+    if (value.includes(opt)) onChange(value.filter(v => v !== opt));
+    else onChange([...value, opt]);
+  };
+
+  const isHighlighted = (opt: string) => q.correct.includes(opt);
+
+  return (
+    <div className="rounded-xl border border-border bg-card p-5 flex flex-col gap-3">
+      <p className="text-sm font-medium leading-relaxed">
+        <span className="font-bold">№{q.num}.</span>{" "}
+        {q.highlightMode === "correct" ? (
+          <>Выберите <span className="font-bold text-red-500">правильные</span> примеры отыгровки:{" "}</>
+        ) : (
+          <>Выберите <span className="font-bold text-red-500">неправильные</span> примеры отыгровки:{" "}</>
+        )}
+        <span className="text-red-500">*</span>
+      </p>
+      <div className="flex flex-col gap-2.5 mt-1">
+        {q.options.map(opt => {
+          const checked = value.includes(opt);
+          const highlighted = isHighlighted(opt);
+          return (
+            <label key={opt} className="flex items-start gap-3 cursor-pointer group">
+              <div
+                className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-colors shrink-0 mt-0.5 ${
+                  checked ? "border-red-500 bg-red-500" : "border-muted-foreground group-hover:border-red-400"
+                }`}
+                onClick={() => toggle(opt)}
+              >
+                {checked && <Icon name="Check" size={10} className="text-white" />}
+              </div>
+              <span
+                className={`text-sm leading-snug ${highlighted ? "font-bold text-red-500" : "text-foreground"}`}
+                onClick={() => toggle(opt)}
+              >
+                {opt}
+              </span>
+            </label>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+interface OpenQuestionSimpleProps {
+  q: TkmSection4OpenQuestion;
+  value: string;
+  onChange: (v: string) => void;
+}
+
+function OpenQuestionSimple({ q, value, onChange }: OpenQuestionSimpleProps) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-5 flex flex-col gap-3">
+      <p className="text-sm font-medium leading-relaxed">
+        <span className="font-bold">№{q.num}.</span> {q.text}{" "}
+        <span className="text-red-500">*</span>
+      </p>
+      <textarea
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder="Развернутый ответ"
+        rows={4}
+        className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
+      />
+    </div>
+  );
+}
+
 interface Props {
   onNext: (answers: Record<string, string>) => void;
   onBack: () => void;
@@ -88,6 +170,7 @@ interface Props {
 export default function TkmSection4({ onNext, onBack }: Props) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [multiAnswers, setMultiAnswers] = useState<Record<string, string[]>>({});
+  const [styledAnswers, setStyledAnswers] = useState<Record<string, string[]>>({});
   const [error, setError] = useState("");
 
   const set = (key: string, val: string) => setAnswers(prev => ({ ...prev, [key]: val }));
@@ -98,12 +181,24 @@ export default function TkmSection4({ onNext, onBack }: Props) {
     const unansweredRadio = TKM_SECTION4_RADIO.find(q => !answers[q.key]);
     if (unansweredRadio) { setError("Ответьте на все вопросы раздела"); return; }
 
+    const unansweredRadio2 = TKM_SECTION4_RADIO2.find(q => !answers[q.key]);
+    if (unansweredRadio2) { setError("Ответьте на все вопросы раздела"); return; }
+
     const unansweredMulti = TKM_SECTION4_MULTI.find(q => !(multiAnswers[q.key]?.length));
     if (unansweredMulti) { setError("Ответьте на все вопросы раздела"); return; }
+
+    const unansweredStyled = TKM_SECTION4_STYLED.find(q => !(styledAnswers[q.key]?.length));
+    if (unansweredStyled) { setError("Ответьте на все вопросы раздела"); return; }
+
+    const unansweredOpen = TKM_SECTION4_OPEN.find(q => !answers[q.key]?.trim());
+    if (unansweredOpen) { setError("Ответьте на все вопросы раздела"); return; }
 
     const allAnswers: Record<string, string> = { ...answers };
     for (const q of TKM_SECTION4_MULTI) {
       allAnswers[q.key] = JSON.stringify(multiAnswers[q.key] || []);
+    }
+    for (const q of TKM_SECTION4_STYLED) {
+      allAnswers[q.key] = JSON.stringify(styledAnswers[q.key] || []);
     }
     onNext(allAnswers);
   };
@@ -141,6 +236,35 @@ export default function TkmSection4({ onNext, onBack }: Props) {
           q={q}
           value={multiAnswers[q.key] || []}
           onChange={val => setMultiAnswers(prev => ({ ...prev, [q.key]: val }))}
+        />
+      ))}
+
+      {TKM_SECTION4_RADIO2.map((q, i) => (
+        <RadioQuestion
+          key={q.key}
+          num={22 + i}
+          text={q.text}
+          options={q.options}
+          value={answers[q.key] || ""}
+          onChange={val => set(q.key, val)}
+        />
+      ))}
+
+      {TKM_SECTION4_STYLED.map(q => (
+        <StyledMultiQuestion
+          key={q.key}
+          q={q}
+          value={styledAnswers[q.key] || []}
+          onChange={val => setStyledAnswers(prev => ({ ...prev, [q.key]: val }))}
+        />
+      ))}
+
+      {TKM_SECTION4_OPEN.map(q => (
+        <OpenQuestionSimple
+          key={q.key}
+          q={q}
+          value={answers[q.key] || ""}
+          onChange={val => set(q.key, val)}
         />
       ))}
 
