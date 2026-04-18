@@ -97,23 +97,20 @@ function StyledMultiQuestion({ q, value, onChange }: StyledMultiQuestionProps) {
     else onChange([...value, opt]);
   };
 
-  const isHighlighted = (opt: string) => q.correct.includes(opt);
-
   return (
     <div className="rounded-xl border border-border bg-card p-5 flex flex-col gap-3">
       <p className="text-sm font-medium leading-relaxed">
         <span className="font-bold">№{q.num}.</span>{" "}
         {q.highlightMode === "correct" ? (
-          <>Выберите <span className="font-bold text-red-500">правильные</span> примеры отыгровки:{" "}</>
+          <>Выберите <span className="font-bold">правильные</span> примеры отыгровки:{" "}</>
         ) : (
-          <>Выберите <span className="font-bold text-red-500">неправильные</span> примеры отыгровки:{" "}</>
+          <>Выберите <span className="font-bold">неправильные</span> примеры отыгровки:{" "}</>
         )}
         <span className="text-red-500">*</span>
       </p>
       <div className="flex flex-col gap-2.5 mt-1">
         {q.options.map(opt => {
           const checked = value.includes(opt);
-          const highlighted = isHighlighted(opt);
           return (
             <label key={opt} className="flex items-start gap-3 cursor-pointer group">
               <div
@@ -124,10 +121,7 @@ function StyledMultiQuestion({ q, value, onChange }: StyledMultiQuestionProps) {
               >
                 {checked && <Icon name="Check" size={10} className="text-white" />}
               </div>
-              <span
-                className={`text-sm leading-snug ${highlighted ? "font-bold text-red-500" : "text-foreground"}`}
-                onClick={() => toggle(opt)}
-              >
+              <span className="text-sm text-foreground leading-snug" onClick={() => toggle(opt)}>
                 {opt}
               </span>
             </label>
