@@ -209,18 +209,20 @@ function SidebarContent({ active, go, onClose, hasTkmAccess, tkmLocked }: { acti
   );
 }
 
-function SidebarSearch({ go }: { go: (id: SectionId) => void }) {
+function SidebarSearch({ go, tkmLocked }: { go: (id: SectionId) => void; tkmLocked?: boolean }) {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<typeof NAV>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (val: string) => {
+    if (tkmLocked) return;
     setSearch(val);
     if (!val.trim()) { setResults([]); return; }
     setResults(NAV.filter(n => n.label.toLowerCase().includes(val.toLowerCase())));
   };
 
   const handleGo = (id: SectionId) => {
+    if (tkmLocked) return;
     go(id);
     setSearch("");
     setResults([]);
@@ -228,14 +230,15 @@ function SidebarSearch({ go }: { go: (id: SectionId) => void }) {
 
   return (
     <div className="relative px-3 mb-3">
-      <div className="flex items-center gap-2 bg-muted border border-border rounded px-3 py-2 focus-within:border-red-500 transition-colors">
+      <div className={`flex items-center gap-2 bg-muted border rounded px-3 py-2 transition-colors ${tkmLocked ? "opacity-30 cursor-not-allowed border-border" : "border-border focus-within:border-red-500"}`}>
         <Icon name="Search" size={14} className="text-muted-foreground shrink-0" />
         <input
           ref={inputRef}
           value={search}
+          disabled={tkmLocked}
           onChange={e => handleChange(e.target.value)}
           placeholder="Поиск по разделам..."
-          className="bg-transparent text-xs outline-none flex-1 text-foreground placeholder:text-muted-foreground"
+          className="bg-transparent text-xs outline-none flex-1 text-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed"
         />
         {search && (
           <button onClick={() => handleChange("")}>
@@ -276,7 +279,7 @@ export default function LearnSidebar({ active, go, hasTkmAccess, tkmLocked }: Le
       {/* Desktop sidebar */}
       <aside className="hidden md:flex w-72 xl:w-80 shrink-0 border-r border-border flex-col py-6 sticky top-0 h-screen overflow-y-auto">
         <p className="px-5 text-xs uppercase tracking-widest text-muted-foreground mb-3">Разделы</p>
-        <SidebarSearch go={go} />
+        <SidebarSearch go={go} tkmLocked={tkmLocked} />
         <SidebarContent active={active} go={go} hasTkmAccess={hasTkmAccess} tkmLocked={tkmLocked} />
       </aside>
 

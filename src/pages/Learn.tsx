@@ -70,8 +70,10 @@ export default function Learn() {
       {/* Top bar */}
       <div className="border-b border-border px-3 sm:px-4 md:px-8 xl:px-12 py-2.5 sm:py-3 md:py-4 flex items-center gap-2 sm:gap-3">
         <button
-          onClick={() => { playClickSound(); navigate("/"); }}
-          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors shrink-0 py-1"
+          onClick={() => { if (isTkmActive) return; playClickSound(); navigate("/"); }}
+          disabled={isTkmActive}
+          title={isTkmActive ? "Недоступно во время ТКМ" : undefined}
+          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors shrink-0 py-1 disabled:opacity-30 disabled:cursor-not-allowed"
         >
           <Icon name="ArrowLeft" size={16} />
           <span className="hidden sm:inline">На главную</span>
