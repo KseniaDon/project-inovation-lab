@@ -6,7 +6,7 @@ export interface TkmMeta {
   nickname: string;
   vkLink: string;
   department: string;
-  activationCode: string;
+  activationCode?: string;
 }
 
 interface TkmSessionData {

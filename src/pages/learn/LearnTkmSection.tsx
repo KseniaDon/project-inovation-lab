@@ -71,7 +71,6 @@ export default function LearnTkmSection({ onActiveChange }: LearnTkmSectionProps
           nickname: meta.nickname,
           vk_link: meta.vkLink,
           department: meta.department,
-          activation_code: meta.activationCode,
           answers: finalAnswers ?? answers,
         }),
       });

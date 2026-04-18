@@ -101,24 +101,17 @@ def handler(event: dict, context) -> dict:
     conn = get_conn()
     cur = conn.cursor()
 
-    # POST submit — сохранить ответы (с проверкой кода, допуска и попыток)
+    # POST submit — сохранить ответы (с проверкой допуска и попыток)
     if method == "POST" and action == "submit":
         body = json.loads(event.get("body") or "{}")
         nickname = (body.get("nickname") or "").strip()
         vk_link = (body.get("vk_link") or "").strip()
         department = (body.get("department") or "").strip()
         answers = body.get("answers") or {}
-        activation_code = (body.get("activation_code") or "").strip()
 
-        if not nickname or not vk_link or not department:
+        if not vk_link or not department:
             conn.close()
             return {"statusCode": 400, "headers": CORS, "body": json.dumps({"error": "Заполните все обязательные поля"})}
-
-        # Проверка кода активации
-        correct_code = get_activation_code(cur, s)
-        if activation_code != correct_code:
-            conn.close()
-            return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Неверный код активации"})}
 
         # Проверка VK ссылки против списка допущенных
         allowed = get_tkm_allowed(cur, s)
@@ -137,6 +130,10 @@ def handler(event: dict, context) -> dict:
         # Уменьшаем счётчик попыток
         allowed[idx]["attempts"] -= 1
         save_tkm_allowed(cur, conn, s, allowed)
+
+        # Если никнейм не передан — берём из VK ссылки
+        if not nickname:
+            nickname = vk_nick
 
         cur.execute(
             f"INSERT INTO {s}.tkm_submissions (nickname, vk_link, department, answers) VALUES (%s, %s, %s, %s) RETURNING id",
