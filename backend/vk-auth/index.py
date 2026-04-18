@@ -60,7 +60,7 @@ def _header(headers: dict, name: str) -> str:
     return ""
 
 def get_current_user(event):
-    token = (event.get("headers") or {}).get("X-Authorization", "").replace("Bearer ", "")
+    token = _header(event.get("headers") or {}, "X-Authorization").replace("Bearer ", "").strip()
     return verify_token(token)
 
 # Иерархия ролей: чем меньше индекс — тем выше роль
