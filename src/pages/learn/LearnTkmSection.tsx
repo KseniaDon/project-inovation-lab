@@ -127,11 +127,31 @@ export default function LearnTkmSection({ onActiveChange }: LearnTkmSectionProps
       </div>
 
       {expired && stage !== "done" && (
-        <div className="rounded-xl border border-red-700/40 bg-red-900/10 p-4 flex items-start gap-3">
-          <Icon name="AlertTriangle" size={18} className="text-red-400 mt-0.5 shrink-0" />
-          <p className="text-sm text-red-300">
-            Время истекло. Ваши ответы автоматически отправляются...
-          </p>
+        <div className="flex flex-col gap-3">
+          <div className="rounded-xl border border-red-700/40 bg-red-900/10 p-4 flex items-start gap-3">
+            <Icon name="AlertTriangle" size={18} className="text-red-400 mt-0.5 shrink-0" />
+            <p className="text-sm text-red-300">
+              {submitting
+                ? "Время истекло. Ваши ответы автоматически отправляются..."
+                : submitError
+                ? "Время истекло. Ответы не удалось отправить."
+                : "Время истекло. Ваши ответы автоматически отправляются..."}
+            </p>
+          </div>
+          {submitError && (
+            <div className="flex flex-col gap-3">
+              <p className="text-sm text-red-500 flex items-start gap-2">
+                <Icon name="AlertCircle" size={15} className="mt-0.5 shrink-0" />
+                {submitError}
+              </p>
+              <button
+                onClick={resetSession}
+                className="self-start text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
+              >
+                ← Начать заново
+              </button>
+            </div>
+          )}
         </div>
       )}
 
