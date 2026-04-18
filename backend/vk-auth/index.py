@@ -87,6 +87,23 @@ def clean_nick(raw: str) -> str:
             raw = raw[len(prefix):]
     return raw.strip("/").strip()
 
+def parse_jsonb_details(val):
+    """JSONB из PostgreSQL psycopg2 отдаёт как dict; старые строки могли быть TEXT — тогда str."""
+    if val is None:
+        return {}
+    if isinstance(val, dict):
+        return val
+    if isinstance(val, str):
+        if not val:
+            return {}
+        try:
+            return json.loads(val)
+        except json.JSONDecodeError:
+            return {"_parse_error": True, "raw": val[:500]}
+    if isinstance(val, list):
+        return {"items": val}
+    return {}
+
 def handler(event: dict, context) -> dict:
     """Авторизация по никнейму ВК + пароль, управление доступами и данными сайта."""
     if event.get("httpMethod") == "OPTIONS":
@@ -365,7 +382,15 @@ def handler(event: dict, context) -> dict:
         rows = cur.fetchall()
         conn.commit()
         conn.close()
-        logs = [{"actor": r[0], "action": r[1], "details": json.loads(r[2]) if r[2] else {}, "created_at": str(r[3])} for r in rows]
+        logs = [
+            {
+                "actor": r[0],
+                "action": r[1],
+                "details": parse_jsonb_details(r[2]),
+                "created_at": str(r[3]),
+            }
+            for r in rows
+        ]
         return resp(200, {"logs": logs})
 
     return resp(400, {"error": "Укажите action"})
