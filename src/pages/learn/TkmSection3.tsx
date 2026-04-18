@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
-import { TKM_SECTION3 } from "./tkmAnswerKey";
+import { TKM_SECTION3, TKM_SECTION3_OPEN, TkmOpenQuestion } from "./tkmAnswerKey";
 
 interface RadioQuestionProps {
   num: number;
@@ -36,6 +36,44 @@ function RadioQuestion({ num, text, options, value, onChange }: RadioQuestionPro
   );
 }
 
+interface OpenQuestionProps {
+  q: TkmOpenQuestion;
+  value: string;
+  onChange: (v: string) => void;
+}
+
+function OpenQuestion({ q, value, onChange }: OpenQuestionProps) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-5 flex flex-col gap-3">
+      <p className="text-sm font-medium leading-relaxed">
+        <span className="font-bold">№{q.num}.</span> {q.title}{" "}
+        <span className="text-red-500">*</span>
+      </p>
+      {q.situation && (
+        <div className="flex flex-col gap-1">
+          <p className="text-sm font-bold">Описание ситуации:</p>
+          <p className="text-sm leading-relaxed">{q.situation}</p>
+        </div>
+      )}
+      <div className="flex flex-col gap-1">
+        <p className="text-sm font-bold">Пример:</p>
+        <p className="text-sm text-muted-foreground italic whitespace-pre-line">{q.example}</p>
+      </div>
+      <p className="text-sm leading-relaxed">
+        <span className="font-bold">От вас НЕ требуется:</span> {q.notRequired}
+      </p>
+      <p className="text-sm font-bold">Внимание! {q.warning}</p>
+      <textarea
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder="Развернутый ответ"
+        rows={4}
+        className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
+      />
+    </div>
+  );
+}
+
 interface Props {
   onNext: (answers: Record<string, string>) => void;
   onBack: () => void;
@@ -51,6 +89,11 @@ export default function TkmSection3({ onNext, onBack }: Props) {
     setError("");
     const unanswered = TKM_SECTION3.find(q => !answers[q.key]);
     if (unanswered) {
+      setError(`Ответьте на все вопросы раздела`);
+      return;
+    }
+    const unansweredOpen = TKM_SECTION3_OPEN.find(q => !answers[q.key]?.trim());
+    if (unansweredOpen) {
       setError(`Ответьте на все вопросы раздела`);
       return;
     }
@@ -79,6 +122,15 @@ export default function TkmSection3({ onNext, onBack }: Props) {
           num={i + 4}
           text={q.text}
           options={q.options}
+          value={answers[q.key] || ""}
+          onChange={val => set(q.key, val)}
+        />
+      ))}
+
+      {TKM_SECTION3_OPEN.map(q => (
+        <OpenQuestion
+          key={q.key}
+          q={q}
           value={answers[q.key] || ""}
           onChange={val => set(q.key, val)}
         />
