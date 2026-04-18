@@ -6,8 +6,9 @@ import TkmQuestionsODS from "./TkmQuestionsODS";
 import TkmSection3 from "./TkmSection3";
 import TkmSection4 from "./TkmSection4";
 import TkmSection5 from "./TkmSection5";
+import TkmSection6 from "./TkmSection6";
 
-type Stage = "form" | "section2" | "section3" | "section4" | "section5" | "done";
+type Stage = "form" | "section2" | "section3" | "section4" | "section5" | "section6" | "done";
 
 interface Meta {
   nickname: string;
@@ -21,6 +22,7 @@ const SECTION_LABELS: Record<Stage, string> = {
   section3: "Раздел 2 из 8 — Уставная документация",
   section4: "Раздел 3 из 8 — RP-сфера",
   section5: "Раздел 4 из 8 — Препараты",
+  section6: "Раздел 5 из 8 — Медицина",
   done: "Завершено",
 };
 
@@ -71,14 +73,18 @@ export default function LearnTkmSection() {
       )}
 
       {stage === "section5" && (
-        <TkmSection5 onNext={a => handleSection(a, "done")} onBack={() => setStage("section4")} />
+        <TkmSection5 onNext={a => handleSection(a, "section6")} onBack={() => setStage("section4")} />
+      )}
+
+      {stage === "section6" && (
+        <TkmSection6 onNext={a => handleSection(a, "done")} onBack={() => setStage("section5")} />
       )}
 
       {stage === "done" && meta && (
         <div className="flex flex-col gap-4 max-w-2xl">
           <div className="rounded-xl border border-green-700/40 bg-green-900/10 p-5 flex flex-col gap-2">
-            <p className="text-sm font-semibold text-green-400">Раздел 4 завершён!</p>
-            <p className="text-sm text-muted-foreground">Раздел 5 появится здесь по мере добавления вопросов.</p>
+            <p className="text-sm font-semibold text-green-400">Раздел 5 завершён!</p>
+            <p className="text-sm text-muted-foreground">Раздел 6 появится здесь по мере добавления вопросов.</p>
           </div>
           <button
             onClick={() => setStage("form")}
