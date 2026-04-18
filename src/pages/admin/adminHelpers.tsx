@@ -18,9 +18,9 @@ export function Field({ label, children }: { label: string; children: React.Reac
   );
 }
 
-export function Inp({ value, onChange, placeholder, className = "" }: { value: string; onChange: (v: string) => void; placeholder?: string; className?: string }) {
+export function Inp({ value, onChange, placeholder, className = "", onKeyDown }: { value: string; onChange: (v: string) => void; placeholder?: string; className?: string; onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void }) {
   return (
-    <input type="text" value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
+    <input type="text" value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} onKeyDown={onKeyDown}
       className={`w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors ${className}`} />
   );
 }

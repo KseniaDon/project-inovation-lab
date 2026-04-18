@@ -39,6 +39,7 @@ export type Tab =
 
 export type Report = { label: string; template: string };
 export type AccessUser = { nickname: string; role: Role; created_at: string; created_by: string | null; href: string; hospital_role: string };
+export type TkmAllowedEntry = { nick: string; attempts: number };
 
 export type Section = { id: string; title: string; items: string[] };
 export type StaffMember = { role: string; name: string; nickname: string; href: string; badge: string; badgeColor: string };

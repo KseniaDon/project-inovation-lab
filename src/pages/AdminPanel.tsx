@@ -4,14 +4,14 @@ import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
 import { invalidateSiteCache } from "@/hooks/useSiteData";
 
-import { Role, AccessUser, ROLE_META, normalizeRole } from "./admin/adminTypes";
+import { Role, AccessUser, ROLE_META, normalizeRole, TkmAllowedEntry } from "./admin/adminTypes";
 import AdminHome, { HomeLink, DEFAULT_LINKS } from "./admin/AdminHome";
 import AdminStaff, { StaffMember } from "./admin/AdminStaff";
 import AdminAccess, { HospitalRole } from "./admin/AdminAccess";
 import AdminPassword from "./admin/AdminPassword";
 import AdminAuditLog, { AuditEntry } from "./admin/AdminAuditLog";
 import AdminWhatsNew from "./admin/AdminWhatsNew";
-import AdminTkm, { TkmAllowedEntry } from "./admin/AdminTkm";
+import AdminTkm from "./admin/AdminTkm";
 import AdminTkmReviews from "./admin/AdminTkmReviews";
 import AdminTkmEditor from "./admin/AdminTkmEditor";
 import { WhatsNewEntry } from "@/components/WhatsNew";

@@ -1,11 +1,9 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import { SectionHeader, Inp } from "./adminHelpers";
+import type { TkmAllowedEntry } from "./adminTypes";
 
-export interface TkmAllowedEntry {
-  nick: string;
-  attempts: number;
-}
+export type { TkmAllowedEntry };
 
 interface Props {
   allowed: TkmAllowedEntry[];
@@ -24,18 +22,18 @@ export default function AdminTkm({ allowed, saving, saved, onSave }: Props) {
     const nick = input.trim().toLowerCase().replace(/^(https?:\/\/)?(vk\.(ru|com)\/)?@?/, "").replace(/\/$/, "");
     if (!nick) { setInput(""); return; }
     if (list.some(e => e.nick === nick)) { setInput(""); return; }
-    setList(prev => [...prev, { nick, attempts: MAX_ATTEMPTS }]);
+    setList(prev => [...prev, { nick, attempts: 0 }]);
     setInput("");
   };
 
   const remove = (nick: string) => setList(prev => prev.filter(e => e.nick !== nick));
 
-  const addAttempt = (nick: string) => {
-    setList(prev => prev.map(e => e.nick === nick ? { ...e, attempts: e.attempts + 1 } : e));
-  };
-
-  const setAttempts = (nick: string, val: number) => {
-    setList(prev => prev.map(e => e.nick === nick ? { ...e, attempts: Math.max(0, val) } : e));
+  const changeAttempts = (nick: string, delta: number) => {
+    setList(prev => prev.map(e => {
+      if (e.nick !== nick) return e;
+      const next = Math.min(MAX_ATTEMPTS, Math.max(0, e.attempts + delta));
+      return { ...e, attempts: next };
+    }));
   };
 
   const attemptColor = (n: number) => {
@@ -46,7 +44,7 @@ export default function AdminTkm({ allowed, saving, saved, onSave }: Props) {
 
   return (
     <div className="max-w-xl">
-      <SectionHeader title="Допуск к ТКМ" desc="Сотрудники из этого списка могут проходить ТКМ. У каждого 3 попытки." />
+      <SectionHeader title="Допуск к ТКМ" desc="Добавьте сотрудника и выдайте ему попытки. Без попыток пройти ТКМ невозможно." />
 
       <div className="flex gap-2 mb-4">
         <Inp
@@ -54,7 +52,7 @@ export default function AdminTkm({ allowed, saving, saved, onSave }: Props) {
           onChange={setInput}
           placeholder="Никнейм ВКонтакте"
           className="flex-1"
-          onKeyDown={(e: React.KeyboardEvent) => e.key === "Enter" && add()}
+          onKeyDown={(e) => e.key === "Enter" && add()}
         />
         <button
           onClick={add}
@@ -77,13 +75,13 @@ export default function AdminTkm({ allowed, saving, saved, onSave }: Props) {
 
               <div className="flex items-center gap-2 shrink-0">
                 <span className="text-xs text-zinc-500">Попытки:</span>
-                <span className={`text-sm font-bold w-5 text-center tabular-nums ${attemptColor(entry.attempts)}`}>
+                <span className={`text-sm font-bold w-4 text-center tabular-nums ${attemptColor(entry.attempts)}`}>
                   {entry.attempts}
                 </span>
 
                 <div className="flex items-center gap-1">
                   <button
-                    onClick={() => setAttempts(entry.nick, entry.attempts - 1)}
+                    onClick={() => changeAttempts(entry.nick, -1)}
                     disabled={entry.attempts <= 0}
                     title="Убрать попытку"
                     className="w-6 h-6 flex items-center justify-center text-zinc-600 hover:text-zinc-300 disabled:opacity-20 disabled:cursor-not-allowed transition-colors border border-zinc-700 hover:border-zinc-500"
@@ -91,9 +89,10 @@ export default function AdminTkm({ allowed, saving, saved, onSave }: Props) {
                     <Icon name="Minus" size={11} />
                   </button>
                   <button
-                    onClick={() => addAttempt(entry.nick)}
-                    title="Дать ещё попытку"
-                    className="w-6 h-6 flex items-center justify-center text-zinc-600 hover:text-green-400 transition-colors border border-zinc-700 hover:border-green-600"
+                    onClick={() => changeAttempts(entry.nick, 1)}
+                    disabled={entry.attempts >= MAX_ATTEMPTS}
+                    title={entry.attempts >= MAX_ATTEMPTS ? "Максимум 3 попытки" : "Дать попытку"}
+                    className="w-6 h-6 flex items-center justify-center text-zinc-600 hover:text-green-400 disabled:opacity-20 disabled:cursor-not-allowed transition-colors border border-zinc-700 hover:border-green-600"
                   >
                     <Icon name="Plus" size={11} />
                   </button>
@@ -121,7 +120,7 @@ export default function AdminTkm({ allowed, saving, saved, onSave }: Props) {
           {saved ? <><Icon name="Check" size={14} />Сохранено</> : saving ? "Сохраняю..." : <><Icon name="Save" size={14} />Сохранить</>}
         </button>
         <p className="text-xs text-zinc-600">
-          Зелёный — есть попытки · Жёлтый — 1 попытка · Красный — исчерпаны
+          🟢 есть попытки · 🟡 1 попытка · 🔴 исчерпаны (нельзя пройти)
         </p>
       </div>
     </div>
