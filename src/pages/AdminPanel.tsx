@@ -122,7 +122,10 @@ export default function AdminPanel() {
       if (d.data?.staff) setStaff(d.data.staff);
       if (d.data?.home_links) setLinks(d.data.home_links);
       if (d.data?.whats_new) setWhatsNew(d.data.whats_new.map((e: WhatsNewEntry) => ({ ...e, id: e.id || `wn_${Math.random().toString(36).slice(2)}` })));
-      if (d.data?.tkm_allowed) setTkmAllowed(d.data.tkm_allowed);
+      if (d.data?.tkm_allowed) {
+        const raw = d.data.tkm_allowed as Array<string | TkmAllowedEntry>;
+        setTkmAllowed(raw.map(e => typeof e === "string" ? { nick: e.toLowerCase(), attempts: 3 } : e));
+      }
     });
   }, [me, authFetch]);
 

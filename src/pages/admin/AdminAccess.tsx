@@ -101,7 +101,7 @@ export default function AdminAccess({
       role: normalizeRole(u.role as string),
       href: u.href || "",
       hospital_role: u.hospital_role || "Нет",
-      tkm: tkmAllowed.some(e => e.nick.toLowerCase() === nick),
+      tkm: tkmAllowed.some(e => e?.nick?.toLowerCase() === nick),
     });
   };
 
@@ -112,11 +112,11 @@ export default function AdminAccess({
     setEditSaving(true);
     await onEdit(editingNick, { role: editState.role, href: editState.href, hospital_role: editState.hospital_role });
     const nick = editingNick.toLowerCase();
-    const hasTkm = tkmAllowed.some(e => e.nick.toLowerCase() === nick);
+    const hasTkm = tkmAllowed.some(e => e?.nick?.toLowerCase() === nick);
     if (editState.tkm && !hasTkm) {
-      await onSaveTkm([...tkmAllowed, { nick: editingNick.toLowerCase(), attempts: 3 }]);
+      await onSaveTkm([...tkmAllowed.filter(e => e?.nick), { nick: editingNick.toLowerCase(), attempts: 3 }]);
     } else if (!editState.tkm && hasTkm) {
-      await onSaveTkm(tkmAllowed.filter(e => e.nick.toLowerCase() !== nick));
+      await onSaveTkm(tkmAllowed.filter(e => e?.nick?.toLowerCase() !== nick));
     }
     setEditSaving(false);
     setEditingNick(null);
@@ -193,8 +193,8 @@ export default function AdminAccess({
                       {u.hospital_role && u.hospital_role !== "Нет" && u.hospital_role !== "" && (
                         <span className="ml-2 text-zinc-600">· {u.hospital_role}</span>
                       )}
-                      {tkmAllowed.some(e => e.nick.toLowerCase() === u.nickname.toLowerCase()) && (
-                        <span className="ml-2 text-blue-500">· ТКМ ({tkmAllowed.find(e => e.nick.toLowerCase() === u.nickname.toLowerCase())?.attempts ?? 0})</span>
+                      {tkmAllowed.some(e => e?.nick?.toLowerCase() === u.nickname.toLowerCase()) && (
+                        <span className="ml-2 text-blue-500">· ТКМ ({tkmAllowed.find(e => e?.nick?.toLowerCase() === u.nickname.toLowerCase())?.attempts ?? 0})</span>
                       )}
                     </p>
                   </div>
