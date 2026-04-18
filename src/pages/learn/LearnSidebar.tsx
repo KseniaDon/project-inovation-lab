@@ -6,11 +6,12 @@ interface LearnSidebarProps {
   active: SectionId;
   go: (id: SectionId) => void;
   hasTkmAccess?: boolean;
+  tkmLocked?: boolean;
 }
 
 const ACCORDION_PARENTS: SectionId[] = ["intern", "feldsher"];
 
-function SidebarContent({ active, go, onClose, hasTkmAccess }: { active: SectionId; go: (id: SectionId) => void; onClose?: () => void; hasTkmAccess?: boolean }) {
+function SidebarContent({ active, go, onClose, hasTkmAccess, tkmLocked }: { active: SectionId; go: (id: SectionId) => void; onClose?: () => void; hasTkmAccess?: boolean; tkmLocked?: boolean }) {
   const isInternActive = NAV.some((n) => n.parent === "intern" && n.id === active) || active === "intern";
   const isFeldsherActive = NAV.some((n) => n.parent === "feldsher" && n.id === active) || active === "feldsher";
 
@@ -27,20 +28,31 @@ function SidebarContent({ active, go, onClose, hasTkmAccess }: { active: Section
   const bottomItems = NAV.filter((item) => item.id === "tkm");
 
   const handleGo = (id: SectionId) => {
+    if (tkmLocked && id !== "tkm") return;
     go(id);
     onClose?.();
   };
 
   return (
     <nav className="flex flex-col gap-0.5 px-3">
+      {tkmLocked && (
+        <div className="mx-3 mb-3 px-3 py-2 rounded-lg bg-yellow-500/10 border border-yellow-500/30 flex items-center gap-2">
+          <Icon name="Lock" size={13} className="text-yellow-400 shrink-0" />
+          <p className="text-xs text-yellow-400">Идёт ТКМ — навигация заблокирована</p>
+        </div>
+      )}
       {topItems.map((item) => {
         const isActive = active === item.id;
+        const isLocked = tkmLocked && item.id !== "tkm";
         return (
           <button
             key={item.id}
             onClick={() => handleGo(item.id)}
+            disabled={isLocked}
             className={`w-full flex items-center gap-3 px-3 py-3 text-base font-semibold transition-colors text-left rounded-none
-              ${isActive
+              ${isLocked
+                ? "opacity-30 cursor-not-allowed border-l-2 border-transparent text-muted-foreground"
+                : isActive
                 ? "bg-[hsl(var(--red-border)/0.1)] text-[hsl(var(--red-border))] border-l-2 border-[hsl(var(--red-border))]"
                 : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
               }`}
@@ -57,9 +69,12 @@ function SidebarContent({ active, go, onClose, hasTkmAccess }: { active: Section
       {/* Аккордеон: Интерн */}
       <div className="flex flex-col">
         <button
-          onClick={() => { toggleGroup("intern"); if (!openGroups["intern"]) handleGo("intern"); }}
+          onClick={() => { if (tkmLocked) return; toggleGroup("intern"); if (!openGroups["intern"]) handleGo("intern"); }}
+          disabled={tkmLocked}
           className={`w-full flex items-center justify-between gap-3 px-3 py-3 text-base font-semibold transition-colors text-left rounded-none
-            ${isInternActive
+            ${tkmLocked
+              ? "opacity-30 cursor-not-allowed border-l-2 border-transparent text-muted-foreground"
+              : isInternActive
               ? "bg-[hsl(var(--red-border)/0.1)] text-[hsl(var(--red-border))] border-l-2 border-[hsl(var(--red-border))]"
               : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
             }`}
@@ -113,9 +128,12 @@ function SidebarContent({ active, go, onClose, hasTkmAccess }: { active: Section
       {/* Аккордеон: Фельдшер */}
       <div className="flex flex-col">
         <button
-          onClick={() => { toggleGroup("feldsher"); if (!openGroups["feldsher"]) handleGo("feldsher"); }}
+          onClick={() => { if (tkmLocked) return; toggleGroup("feldsher"); if (!openGroups["feldsher"]) handleGo("feldsher"); }}
+          disabled={tkmLocked}
           className={`w-full flex items-center justify-between gap-3 px-3 py-3 text-base font-semibold transition-colors text-left rounded-none
-            ${isFeldsherActive
+            ${tkmLocked
+              ? "opacity-30 cursor-not-allowed border-l-2 border-transparent text-muted-foreground"
+              : isFeldsherActive
               ? "bg-[hsl(var(--red-border)/0.1)] text-[hsl(var(--red-border))] border-l-2 border-[hsl(var(--red-border))]"
               : "text-muted-foreground hover:text-foreground hover:bg-secondary border-l-2 border-transparent"
             }`}
@@ -248,7 +266,7 @@ function SidebarSearch({ go }: { go: (id: SectionId) => void }) {
   );
 }
 
-export default function LearnSidebar({ active, go, hasTkmAccess }: LearnSidebarProps) {
+export default function LearnSidebar({ active, go, hasTkmAccess, tkmLocked }: LearnSidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const activeLabel = NAV.find((n) => n.id === active)?.label ?? "Меню";
@@ -259,7 +277,7 @@ export default function LearnSidebar({ active, go, hasTkmAccess }: LearnSidebarP
       <aside className="hidden md:flex w-72 xl:w-80 shrink-0 border-r border-border flex-col py-6 sticky top-0 h-screen overflow-y-auto">
         <p className="px-5 text-xs uppercase tracking-widest text-muted-foreground mb-3">Разделы</p>
         <SidebarSearch go={go} />
-        <SidebarContent active={active} go={go} hasTkmAccess={hasTkmAccess} />
+        <SidebarContent active={active} go={go} hasTkmAccess={hasTkmAccess} tkmLocked={tkmLocked} />
       </aside>
 
       {/* Mobile: bottom bar button */}
@@ -292,7 +310,7 @@ export default function LearnSidebar({ active, go, hasTkmAccess }: LearnSidebarP
               </button>
             </div>
             <div className="py-4">
-              <SidebarContent active={active} go={go} onClose={() => setMobileOpen(false)} hasTkmAccess={hasTkmAccess} />
+              <SidebarContent active={active} go={go} onClose={() => setMobileOpen(false)} hasTkmAccess={hasTkmAccess} tkmLocked={tkmLocked} />
             </div>
           </div>
         </div>

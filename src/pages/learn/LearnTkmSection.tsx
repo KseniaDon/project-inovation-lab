@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef } from "react";
 import Icon from "@/components/ui/icon";
 import func2url from "../../../backend/func2url.json";
 import TkmForm from "./TkmForm";
@@ -9,19 +9,12 @@ import TkmSection3 from "./TkmSection3";
 import TkmSection4 from "./TkmSection4";
 import TkmSection5 from "./TkmSection5";
 import TkmSection6 from "./TkmSection6";
+import { useTkmSession } from "./useTkmSession";
+import { useState } from "react";
 
 const TKM_URL = func2url["tkm"];
 
-type Stage = "form" | "section2" | "section3" | "section4" | "section5" | "section6" | "submit" | "done";
-
-interface Meta {
-  nickname: string;
-  vkLink: string;
-  department: string;
-  activationCode: string;
-}
-
-const SECTION_LABELS: Record<Stage, string> = {
+const SECTION_LABELS: Record<string, string> = {
   form: "Вводные данные",
   section2: "Раздел 1 из 5 — Отделение",
   section3: "Раздел 2 из 5 — Уставная документация",
@@ -32,25 +25,41 @@ const SECTION_LABELS: Record<Stage, string> = {
   done: "Завершено",
 };
 
-export default function LearnTkmSection() {
-  const [stage, setStage] = useState<Stage>("form");
-  const [meta, setMeta] = useState<Meta | null>(null);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+function formatTime(ms: number) {
+  const totalSec = Math.max(0, Math.floor(ms / 1000));
+  const m = Math.floor(totalSec / 60).toString().padStart(2, "0");
+  const s = (totalSec % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
+}
+
+interface LearnTkmSectionProps {
+  onActiveChange?: (active: boolean) => void;
+}
+
+export default function LearnTkmSection({ onActiveChange }: LearnTkmSectionProps) {
+  const {
+    stage,
+    setStage,
+    meta,
+    answers,
+    timeLeft,
+    expired,
+    isActive,
+    startSession,
+    mergeAnswers,
+    finishSession,
+    resetSession,
+  } = useTkmSession();
+
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const autoSubmittedRef = useRef(false);
 
-  const handleDepartmentSelected = (dept: string, info: { nickname: string; vkLink: string; activationCode: string }) => {
-    setMeta({ nickname: info.nickname, vkLink: info.vkLink, department: dept, activationCode: info.activationCode });
-    setAnswers({});
-    setStage("section2");
-  };
+  useEffect(() => {
+    onActiveChange?.(isActive);
+  }, [isActive, onActiveChange]);
 
-  const handleSection = (newAnswers: Record<string, string>, nextStage: Stage) => {
-    setAnswers(prev => ({ ...prev, ...newAnswers }));
-    setStage(nextStage);
-  };
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (finalAnswers?: Record<string, string>) => {
     if (!meta) return;
     setSubmitting(true);
     setSubmitError("");
@@ -63,59 +72,103 @@ export default function LearnTkmSection() {
           vk_link: meta.vkLink,
           department: meta.department,
           activation_code: meta.activationCode,
-          answers,
+          answers: finalAnswers ?? answers,
         }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || "Ошибка при отправке");
       }
-      setStage("done");
+      finishSession();
     } catch (e: unknown) {
       setSubmitError(e instanceof Error ? e.message : "Ошибка при отправке. Попробуйте ещё раз.");
     }
     setSubmitting(false);
   };
 
+  useEffect(() => {
+    if (expired && stage !== "done" && stage !== "form" && !autoSubmittedRef.current) {
+      autoSubmittedRef.current = true;
+      handleSubmit();
+    }
+  }, [expired, stage]);
+
+  const isWarning = timeLeft <= 10 * 60 * 1000 && timeLeft > 0;
+  const isCritical = timeLeft <= 3 * 60 * 1000 && timeLeft > 0;
+
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Раздел</p>
-        <h1 className="text-2xl sm:text-3xl font-bold">ТКМ</h1>
-        <p className="text-xs text-muted-foreground mt-1">{SECTION_LABELS[stage]}</p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Раздел</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">ТКМ</h1>
+          <p className="text-xs text-muted-foreground mt-1">{SECTION_LABELS[stage]}</p>
+        </div>
+
+        {isActive && !expired && (
+          <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border font-mono text-lg font-bold shrink-0 transition-colors ${
+            isCritical
+              ? "border-red-500 bg-red-500/10 text-red-400 animate-pulse"
+              : isWarning
+              ? "border-yellow-500 bg-yellow-500/10 text-yellow-400"
+              : "border-border bg-card text-foreground"
+          }`}>
+            <Icon name="Timer" size={18} className={isCritical ? "text-red-400" : isWarning ? "text-yellow-400" : "text-muted-foreground"} />
+            {formatTime(timeLeft)}
+          </div>
+        )}
+
+        {isActive && expired && (
+          <div className="flex items-center gap-2 px-4 py-2 rounded-xl border border-red-500 bg-red-500/10 text-red-400 font-mono text-lg font-bold shrink-0">
+            <Icon name="TimerOff" size={18} />
+            00:00
+          </div>
+        )}
       </div>
 
+      {expired && stage !== "done" && (
+        <div className="rounded-xl border border-red-700/40 bg-red-900/10 p-4 flex items-start gap-3">
+          <Icon name="AlertTriangle" size={18} className="text-red-400 mt-0.5 shrink-0" />
+          <p className="text-sm text-red-300">
+            Время истекло. Ваши ответы автоматически отправляются...
+          </p>
+        </div>
+      )}
+
       {stage === "form" && (
-        <TkmForm onDepartmentSelected={handleDepartmentSelected} />
+        <TkmForm onDepartmentSelected={(dept, info) => {
+          startSession({ nickname: info.nickname, vkLink: info.vkLink, department: dept, activationCode: info.activationCode });
+          autoSubmittedRef.current = false;
+        }} />
       )}
 
-      {stage === "section2" && meta && meta.department === "ОИК" && (
-        <TkmQuestionsOIK onNext={a => handleSection(a, "section3")} onBack={() => setStage("form")} />
+      {!expired && stage === "section2" && meta && meta.department === "ОИК" && (
+        <TkmQuestionsOIK onNext={a => mergeAnswers(a, "section3")} onBack={() => setStage("form")} />
       )}
-      {stage === "section2" && meta && meta.department === "СОП" && (
-        <TkmQuestionsSOP onNext={a => handleSection(a, "section3")} onBack={() => setStage("form")} />
+      {!expired && stage === "section2" && meta && meta.department === "СОП" && (
+        <TkmQuestionsSOP onNext={a => mergeAnswers(a, "section3")} onBack={() => setStage("form")} />
       )}
-      {stage === "section2" && meta && meta.department === "ОДС" && (
-        <TkmQuestionsODS onNext={a => handleSection(a, "section3")} onBack={() => setStage("form")} />
-      )}
-
-      {stage === "section3" && (
-        <TkmSection3 onNext={a => handleSection(a, "section4")} onBack={() => setStage("section2")} />
+      {!expired && stage === "section2" && meta && meta.department === "ОДС" && (
+        <TkmQuestionsODS onNext={a => mergeAnswers(a, "section3")} onBack={() => setStage("form")} />
       )}
 
-      {stage === "section4" && (
-        <TkmSection4 onNext={a => handleSection(a, "section5")} onBack={() => setStage("section3")} />
+      {!expired && stage === "section3" && (
+        <TkmSection3 onNext={a => mergeAnswers(a, "section4")} onBack={() => setStage("section2")} />
       )}
 
-      {stage === "section5" && (
-        <TkmSection5 onNext={a => handleSection(a, "section6")} onBack={() => setStage("section4")} />
+      {!expired && stage === "section4" && (
+        <TkmSection4 onNext={a => mergeAnswers(a, "section5")} onBack={() => setStage("section3")} />
       )}
 
-      {stage === "section6" && (
-        <TkmSection6 onNext={a => handleSection(a, "submit")} onBack={() => setStage("section5")} />
+      {!expired && stage === "section5" && (
+        <TkmSection5 onNext={a => mergeAnswers(a, "section6")} onBack={() => setStage("section4")} />
       )}
 
-      {stage === "submit" && meta && (
+      {!expired && stage === "section6" && (
+        <TkmSection6 onNext={a => mergeAnswers(a, "submit")} onBack={() => setStage("section5")} />
+      )}
+
+      {!expired && stage === "submit" && meta && (
         <div className="flex flex-col gap-5 max-w-2xl">
           <div className="rounded-xl border border-border bg-card p-5 flex flex-col gap-3">
             <h2 className="text-base font-bold">Все разделы пройдены!</h2>
@@ -144,7 +197,7 @@ export default function LearnTkmSection() {
               ← Назад
             </button>
             <button
-              onClick={handleSubmit}
+              onClick={() => handleSubmit()}
               disabled={submitting}
               className="px-6 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm font-semibold rounded-lg transition-colors flex items-center gap-2"
             >
@@ -176,7 +229,7 @@ export default function LearnTkmSection() {
             </p>
           </div>
           <button
-            onClick={() => { setStage("form"); setMeta(null); setAnswers({}); }}
+            onClick={resetSession}
             className="self-start text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
           >
             ← Начать заново

@@ -40,6 +40,7 @@ const ADMIN_ROLES = ["super_admin", "head_admin", "admin", "moderator", "editor"
 
 export default function Learn() {
   const [active, setActive] = useState<SectionId>("intro");
+  const [isTkmActive, setIsTkmActive] = useState(false);
   const navigate = useNavigate();
 
   const go = (id: SectionId) => {
@@ -78,7 +79,7 @@ export default function Learn() {
       </div>
 
       <div className="flex flex-1 pb-16 md:pb-0">
-        <LearnSidebar active={active} go={go} hasTkmAccess={hasTkmAccess} />
+        <LearnSidebar active={active} go={go} hasTkmAccess={hasTkmAccess} tkmLocked={isTkmActive} />
 
         {/* ── Content ── */}
         <main className={`flex-1 px-4 md:px-10 xl:px-16 py-6 md:py-10 min-w-0 mx-auto w-full ${active === "intern-binds" || active === "intern-evidence" || active === "intern-mis" || active === "intern-gov" ? "max-w-6xl" : "max-w-4xl"}`}>
@@ -245,7 +246,7 @@ export default function Learn() {
           {active === "feldsher-wards" && <LearnFeldsherWardsSection go={go} />}
 
           {/* ТКМ */}
-          {active === "tkm" && <LearnTkmSection />}
+          {active === "tkm" && <LearnTkmSection onActiveChange={setIsTkmActive} />}
 
         </motion.div>
         </AnimatePresence>
