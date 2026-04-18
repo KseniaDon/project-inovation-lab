@@ -17,7 +17,7 @@ interface TkmSessionData {
 }
 
 const STORAGE_KEY = "tkm_session";
-const DURATION_MS = 60 * 60 * 1000;
+const DURATION_MS = 90 * 60 * 1000;
 
 function loadSession(): TkmSessionData | null {
   try {
