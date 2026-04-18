@@ -1,13 +1,17 @@
 import {
   TKM_QUESTIONS,
   TKM_SECTION3,
+  TKM_SECTION3_OPEN,
   TKM_SECTION3_RADIO2,
   TKM_SECTION3_MULTI,
+  TKM_SECTION3_MATCH,
   TKM_SECTION4_RADIO,
   TKM_SECTION4_RADIO2,
   TKM_SECTION4_MULTI,
   TKM_SECTION4_STYLED,
+  TKM_SECTION4_OPEN,
   TKM_SECTION5_MULTI,
+  TKM_SECTION5_OPEN,
   TKM_SECTION6_SINGLE,
   TKM_SECTION6_MULTI,
   TKM_SECTION6_OPEN,
@@ -41,7 +45,8 @@ export const STATUS_LABELS: Record<string, { label: string; color: string }> = {
 
 export const OPEN_MAX_SCORES: Record<string, number> = {
   "3.10": 5, "3.11": 5, "3.12": 5, "3.13": 5, "3.14": 5,
-  "4.28": 4,
+  "3.17": 4,
+  "3.28": 4,
   "4.30": 5, "4.31": 3,
   "5.35": 3, "5.36": 3, "5.37": 2, "5.38": 5,
 };
@@ -69,6 +74,22 @@ function getMultiQuestions(): TkmMultiQuestion[] {
     ...TKM_SECTION4_STYLED,
     ...TKM_SECTION5_MULTI,
     ...TKM_SECTION6_MULTI,
+  ];
+}
+
+// Все вопросы с полем num для нумерации
+function getAllQuestionsWithNum(): { key: string; num?: number; text?: string; title?: string }[] {
+  return [
+    ...TKM_SECTION3_MULTI,
+    ...TKM_SECTION3_OPEN,
+    ...TKM_SECTION3_MATCH,
+    ...TKM_SECTION4_MULTI,
+    ...TKM_SECTION4_STYLED,
+    ...TKM_SECTION4_OPEN,
+    ...TKM_SECTION5_MULTI,
+    ...TKM_SECTION5_OPEN,
+    ...TKM_SECTION6_MULTI,
+    ...TKM_SECTION6_OPEN,
   ];
 }
 
@@ -125,15 +146,38 @@ export function getCorrectAnswer(key: string, dept: string): string | string[] |
   return null;
 }
 
+export function getQuestionNum(key: string): number | null {
+  const found = getAllQuestionsWithNum().find(q => q.key === key);
+  if (found && "num" in found && typeof found.num === "number") return found.num;
+  return null;
+}
+
 export function getQuestionLabel(key: string, dept: string): string {
-  const all = [
-    ...getSingleQuestions(dept),
-    ...getMultiQuestions(),
-    ...TKM_SECTION6_OPEN,
-  ];
-  const found = all.find(q => q.key === key);
-  if (found && "text" in found) return (found as { text: string }).text;
-  if (found && "title" in found) return (found as { title: string }).title;
+  // Сначала ищем по всем одиночным и мульти (у них text всегда есть)
+  const singles = getSingleQuestions(dept);
+  const single = singles.find(q => q.key === key);
+  if (single) return single.text;
+
+  const multis = getMultiQuestions();
+  const multi = multis.find(q => q.key === key);
+  if (multi) return multi.text;
+
+  // Открытые и спец. вопросы
+  const open3 = TKM_SECTION3_OPEN.find(q => q.key === key);
+  if (open3) return open3.title;
+
+  const match3 = TKM_SECTION3_MATCH.find(q => q.key === key);
+  if (match3) return match3.text;
+
+  const open4 = TKM_SECTION4_OPEN.find(q => q.key === key);
+  if (open4) return open4.text;
+
+  const open5 = TKM_SECTION5_OPEN.find(q => q.key === key);
+  if (open5) return open5.text;
+
+  const open6 = TKM_SECTION6_OPEN.find(q => q.key === key);
+  if (open6) return open6.text;
+
   return key;
 }
 
