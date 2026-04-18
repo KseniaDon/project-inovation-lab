@@ -8,6 +8,13 @@
       "bodyMatcher": "partial"
     },
     {
+      "name": "Проверить доступ — ссылки нет в списке, отказ",
+      "method": "GET",
+      "path": "/?action=check_access&vk_link=https://vk.com/__nobody__test__",
+      "expectedStatus": 403,
+      "bodyMatcher": "partial"
+    },
+    {
       "name": "Отправить ответы с неверным кодом активации",
       "method": "POST",
       "path": "/?action=submit",

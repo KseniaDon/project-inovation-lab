@@ -3,7 +3,6 @@ import Icon from "@/components/ui/icon";
 import func2url from "../../../backend/func2url.json";
 
 const TKM_URL = func2url["tkm"];
-const ACTIVATION_CODE = "78";
 
 const DEPARTMENTS = [
   { value: "ОИК", label: "ОИК (Отделение Инфекционного Контроля)" },
@@ -22,16 +21,32 @@ export default function TkmForm({ onDepartmentSelected }: TkmFormProps) {
   const [department, setDepartment] = useState("");
   const [error, setError] = useState("");
   const [codeError, setCodeError] = useState("");
+  const [checking, setChecking] = useState(false);
 
-  const handleNext = () => {
+  const handleNext = async () => {
     setError("");
     setCodeError("");
 
     if (!nickname.trim()) { setError("Введите ваш никнейм"); return; }
     if (!vkLink.trim()) { setError("Введите ссылку на страницу ВКонтакте"); return; }
     if (!code.trim()) { setCodeError("Введите код активации"); return; }
-    if (code.trim() !== ACTIVATION_CODE) { setCodeError("Неверный код активации. Узнайте его у куратора/заведующего/заместителя заведующего отделением интернатуры"); return; }
     if (!department) { setError("Выберите отделение"); return; }
+
+    setChecking(true);
+    try {
+      const res = await fetch(`${TKM_URL}?action=check_access&vk_link=${encodeURIComponent(vkLink.trim())}`);
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Нет доступа к ТКМ");
+        setChecking(false);
+        return;
+      }
+    } catch {
+      setError("Ошибка соединения. Попробуйте ещё раз.");
+      setChecking(false);
+      return;
+    }
+    setChecking(false);
 
     onDepartmentSelected(department, { nickname: nickname.trim(), vkLink: vkLink.trim(), activationCode: code.trim() });
   };
@@ -170,9 +185,11 @@ export default function TkmForm({ onDepartmentSelected }: TkmFormProps) {
 
       <button
         onClick={handleNext}
-        className="self-start px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg transition-colors"
+        disabled={checking}
+        className="self-start px-6 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm font-semibold rounded-lg transition-colors flex items-center gap-2"
       >
-        Далее
+        {checking && <Icon name="Loader2" size={15} className="animate-spin" />}
+        {checking ? "Проверка..." : "Далее"}
       </button>
     </div>
   );

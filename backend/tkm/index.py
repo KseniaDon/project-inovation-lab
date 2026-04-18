@@ -162,6 +162,22 @@ def handler(event: dict, context) -> dict:
         item["reviewed_at"] = item["reviewed_at"].isoformat() if item["reviewed_at"] else None
         return {"statusCode": 200, "headers": CORS, "body": json.dumps(item, ensure_ascii=False)}
 
+    # GET check_access — проверить допуск по VK ссылке
+    if method == "GET" and action == "check_access":
+        vk_link = (qs.get("vk_link") or "").strip()
+        if not vk_link:
+            conn.close()
+            return {"statusCode": 400, "headers": CORS, "body": json.dumps({"error": "Укажите vk_link"})}
+        allowed = get_tkm_allowed(cur, s)
+        conn.close()
+        if not allowed:
+            return {"statusCode": 200, "headers": CORS, "body": json.dumps({"ok": True})}
+        vk_nick = normalize_vk(vk_link)
+        allowed_normalized = [normalize_vk(a) for a in allowed]
+        if vk_nick not in allowed_normalized:
+            return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Ваша страница ВКонтакте не найдена в списке допущенных к ТКМ. Обратитесь к куратору."})}
+        return {"statusCode": 200, "headers": CORS, "body": json.dumps({"ok": True})}
+
     # GET scores — загрузить макс. баллы из БД
     if method == "GET" and action == "scores":
         cur.execute(f"SELECT key, max_score FROM {s}.tkm_scores")

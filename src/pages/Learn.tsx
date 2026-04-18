@@ -245,7 +245,7 @@ export default function Learn() {
           {active === "feldsher-wards" && <LearnFeldsherWardsSection go={go} />}
 
           {/* ТКМ */}
-          {active === "tkm" && hasTkmAccess && <LearnTkmSection />}
+          {active === "tkm" && <LearnTkmSection />}
 
         </motion.div>
         </AnimatePresence>

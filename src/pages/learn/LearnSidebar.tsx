@@ -24,7 +24,7 @@ function SidebarContent({ active, go, onClose, hasTkmAccess }: { active: Section
   };
 
   const topItems = NAV.filter((item) => !item.parent && !ACCORDION_PARENTS.includes(item.id) && item.id !== "tkm");
-  const bottomItems = NAV.filter((item) => item.id === "tkm" && hasTkmAccess);
+  const bottomItems = NAV.filter((item) => item.id === "tkm");
 
   const handleGo = (id: SectionId) => {
     go(id);
