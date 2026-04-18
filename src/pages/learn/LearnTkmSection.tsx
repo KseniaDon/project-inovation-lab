@@ -139,18 +139,10 @@ export default function LearnTkmSection({ onActiveChange }: LearnTkmSectionProps
             </p>
           </div>
           {submitError && (
-            <div className="flex flex-col gap-3">
-              <p className="text-sm text-red-500 flex items-start gap-2">
-                <Icon name="AlertCircle" size={15} className="mt-0.5 shrink-0" />
-                {submitError}
-              </p>
-              <button
-                onClick={resetSession}
-                className="self-start text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
-              >
-                ← Начать заново
-              </button>
-            </div>
+            <p className="text-sm text-red-500 flex items-start gap-2">
+              <Icon name="AlertCircle" size={15} className="mt-0.5 shrink-0" />
+              {submitError}
+            </p>
           )}
         </div>
       )}
