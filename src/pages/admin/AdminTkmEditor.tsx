@@ -3,8 +3,6 @@ import Icon from "@/components/ui/icon";
 import { TKM_QUESTIONS } from "../learn/tkmAnswerKey";
 import {
   DEPT_LABELS,
-  EditableQuestion,
-  EditableMultiQuestion,
   initMcq,
   initDeptMcq,
   initOpen,
@@ -15,12 +13,16 @@ import {
   initS4Open,
   initS5Multi,
   initS5Open,
+  initS6Single,
+  initS6Multi,
+  initS6Open,
 } from "./TkmEditorTypes";
 import {
   SectionPreview,
   Section2Preview,
   Section3Preview,
   Section4Preview,
+  Section5Preview,
 } from "./TkmPreviewComponents";
 import {
   SectionHeader,
@@ -29,6 +31,7 @@ import {
   StyledMultiCard,
   SimpleOpenCard,
   S5OpenCard,
+  S6OpenCard,
 } from "./TkmEditCards";
 
 type ViewMode = "edit" | "preview";
@@ -44,10 +47,18 @@ export default function AdminTkmEditor() {
   const [s4Open, setS4Open] = useState(initS4Open);
   const [s5Multi, setS5Multi] = useState(initS5Multi);
   const [s5Open, setS5Open] = useState(initS5Open);
+  const [s6Single, setS6Single] = useState(initS6Single);
+  const [s6Multi, setS6Multi] = useState(initS6Multi);
+  const [s6Open, setS6Open] = useState(initS6Open);
   const [activeDept, setActiveDept] = useState<string>("ОИК");
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({ dept: true, s3: false, open: false, s4radio: false, s4styled: false, s4open: false, s5multi: false, s5open: false });
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({
+    dept: true, s3: false, open: false,
+    s4radio: false, s4styled: false, s4open: false,
+    s5multi: false, s5open: false,
+    s6single: false, s6multi: false, s6open: false,
+  });
   const [viewMode, setViewMode] = useState<ViewMode>("edit");
-  const [previewSection, setPreviewSection] = useState<"1" | "2" | "3" | "4">("1");
+  const [previewSection, setPreviewSection] = useState<"1" | "2" | "3" | "4" | "5">("1");
 
   const toggle = (k: string) => setExpanded(v => ({ ...v, [k]: !v[k] }));
 
@@ -56,11 +67,17 @@ export default function AdminTkmEditor() {
   const openTotal = openQuestions.reduce((s, q) => s + q.points, 0);
   const s4Total = [...s4Radio, ...s4Radio2, ...s4Multi, ...s4Styled, ...s4Open].reduce((s, q) => s + q.points, 0);
   const s5Total = [...s5Multi, ...s5Open].reduce((s, q) => s + q.points, 0);
-  const grandTotal = deptTotal(activeDept) + s3Total + openTotal + s4Total + s5Total;
+  const s6Total = [...s6Single, ...s6Multi, ...s6Open].reduce((s, q) => s + q.points, 0);
+  const grandTotal = deptTotal(activeDept) + s3Total + openTotal + s4Total + s5Total + s6Total;
+
+  const totalQuestions = (deptMcq[activeDept] || []).length + section3.length + openQuestions.length
+    + s4Radio.length + s4Radio2.length + s4Multi.length + s4Styled.length + s4Open.length
+    + s5Multi.length + s5Open.length
+    + s6Single.length + s6Multi.length + s6Open.length;
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Шапка с переключателем режима */}
+      {/* Шапка */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-sm font-bold text-zinc-200 uppercase tracking-widest">ТКМ — Структура теста</h2>
@@ -82,7 +99,7 @@ export default function AdminTkmEditor() {
             </button>
           </div>
           <div className="flex items-center gap-2 text-xs text-zinc-400 px-3 py-2 border border-zinc-700 bg-zinc-900">
-            <span>{(deptMcq[activeDept] || []).length + section3.length + openQuestions.length + s4Radio.length + s4Radio2.length + s4Multi.length + s4Styled.length + s4Open.length + s5Multi.length + s5Open.length} вопр.</span>
+            <span>{totalQuestions} вопр.</span>
             <span className="text-zinc-600">·</span>
             <span>макс. {grandTotal} б.</span>
           </div>
@@ -94,13 +111,19 @@ export default function AdminTkmEditor() {
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2 flex-wrap">
             <p className="text-xs text-zinc-500 uppercase tracking-widest">Раздел:</p>
-            {(["1", "2", "3", "4"] as const).map(s => (
+            {([
+              { v: "1", l: "1 — Отделение" },
+              { v: "2", l: "2 — Уставная документация" },
+              { v: "3", l: "3 — RP-сфера" },
+              { v: "4", l: "4 — Препараты" },
+              { v: "5", l: "5 — Медицина" },
+            ] as const).map(s => (
               <button
-                key={s}
-                onClick={() => setPreviewSection(s)}
-                className={`text-xs px-3 py-1.5 border transition-colors ${previewSection === s ? "border-red-600 text-red-400 bg-red-900/20" : "border-zinc-700 text-zinc-400 hover:border-zinc-500"}`}
+                key={s.v}
+                onClick={() => setPreviewSection(s.v)}
+                className={`text-xs px-3 py-1.5 border transition-colors ${previewSection === s.v ? "border-red-600 text-red-400 bg-red-900/20" : "border-zinc-700 text-zinc-400 hover:border-zinc-500"}`}
               >
-                {s === "1" ? "Раздел 1 — Отделение" : s === "2" ? "Раздел 2 — Уставная документация" : s === "3" ? "Раздел 3 — RP-сфера" : "Раздел 4 — Препараты"}
+                {s.l}
               </button>
             ))}
             {previewSection === "1" && (
@@ -118,6 +141,7 @@ export default function AdminTkmEditor() {
             {previewSection === "2" && <Section2Preview />}
             {previewSection === "3" && <Section3Preview />}
             {previewSection === "4" && <Section4Preview />}
+            {previewSection === "5" && <Section5Preview />}
           </div>
         </div>
       )}
@@ -149,7 +173,7 @@ export default function AdminTkmEditor() {
             )}
           </div>
 
-          {/* Раздел 2 — тестовые вопросы уставной доки */}
+          {/* Раздел 2 — тестовые вопросы */}
           <div className="flex flex-col gap-1">
             <SectionHeader
               label="Уставная документация — тестовые вопросы (№4–9)"
@@ -166,7 +190,7 @@ export default function AdminTkmEditor() {
             )}
           </div>
 
-          {/* Раздел 2 — открытые вопросы */}
+          {/* Раздел 2 — открытые */}
           <div className="flex flex-col gap-1">
             <SectionHeader
               label="Уставная документация — открытые вопросы (№10–14)"
@@ -183,7 +207,7 @@ export default function AdminTkmEditor() {
             )}
           </div>
 
-          {/* Раздел 3 — RP-сфера — радио (№18–20, 22) */}
+          {/* Раздел 3 — радио/мульти */}
           <div className="flex flex-col gap-1">
             <SectionHeader
               label="RP-сфера — тестовые вопросы (№18–20, 22)"
@@ -202,7 +226,7 @@ export default function AdminTkmEditor() {
             )}
           </div>
 
-          {/* Раздел 3 — RP-сфера — примеры отыгровки (№23–27) */}
+          {/* Раздел 3 — стилизованные */}
           <div className="flex flex-col gap-1">
             <SectionHeader
               label="RP-сфера — примеры отыгровки (№23–27)"
@@ -219,7 +243,7 @@ export default function AdminTkmEditor() {
             )}
           </div>
 
-          {/* Раздел 3 — RP-сфера — открытый вопрос (№28) */}
+          {/* Раздел 3 — открытый */}
           <div className="flex flex-col gap-1">
             <SectionHeader
               label="RP-сфера — открытый вопрос (№28)"
@@ -236,7 +260,7 @@ export default function AdminTkmEditor() {
             )}
           </div>
 
-          {/* Раздел 4 — Препараты — мультивыбор (№29) */}
+          {/* Раздел 4 — мультивыбор */}
           <div className="flex flex-col gap-1">
             <SectionHeader
               label="Препараты — верные утверждения (№29)"
@@ -253,7 +277,7 @@ export default function AdminTkmEditor() {
             )}
           </div>
 
-          {/* Раздел 4 — Препараты — открытые вопросы (№30–31) */}
+          {/* Раздел 4 — открытые */}
           <div className="flex flex-col gap-1">
             <SectionHeader
               label="Препараты — открытые вопросы (№30–31)"
@@ -266,6 +290,60 @@ export default function AdminTkmEditor() {
             {expanded.s5open && (
               <div className="flex flex-col gap-1 mt-1">
                 {s5Open.map(q => <S5OpenCard key={q.key} q={q} onChange={updated => setS5Open(prev => prev.map(x => x.key === q.key ? updated : x))} />)}
+              </div>
+            )}
+          </div>
+
+          {/* Раздел 5 — Медицина — радио (№32, 34) */}
+          <div className="flex flex-col gap-1">
+            <SectionHeader
+              label="Медицина — тестовые вопросы (№32, 34)"
+              badge="Раздел 5"
+              expanded={!!expanded.s6single}
+              onToggle={() => toggle("s6single")}
+              questionCount={s6Single.length}
+              maxPoints={s6Single.reduce((s, q) => s + q.points, 0)}
+            />
+            {expanded.s6single && (
+              <div className="flex flex-col gap-1 mt-1">
+                {s6Single.map((q, i) => {
+                  const nums: Record<string, number> = { "5.32": 31, "5.34": 33 };
+                  return <McqCard key={q.key} q={q} index={nums[q.key] ?? (31 + i)} onChange={updated => setS6Single(prev => prev.map((x, xi) => xi === i ? updated : x))} />;
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Раздел 5 — Медицина — мультивыбор (№33) */}
+          <div className="flex flex-col gap-1">
+            <SectionHeader
+              label="Медицина — верные утверждения (№33)"
+              badge="Раздел 5"
+              expanded={!!expanded.s6multi}
+              onToggle={() => toggle("s6multi")}
+              questionCount={s6Multi.length}
+              maxPoints={s6Multi.reduce((s, q) => s + q.points, 0)}
+            />
+            {expanded.s6multi && (
+              <div className="flex flex-col gap-1 mt-1">
+                {s6Multi.map((q, i) => <McqCard key={q.key} q={{ ...q, correct: q.correct.join(", ") }} index={32 + i} onChange={updated => setS6Multi(prev => prev.map((x, xi) => xi === i ? { ...updated, num: x.num, correct: updated.correct.split(", ").filter(Boolean) } : x))} />)}
+              </div>
+            )}
+          </div>
+
+          {/* Раздел 5 — Медицина — открытые (№35–38) */}
+          <div className="flex flex-col gap-1">
+            <SectionHeader
+              label="Медицина — открытые вопросы (№35–38)"
+              badge="Раздел 5"
+              expanded={!!expanded.s6open}
+              onToggle={() => toggle("s6open")}
+              questionCount={s6Open.length}
+              maxPoints={s6Open.reduce((s, q) => s + q.points, 0)}
+            />
+            {expanded.s6open && (
+              <div className="flex flex-col gap-1 mt-1">
+                {s6Open.map(q => <S6OpenCard key={q.key} q={q} onChange={updated => setS6Open(prev => prev.map(x => x.key === q.key ? updated : x))} />)}
               </div>
             )}
           </div>
