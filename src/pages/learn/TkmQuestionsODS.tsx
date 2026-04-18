@@ -59,7 +59,7 @@ export default function TkmQuestionsODS({ onNext, onBack }: Props) {
   return (
     <div className="flex flex-col gap-5 max-w-2xl">
       <div className="rounded-xl border border-border bg-card p-5 flex flex-col gap-2">
-        <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded font-semibold self-start">Раздел 2 из 8</span>
+        <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded font-semibold self-start">Раздел 1 из 8</span>
         <h2 className="text-base font-bold mt-1">Ваше будущее отделение — ОДС.</h2>
         <p className="text-sm text-muted-foreground leading-relaxed">
           Этот раздел включает в себя вопросы, которые проверяют Ваши знания Вашего будущего отделения.
