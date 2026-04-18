@@ -31,6 +31,21 @@ export default function AdminTkmReviews({ reviewerNick }: Props) {
   const [saved, setSaved] = useState(false);
   const [filterStatus, setFilterStatus] = useState("pending");
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
+  const [dbScores, setDbScores] = useState<Record<string, number>>(OPEN_MAX_SCORES);
+
+  // Загрузка актуальных макс. баллов из БД
+  useEffect(() => {
+    fetch(`${TKM_URL}?action=scores`)
+      .then(r => r.json())
+      .then((data: Record<string, number>) => {
+        if (data && Object.keys(data).length) {
+          setDbScores({ ...OPEN_MAX_SCORES, ...data });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const getMaxScore = (key: string) => dbScores[key] ?? OPEN_MAX_SCORES[key] ?? 2;
 
   const load = async () => {
     setLoading(true);
@@ -58,7 +73,7 @@ export default function AdminTkmReviews({ reviewerNick }: Props) {
       const initScores: Record<string, string> = {};
       for (const key of Object.keys(data.answers || {})) {
         const qType = getQuestionType(key, data.department);
-        const isOpenScored = OPEN_MAX_SCORES[key] !== undefined;
+        const isOpenScored = getMaxScore(key) !== undefined && dbScores[key] !== undefined;
         const isWrongMulti = qType === "multi" && checkAnswer(key, data.answers[key], data.department) === "wrong";
         if (isOpenScored || isWrongMulti) {
           initScores[key] = "0";
@@ -96,7 +111,7 @@ export default function AdminTkmReviews({ reviewerNick }: Props) {
     const autoScore = calcAutoScore(selected.answers || {}, selected.department);
     const manualTotal = calcManualTotal();
     const totalScore = autoScore + manualTotal;
-    const maxScore = Object.values(OPEN_MAX_SCORES).reduce((s, v) => s + v, 0) +
+    const maxScore = Object.values(dbScores).reduce((s, v) => s + v, 0) +
       Object.keys(selected.answers || {}).filter(k => checkAnswer(k, selected.answers[k], selected.department) !== "open").length;
 
     try {
@@ -193,6 +208,7 @@ export default function AdminTkmReviews({ reviewerNick }: Props) {
           saving={saving}
           saved={saved}
           expandedSections={expandedSections}
+          dbScores={dbScores}
           onClose={() => setSelected(null)}
           onManualScore={(key, val) => setManualScores(prev => ({ ...prev, [key]: val }))}
           onCommentChange={setComment}

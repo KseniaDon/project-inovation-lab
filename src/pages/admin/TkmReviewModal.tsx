@@ -19,6 +19,7 @@ interface Props {
   saving: boolean;
   saved: boolean;
   expandedSections: Record<string, boolean>;
+  dbScores: Record<string, number>;
   onClose: () => void;
   onManualScore: (key: string, val: string) => void;
   onCommentChange: (val: string) => void;
@@ -38,6 +39,7 @@ export default function TkmReviewModal({
   saving,
   saved,
   expandedSections,
+  dbScores,
   onClose,
   onManualScore,
   onCommentChange,
@@ -104,7 +106,7 @@ export default function TkmReviewModal({
                         const qType = getQuestionType(k, selected.department);
                         const correctAns = getCorrectAnswer(k, selected.department);
                         const multiMax = qType === "multi" && Array.isArray(correctAns) ? correctAns.length : 2;
-                        const maxScore = OPEN_MAX_SCORES[k] ?? (qType === "multi" ? multiMax : 2);
+                        const maxScore = dbScores[k] ?? OPEN_MAX_SCORES[k] ?? (qType === "multi" ? multiMax : 2);
                         return (
                           <AnswerRow
                             key={k}

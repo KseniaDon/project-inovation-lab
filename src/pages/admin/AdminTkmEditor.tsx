@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Icon from "@/components/ui/icon";
+import func2url from "../../../backend/func2url.json";
 import { TKM_QUESTIONS } from "../learn/tkmAnswerKey";
+
+const TKM_URL = func2url["tkm"];
 import {
   DEPT_LABELS,
   initMcq,
@@ -36,6 +39,10 @@ import {
 
 type ViewMode = "edit" | "preview";
 
+function applyScores<T extends { key: string; points: number }>(items: T[], scores: Record<string, number>): T[] {
+  return items.map(q => scores[q.key] !== undefined ? { ...q, points: scores[q.key] } : q);
+}
+
 export default function AdminTkmEditor() {
   const [deptMcq, setDeptMcq] = useState(initDeptMcq);
   const [section3, setSection3] = useState(initMcq);
@@ -59,6 +66,60 @@ export default function AdminTkmEditor() {
   });
   const [viewMode, setViewMode] = useState<ViewMode>("edit");
   const [previewSection, setPreviewSection] = useState<"1" | "2" | "3" | "4" | "5">("1");
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saved" | "error">("idle");
+
+  const loadScores = useCallback(async () => {
+    try {
+      const res = await fetch(`${TKM_URL}?action=scores`);
+      const scores: Record<string, number> = await res.json();
+      if (!scores || !Object.keys(scores).length) return;
+      setDeptMcq(prev => {
+        const updated = { ...prev };
+        for (const d of Object.keys(updated)) updated[d] = applyScores(updated[d], scores);
+        return updated;
+      });
+      setSection3(prev => applyScores(prev, scores));
+      setOpenQuestions(prev => applyScores(prev, scores));
+      setS4Radio(prev => applyScores(prev, scores));
+      setS4Radio2(prev => applyScores(prev, scores));
+      setS4Multi(prev => applyScores(prev, scores));
+      setS4Styled(prev => applyScores(prev, scores));
+      setS4Open(prev => applyScores(prev, scores));
+      setS5Multi(prev => applyScores(prev, scores));
+      setS5Open(prev => applyScores(prev, scores));
+      setS6Single(prev => applyScores(prev, scores));
+      setS6Multi(prev => applyScores(prev, scores));
+      setS6Open(prev => applyScores(prev, scores));
+    } catch { /* тихо игнорируем */ }
+  }, []);
+
+  useEffect(() => { loadScores(); }, [loadScores]);
+
+  const saveScores = async () => {
+    setSaving(true);
+    setSaveStatus("idle");
+    const scores: Record<string, number> = {};
+    const collect = (items: { key: string; points: number }[]) => items.forEach(q => { scores[q.key] = q.points; });
+    for (const d of Object.keys(deptMcq)) collect(deptMcq[d]);
+    collect(section3);
+    collect(openQuestions);
+    collect(s4Radio); collect(s4Radio2); collect(s4Multi); collect(s4Styled); collect(s4Open);
+    collect(s5Multi); collect(s5Open);
+    collect(s6Single); collect(s6Multi); collect(s6Open);
+    try {
+      await fetch(`${TKM_URL}?action=save_scores`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ scores }),
+      });
+      setSaveStatus("saved");
+      setTimeout(() => setSaveStatus("idle"), 3000);
+    } catch {
+      setSaveStatus("error");
+    }
+    setSaving(false);
+  };
 
   const toggle = (k: string) => setExpanded(v => ({ ...v, [k]: !v[k] }));
 
@@ -103,6 +164,18 @@ export default function AdminTkmEditor() {
             <span className="text-zinc-600">·</span>
             <span>макс. {grandTotal} б.</span>
           </div>
+          <button
+            onClick={saveScores}
+            disabled={saving}
+            className={`flex items-center gap-1.5 text-xs px-3 py-2 border font-semibold transition-colors disabled:opacity-60 ${
+              saveStatus === "saved" ? "border-green-600 text-green-400 bg-green-900/20" :
+              saveStatus === "error" ? "border-red-600 text-red-400" :
+              "border-zinc-600 text-zinc-300 hover:border-zinc-400 bg-zinc-900"
+            }`}
+          >
+            <Icon name={saveStatus === "saved" ? "Check" : "Save"} size={12} />
+            {saving ? "Сохранение..." : saveStatus === "saved" ? "Сохранено" : saveStatus === "error" ? "Ошибка" : "Сохранить баллы"}
+          </button>
         </div>
       </div>
 

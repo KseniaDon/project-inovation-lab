@@ -20,5 +20,20 @@
       "expectedStatus": 200,
       "bodyMatcher": "partial"
     }
+    ,{
+      "name": "Загрузить макс. баллы",
+      "method": "GET",
+      "path": "/?action=scores",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Сохранить макс. баллы",
+      "method": "POST",
+      "path": "/?action=save_scores",
+      "body": {"scores": {"3.10": 5, "3.11": 5}},
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    }
   ]
 }

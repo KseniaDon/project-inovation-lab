@@ -113,5 +113,25 @@ def handler(event: dict, context) -> dict:
         item["reviewed_at"] = item["reviewed_at"].isoformat() if item["reviewed_at"] else None
         return {"statusCode": 200, "headers": CORS, "body": json.dumps(item, ensure_ascii=False)}
 
+    # GET scores — загрузить макс. баллы из БД
+    if method == "GET" and action == "scores":
+        cur.execute(f"SELECT key, max_score FROM {s}.tkm_scores")
+        rows = cur.fetchall()
+        conn.close()
+        return {"statusCode": 200, "headers": CORS, "body": json.dumps({r[0]: r[1] for r in rows})}
+
+    # POST save_scores — сохранить макс. баллы
+    if method == "POST" and action == "save_scores":
+        body = json.loads(event.get("body") or "{}")
+        scores = body.get("scores") or {}
+        for key, val in scores.items():
+            cur.execute(
+                f"INSERT INTO {s}.tkm_scores (key, max_score, updated_at) VALUES (%s, %s, NOW()) ON CONFLICT (key) DO UPDATE SET max_score=EXCLUDED.max_score, updated_at=NOW()",
+                (str(key), int(val))
+            )
+        conn.commit()
+        conn.close()
+        return {"statusCode": 200, "headers": CORS, "body": json.dumps({"ok": True})}
+
     conn.close()
     return {"statusCode": 400, "headers": CORS, "body": json.dumps({"error": "Укажите action"})}
