@@ -111,8 +111,7 @@ export default function AdminTkmReviews({ reviewerNick }: Props) {
     const autoScore = calcAutoScore(selected.answers || {}, selected.department);
     const manualTotal = calcManualTotal();
     const totalScore = autoScore + manualTotal;
-    const maxScore = Object.values(dbScores).reduce((s, v) => s + v, 0) +
-      Object.keys(selected.answers || {}).filter(k => checkAnswer(k, selected.answers[k], selected.department) !== "open").length;
+    const maxScore = 100;
 
     try {
       await fetch(`${TKM_URL}?action=review&id=${selected.id}`, {
