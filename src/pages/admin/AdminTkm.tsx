@@ -28,23 +28,22 @@ export default function AdminTkm({ allowed, saving, saved, onSave }: Props) {
 
   const remove = (nick: string) => setList(prev => prev.filter(e => e.nick !== nick));
 
-  const changeAttempts = (nick: string, delta: number) => {
-    setList(prev => prev.map(e => {
-      if (e.nick !== nick) return e;
-      const next = Math.min(MAX_ATTEMPTS, Math.max(0, e.attempts + delta));
-      return { ...e, attempts: next };
-    }));
+  // Выдать следующую попытку (+1, но не выше MAX)
+  const grantAttempt = (nick: string) => {
+    setList(prev => prev.map(e =>
+      e.nick === nick ? { ...e, attempts: Math.min(MAX_ATTEMPTS, e.attempts + 1) } : e
+    ));
   };
 
-  const attemptColor = (n: number) => {
-    if (n === 0) return "text-red-500";
-    if (n === 1) return "text-yellow-400";
-    return "text-green-400";
+  const attemptLabel = (n: number) => {
+    if (n === 0) return { text: "Нет попыток", color: "text-red-500", bg: "" };
+    if (n === MAX_ATTEMPTS) return { text: `${n} из ${MAX_ATTEMPTS}`, color: "text-green-400", bg: "" };
+    return { text: `${n} из ${MAX_ATTEMPTS}`, color: "text-yellow-400", bg: "" };
   };
 
   return (
     <div className="max-w-xl">
-      <SectionHeader title="Допуск к ТКМ" desc="Добавьте сотрудника и выдайте ему попытки. Без попыток пройти ТКМ невозможно." />
+      <SectionHeader title="Допуск к ТКМ" desc="Добавьте сотрудника и нажмите «Допустить до теста», чтобы выдать попытку." />
 
       <div className="flex gap-2 mb-4">
         <Inp
@@ -67,47 +66,41 @@ export default function AdminTkm({ allowed, saving, saved, onSave }: Props) {
         <p className="text-zinc-500 text-sm py-4">Список пуст — никто не допущен</p>
       ) : (
         <div className="flex flex-col gap-1 mb-6">
-          {list.map((entry) => (
-            <div key={entry.nick} className="flex items-center gap-3 px-3 py-2.5 border border-zinc-800 bg-zinc-900/40">
-              <Icon name="User" size={14} className="text-zinc-500 shrink-0" />
+          {list.map((entry) => {
+            const label = attemptLabel(entry.attempts);
+            const canGrant = entry.attempts < MAX_ATTEMPTS;
+            return (
+              <div key={entry.nick} className="flex items-center gap-3 px-3 py-2.5 border border-zinc-800 bg-zinc-900/40">
+                <Icon name="User" size={14} className="text-zinc-500 shrink-0" />
 
-              <span className="text-sm text-zinc-200 flex-1 min-w-0 truncate">{entry.nick}</span>
+                <span className="text-sm text-zinc-200 flex-1 min-w-0 truncate">{entry.nick}</span>
 
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="text-xs text-zinc-500">Попытки:</span>
-                <span className={`text-sm font-bold w-4 text-center tabular-nums ${attemptColor(entry.attempts)}`}>
-                  {entry.attempts}
+                {/* Счётчик попыток */}
+                <span className={`text-xs font-semibold tabular-nums shrink-0 ${label.color}`}>
+                  {label.text}
                 </span>
 
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => changeAttempts(entry.nick, -1)}
-                    disabled={entry.attempts <= 0}
-                    title="Убрать попытку"
-                    className="w-6 h-6 flex items-center justify-center text-zinc-600 hover:text-zinc-300 disabled:opacity-20 disabled:cursor-not-allowed transition-colors border border-zinc-700 hover:border-zinc-500"
-                  >
-                    <Icon name="Minus" size={11} />
-                  </button>
-                  <button
-                    onClick={() => changeAttempts(entry.nick, 1)}
-                    disabled={entry.attempts >= MAX_ATTEMPTS}
-                    title={entry.attempts >= MAX_ATTEMPTS ? "Максимум 3 попытки" : "Дать попытку"}
-                    className="w-6 h-6 flex items-center justify-center text-zinc-600 hover:text-green-400 disabled:opacity-20 disabled:cursor-not-allowed transition-colors border border-zinc-700 hover:border-green-600"
-                  >
-                    <Icon name="Plus" size={11} />
-                  </button>
-                </div>
-              </div>
+                {/* Кнопка допуска */}
+                <button
+                  onClick={() => grantAttempt(entry.nick)}
+                  disabled={!canGrant}
+                  title={canGrant ? `Выдать попытку (будет ${entry.attempts + 1} из ${MAX_ATTEMPTS})` : "Максимум попыток выдан"}
+                  className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 border transition-colors shrink-0 disabled:opacity-30 disabled:cursor-not-allowed border-green-700 text-green-400 hover:bg-green-900/30 disabled:border-zinc-700 disabled:text-zinc-500"
+                >
+                  <Icon name="Unlock" size={12} />
+                  Допустить
+                </button>
 
-              <button
-                onClick={() => remove(entry.nick)}
-                title="Удалить из списка"
-                className="text-zinc-600 hover:text-red-400 transition-colors shrink-0"
-              >
-                <Icon name="X" size={14} />
-              </button>
-            </div>
-          ))}
+                <button
+                  onClick={() => remove(entry.nick)}
+                  title="Удалить из списка"
+                  className="text-zinc-600 hover:text-red-400 transition-colors shrink-0"
+                >
+                  <Icon name="X" size={14} />
+                </button>
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -120,7 +113,7 @@ export default function AdminTkm({ allowed, saving, saved, onSave }: Props) {
           {saved ? <><Icon name="Check" size={14} />Сохранено</> : saving ? "Сохраняю..." : <><Icon name="Save" size={14} />Сохранить</>}
         </button>
         <p className="text-xs text-zinc-600">
-          🟢 есть попытки · 🟡 1 попытка · 🔴 исчерпаны (нельзя пройти)
+          Нажмите «Допустить» после проверки теста, чтобы выдать следующую попытку
         </p>
       </div>
     </div>
