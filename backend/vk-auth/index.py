@@ -178,7 +178,7 @@ def handler(event: dict, context) -> dict:
         row = cur.fetchone()
         conn.close()
         if not row:
-            return resp(403, {"error": "Нет доступа"})
+            return resp(401, {"error": "Unauthorized"})
         return resp(200, {"nickname": nick, "role": row[0]})
 
     # ── GET access_list — список доступов (все авторизованные) ───────────────

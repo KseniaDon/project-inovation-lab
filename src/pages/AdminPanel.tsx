@@ -92,20 +92,29 @@ export default function AdminPanel() {
   const authFetch = useCallback((url: string, opts?: RequestInit) =>
     fetch(url, { ...opts, headers: { ...(opts?.headers || {}), "X-Authorization": `Bearer ${token()}`, "Content-Type": "application/json" } }), []);
 
+  const checkSession = useCallback(async () => {
+    try {
+      const res = await authFetch(`${API}?action=me`);
+      const d = await res.json();
+      if (d.nickname) {
+        setMe({ nickname: d.nickname, role: d.role });
+      } else {
+        localStorage.clear();
+        navigate("/admin/login");
+      }
+    } catch { /* сеть — не выбрасываем */ }
+  }, [authFetch, navigate]);
+
   useEffect(() => {
     const t = token();
     const nick = localStorage.getItem("admin_nickname");
     const role = localStorage.getItem("admin_role") as Role | null;
     if (!t || !nick || !role) { navigate("/admin/login"); return; }
     setMe({ nickname: nick, role });
-    authFetch(`${API}?action=me`)
-      .then(r => r.json())
-      .then(d => {
-        if (d.nickname) setMe({ nickname: d.nickname, role: d.role });
-        else if (d.error === "Unauthorized") { localStorage.clear(); navigate("/admin/login"); }
-      })
-      .catch(() => {});
-  }, [navigate, authFetch]);
+    checkSession();
+    const interval = setInterval(checkSession, 30_000);
+    return () => clearInterval(interval);
+  }, [navigate, checkSession]);
 
   useEffect(() => {
     if (!me) return;
