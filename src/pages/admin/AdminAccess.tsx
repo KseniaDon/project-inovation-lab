@@ -57,7 +57,6 @@ export default function AdminAccess({
 
   // Синхронизируем при получении новых данных
   useEffect(() => {
-    if (accessUsers.length === 0) return;
     if (sortMode === "hierarchy") {
       setSortedUsers([...accessUsers].sort((a, b) =>
         roleRank(normalizeRole(a.role as string)) - roleRank(normalizeRole(b.role as string))
@@ -148,6 +147,10 @@ export default function AdminAccess({
       {accessLoading ? (
         <div className="flex justify-center py-10">
           <div className="w-6 h-6 border-2 border-red-600 border-t-transparent rounded-full animate-spin" />
+        </div>
+      ) : sortedUsers.length === 0 ? (
+        <div className="flex justify-center py-10">
+          <p className="text-zinc-500 text-sm">Список пуст или загружается...</p>
         </div>
       ) : (
         <div className="flex flex-col gap-3 mb-6">
