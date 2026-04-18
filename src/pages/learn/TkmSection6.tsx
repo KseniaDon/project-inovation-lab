@@ -3,8 +3,10 @@ import Icon from "@/components/ui/icon";
 import {
   TKM_SECTION6_SINGLE,
   TKM_SECTION6_MULTI,
+  TKM_SECTION6_OPEN,
   TkmQuestion,
   TkmMultiQuestion,
+  TkmSection6OpenQuestion,
 } from "./tkmAnswerKey";
 
 interface RadioQuestionProps {
@@ -80,6 +82,48 @@ function MultiQuestion({ q, value, onChange }: MultiQuestionProps) {
   );
 }
 
+interface OpenQuestionProps {
+  q: TkmSection6OpenQuestion;
+  value: string;
+  onChange: (v: string) => void;
+}
+
+function OpenQuestion({ q, value, onChange }: OpenQuestionProps) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-5 flex flex-col gap-3">
+      <p className="text-sm font-medium leading-relaxed">
+        <span className="font-bold">№{q.num}.</span> {q.text}{" "}
+        <span className="text-red-500">*</span>
+      </p>
+      {q.subQuestions && (
+        <ol className="flex flex-col gap-1 mt-0.5">
+          {q.subQuestions.map((sq, i) => (
+            <li key={i} className="text-sm text-foreground leading-relaxed">
+              <span className="font-medium">{i + 1}.</span> {sq}
+            </li>
+          ))}
+        </ol>
+      )}
+      {q.example && (
+        <div className="flex flex-col gap-1">
+          <p className="text-sm font-bold">Пример:</p>
+          <p className="text-sm text-muted-foreground italic whitespace-pre-line">{q.example}</p>
+        </div>
+      )}
+      {q.warning && (
+        <p className="text-sm font-bold">Внимание! {q.warning}</p>
+      )}
+      <textarea
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder="Развернутый ответ"
+        rows={4}
+        className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
+      />
+    </div>
+  );
+}
+
 interface Props {
   onNext: (answers: Record<string, string>) => void;
   onBack: () => void;
@@ -88,6 +132,7 @@ interface Props {
 export default function TkmSection6({ onNext, onBack }: Props) {
   const [singleAnswers, setSingleAnswers] = useState<Record<string, string>>({});
   const [multiAnswers, setMultiAnswers] = useState<Record<string, string[]>>({});
+  const [openAnswers, setOpenAnswers] = useState<Record<string, string>>({});
   const [error, setError] = useState("");
 
   const handleNext = () => {
@@ -99,7 +144,10 @@ export default function TkmSection6({ onNext, onBack }: Props) {
     const unansweredMulti = TKM_SECTION6_MULTI.find(q => !(multiAnswers[q.key]?.length));
     if (unansweredMulti) { setError("Ответьте на все вопросы раздела"); return; }
 
-    const allAnswers: Record<string, string> = { ...singleAnswers };
+    const unansweredOpen = TKM_SECTION6_OPEN.find(q => !openAnswers[q.key]?.trim());
+    if (unansweredOpen) { setError("Ответьте на все вопросы раздела"); return; }
+
+    const allAnswers: Record<string, string> = { ...singleAnswers, ...openAnswers };
     for (const q of TKM_SECTION6_MULTI) {
       allAnswers[q.key] = JSON.stringify(multiAnswers[q.key] || []);
     }
@@ -145,6 +193,15 @@ export default function TkmSection6({ onNext, onBack }: Props) {
         value={singleAnswers["5.34"] || ""}
         onChange={val => setSingleAnswers(prev => ({ ...prev, "5.34": val }))}
       />
+
+      {TKM_SECTION6_OPEN.map(q => (
+        <OpenQuestion
+          key={q.key}
+          q={q}
+          value={openAnswers[q.key] || ""}
+          onChange={val => setOpenAnswers(prev => ({ ...prev, [q.key]: val }))}
+        />
+      ))}
 
       {error && (
         <p className="text-sm text-red-500 flex items-start gap-2">
