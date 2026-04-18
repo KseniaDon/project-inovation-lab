@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 import func2url from "../../../backend/func2url.json";
-import { TKM_QUESTIONS } from "../learn/tkmAnswerKey";
+import { TKM_QUESTIONS, TKM_SECTION3, TkmQuestion } from "../learn/tkmAnswerKey";
 
 const TKM_URL = func2url["tkm"];
 
@@ -193,7 +193,10 @@ export default function AdminTkmReviews({ reviewerNick }: Props) {
                   <div className="flex flex-col gap-3">
                     <p className="text-xs uppercase tracking-widest text-zinc-500 font-semibold">Ответы</p>
                     {Object.entries(selected.answers).map(([q, a]) => {
-                      const deptQuestions = TKM_QUESTIONS[selected.department] || [];
+                      const deptQuestions: TkmQuestion[] = [
+                        ...(TKM_QUESTIONS[selected.department] || []),
+                        ...TKM_SECTION3,
+                      ];
                       const questionDef = deptQuestions.find(dq => dq.key === q);
                       const correct = questionDef?.correct;
                       const isCorrect = correct !== undefined && a === correct;
