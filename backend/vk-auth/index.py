@@ -50,6 +50,15 @@ def verify_token(token: str):
     except Exception:
         return None
 
+def _header(headers: dict, name: str) -> str:
+    if not headers:
+        return ""
+    want = name.lower()
+    for key, val in headers.items():
+        if key.lower() == want:
+            return (val or "").strip()
+    return ""
+
 def get_current_user(event):
     token = (event.get("headers") or {}).get("X-Authorization", "").replace("Bearer ", "")
     return verify_token(token)
