@@ -2,6 +2,7 @@ import { useState } from "react";
 import TkmForm from "./TkmForm";
 import TkmQuestionsOIK from "./TkmQuestionsOIK";
 import TkmQuestionsSOP from "./TkmQuestionsSOP";
+import TkmQuestionsODS from "./TkmQuestionsODS";
 
 type Stage = "form" | "section2" | "done";
 
@@ -55,7 +56,14 @@ export default function LearnTkmSection() {
         />
       )}
 
-      {stage === "section2" && meta && meta.department !== "ОИК" && meta.department !== "СОП" && (
+      {stage === "section2" && meta && meta.department === "ОДС" && (
+        <TkmQuestionsODS
+          onNext={handleSection2}
+          onBack={() => setStage("form")}
+        />
+      )}
+
+      {stage === "section2" && meta && meta.department !== "ОИК" && meta.department !== "СОП" && meta.department !== "ОДС" && (
         <div className="flex flex-col gap-4 max-w-2xl">
           <div className="rounded-xl border border-border bg-card p-5 text-sm text-muted-foreground">
             <p>Отделение: <span className="text-red-400 font-semibold">{meta.department}</span></p>
