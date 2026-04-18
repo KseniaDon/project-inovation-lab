@@ -135,6 +135,19 @@ export default function AdminTkmReviews({ reviewerNick }: Props) {
     setSaving(false);
   };
 
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+
+  const deleteSubmission = async (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!window.confirm("Удалить эту заявку? Действие необратимо.")) return;
+    setDeletingId(id);
+    try {
+      await fetch(`${TKM_URL}?action=delete&id=${id}`, { method: "POST" });
+      load();
+    } catch { /* ignore */ }
+    setDeletingId(null);
+  };
+
   const toggleSection = (label: string) => {
     setExpandedSections(prev => ({ ...prev, [label]: !prev[label] }));
   };
@@ -190,6 +203,14 @@ export default function AdminTkmReviews({ reviewerNick }: Props) {
                 {sub.score !== null && (
                   <span className="text-sm font-bold text-foreground">{sub.score}/{sub.max_score}</span>
                 )}
+                <button
+                  onClick={(e) => deleteSubmission(sub.id, e)}
+                  disabled={deletingId === sub.id}
+                  title="Удалить заявку"
+                  className="text-zinc-600 hover:text-red-400 disabled:opacity-40 transition-colors p-1"
+                >
+                  <Icon name={deletingId === sub.id ? "Loader" : "Trash2"} size={14} />
+                </button>
                 <Icon name="ChevronRight" size={14} className="text-zinc-600" />
               </div>
             </div>

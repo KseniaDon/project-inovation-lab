@@ -223,6 +223,17 @@ def handler(event: dict, context) -> dict:
             return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Попытки исчерпаны. Обратитесь к куратору для получения дополнительной попытки."})}
         return {"statusCode": 200, "headers": CORS, "body": json.dumps({"ok": True, "attempts_left": entry["attempts"]})}
 
+    # POST delete — удалить заявку
+    if method == "POST" and action == "delete":
+        sub_id = qs.get("id")
+        if not sub_id:
+            conn.close()
+            return {"statusCode": 400, "headers": CORS, "body": json.dumps({"error": "Укажите id"})}
+        cur.execute(f"DELETE FROM {s}.tkm_submissions WHERE id=%s", (sub_id,))
+        conn.commit()
+        conn.close()
+        return {"statusCode": 200, "headers": CORS, "body": json.dumps({"ok": True})}
+
     # GET scores — загрузить макс. баллы из БД
     if method == "GET" and action == "scores":
         cur.execute(f"SELECT key, max_score FROM {s}.tkm_scores")

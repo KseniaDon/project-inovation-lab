@@ -88,7 +88,7 @@ export function useTkmSession() {
   }, []);
 
   useEffect(() => {
-    if (!meta || stage === "form") return;
+    if (!meta || stage === "form" || stage === "done") return;
     const data: TkmSessionData = {
       meta,
       answers,
