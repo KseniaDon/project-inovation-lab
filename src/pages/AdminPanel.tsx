@@ -145,6 +145,7 @@ export default function AdminPanel() {
 
   const myNormRole = me ? normalizeRole(me.role as string) : "editor";
   const canEditContacts = ["super_admin", "head_admin", "admin"].includes(myNormRole);
+  const canManageTkmAccess = ["super_admin", "head_admin", "admin", "moderator"].includes(myNormRole);
   const canEditWhatsNew = myNormRole === "super_admin";
 
   const logout = () => { playClickSound(); localStorage.clear(); navigate("/admin/login"); };
@@ -311,7 +312,7 @@ export default function AdminPanel() {
       {tab === "tkm" && me && (
         <div className="flex flex-col gap-5">
           <div className="flex gap-1 border-b border-zinc-800 pb-0">
-            {TKM_SUB_TABS.filter(s => s.id !== "access" || canEditContacts).map(s => (
+            {TKM_SUB_TABS.filter(s => s.id !== "access" || canManageTkmAccess).map(s => (
               <button
                 key={s.id}
                 onClick={() => setTkmSubTab(s.id)}
