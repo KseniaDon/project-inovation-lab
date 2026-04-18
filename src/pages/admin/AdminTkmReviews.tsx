@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 import func2url from "../../../backend/func2url.json";
+import { TKM_QUESTIONS } from "../learn/tkmAnswerKey";
 
 const TKM_URL = func2url["tkm"];
 
@@ -187,16 +188,33 @@ export default function AdminTkmReviews({ reviewerNick }: Props) {
                   </a>
                 </div>
 
-                {/* Ответы */}
+                {/* Ответы с правильными ответами */}
                 {Object.keys(selected.answers || {}).length > 0 && (
                   <div className="flex flex-col gap-3">
                     <p className="text-xs uppercase tracking-widest text-zinc-500 font-semibold">Ответы</p>
-                    {Object.entries(selected.answers).map(([q, a]) => (
-                      <div key={q} className="border border-zinc-800 bg-zinc-900/40 px-4 py-3">
-                        <p className="text-xs text-zinc-400 mb-1">{q}</p>
-                        <p className="text-sm text-zinc-200 whitespace-pre-wrap">{a}</p>
-                      </div>
-                    ))}
+                    {Object.entries(selected.answers).map(([q, a]) => {
+                      const deptQuestions = TKM_QUESTIONS[selected.department] || [];
+                      const questionDef = deptQuestions.find(dq => dq.key === q);
+                      const correct = questionDef?.correct;
+                      const isCorrect = correct !== undefined && a === correct;
+                      const isWrong = correct !== undefined && a !== correct;
+                      return (
+                        <div key={q} className={`border px-4 py-3 flex flex-col gap-2 ${isCorrect ? "border-green-700/50 bg-green-900/10" : isWrong ? "border-red-700/50 bg-red-900/10" : "border-zinc-800 bg-zinc-900/40"}`}>
+                          <p className="text-xs text-zinc-400">{q}</p>
+                          <div className="flex items-start gap-2">
+                            {isCorrect && <Icon name="CheckCircle" size={14} className="text-green-400 mt-0.5 shrink-0" />}
+                            {isWrong && <Icon name="XCircle" size={14} className="text-red-400 mt-0.5 shrink-0" />}
+                            <p className={`text-sm whitespace-pre-wrap ${isCorrect ? "text-green-300" : isWrong ? "text-red-300" : "text-zinc-200"}`}>{a}</p>
+                          </div>
+                          {isWrong && correct && (
+                            <div className="flex items-start gap-2 mt-1 pt-2 border-t border-zinc-700/50">
+                              <Icon name="CheckCircle" size={13} className="text-green-500 mt-0.5 shrink-0" />
+                              <p className="text-xs text-green-400">Правильный ответ: {correct}</p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
 
