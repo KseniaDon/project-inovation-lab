@@ -44,9 +44,12 @@ interface MultiQuestionProps {
   q: TkmMultiQuestion;
   value: string[];
   onChange: (v: string[]) => void;
+  manualScore?: string;
+  onManualScore?: (v: string) => void;
+  maxScore?: number;
 }
 
-function MultiQuestion({ q, value, onChange }: MultiQuestionProps) {
+function MultiQuestion({ q, value, onChange, manualScore, onManualScore, maxScore }: MultiQuestionProps) {
   const toggle = (opt: string) => {
     if (value.includes(opt)) onChange(value.filter(v => v !== opt));
     else onChange([...value, opt]);
@@ -76,6 +79,22 @@ function MultiQuestion({ q, value, onChange }: MultiQuestionProps) {
           );
         })}
       </div>
+      {onManualScore !== undefined && (
+        <div className="flex items-center gap-3 mt-1 pt-3 border-t border-border">
+          <span className="text-sm text-muted-foreground">Баллов за вопрос:</span>
+          <input
+            type="number"
+            min={0}
+            max={maxScore}
+            value={manualScore ?? "0"}
+            onChange={e => onManualScore(e.target.value)}
+            className="w-16 rounded-lg border border-border bg-background px-2 py-1 text-sm text-center focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
+          {maxScore !== undefined && (
+            <span className="text-sm text-muted-foreground">из {maxScore}</span>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -93,6 +112,7 @@ const SINGLE_NUMS: Record<string, number> = {
 export default function TkmSection6({ onNext, onBack }: Props) {
   const [singleAnswers, setSingleAnswers] = useState<Record<string, string>>({});
   const [multiAnswers, setMultiAnswers] = useState<Record<string, string[]>>({});
+  const [manualScores, setManualScores] = useState<Record<string, string>>({ "5.33": "0" });
   const [error, setError] = useState("");
 
   const handleNext = () => {
@@ -107,6 +127,9 @@ export default function TkmSection6({ onNext, onBack }: Props) {
     const allAnswers: Record<string, string> = { ...singleAnswers };
     for (const q of TKM_SECTION6_MULTI) {
       allAnswers[q.key] = JSON.stringify(multiAnswers[q.key] || []);
+    }
+    for (const key of Object.keys(manualScores)) {
+      allAnswers[`${key}_score`] = manualScores[key];
     }
     onNext(allAnswers);
   };
@@ -142,6 +165,9 @@ export default function TkmSection6({ onNext, onBack }: Props) {
         q={q33}
         value={multiAnswers["5.33"] || []}
         onChange={val => setMultiAnswers(prev => ({ ...prev, "5.33": val }))}
+        manualScore={manualScores["5.33"]}
+        onManualScore={val => setManualScores(prev => ({ ...prev, "5.33": val }))}
+        maxScore={4}
       />
 
       <RadioQuestion
