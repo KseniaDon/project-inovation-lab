@@ -13,11 +13,12 @@ import AdminAuditLog, { AuditEntry } from "./admin/AdminAuditLog";
 import AdminWhatsNew from "./admin/AdminWhatsNew";
 import AdminTkm from "./admin/AdminTkm";
 import AdminTkmReviews from "./admin/AdminTkmReviews";
+import AdminTkmEditor from "./admin/AdminTkmEditor";
 import { WhatsNewEntry } from "@/components/WhatsNew";
 
 const API = "https://functions.poehali.dev/ee0c9d49-3da0-4e2e-a2ab-1f68f29a1405";
 
-type Tab = "home" | "whats_new" | "staff" | "access" | "tkm" | "tkm_reviews" | "audit" | "password";
+type Tab = "home" | "whats_new" | "staff" | "access" | "tkm" | "tkm_reviews" | "tkm_editor" | "audit" | "password";
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "home",      label: "Главная",        icon: "Home" },
@@ -26,6 +27,7 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "access",    label: "Доступы",        icon: "KeyRound" },
   { id: "tkm",         label: "ТКМ — Доступ",    icon: "ClipboardList" },
   { id: "tkm_reviews", label: "ТКМ — Проверка",  icon: "CheckSquare" },
+  { id: "tkm_editor",  label: "ТКМ — Тест",      icon: "BookOpen" },
   { id: "audit",     label: "Журнал изменений", icon: "ScrollText" },
   { id: "password",  label: "Мой пароль",     icon: "Shield" },
 ];
@@ -266,7 +268,8 @@ export default function AdminPanel() {
   const visibleTabs = TABS.filter(t => {
     if (t.id === "staff") return canEditContacts;
     if (t.id === "tkm") return canEditContacts;
-    if (t.id === "tkm_reviews") return canEditContacts;
+    if (t.id === "tkm_reviews") return true;
+    if (t.id === "tkm_editor") return true;
     return true;
   });
 
@@ -298,6 +301,9 @@ export default function AdminPanel() {
       )}
       {tab === "tkm_reviews" && me && (
         <AdminTkmReviews reviewerNick={me.nickname} />
+      )}
+      {tab === "tkm_editor" && (
+        <AdminTkmEditor />
       )}
       {tab === "audit" && (
         <AdminAuditLog logs={auditLogs} loading={auditLoading} onRefresh={loadAudit} />
