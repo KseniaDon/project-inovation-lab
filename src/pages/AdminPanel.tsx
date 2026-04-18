@@ -18,18 +18,23 @@ import { WhatsNewEntry } from "@/components/WhatsNew";
 
 const API = "https://functions.poehali.dev/ee0c9d49-3da0-4e2e-a2ab-1f68f29a1405";
 
-type Tab = "home" | "whats_new" | "staff" | "access" | "tkm" | "tkm_reviews" | "tkm_editor" | "audit" | "password";
+type Tab = "home" | "whats_new" | "staff" | "access" | "tkm" | "audit" | "password";
+type TkmSubTab = "access" | "reviews" | "editor";
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "home",      label: "Главная",        icon: "Home" },
   { id: "whats_new", label: "Что нового",     icon: "Sparkles" },
   { id: "staff",     label: "Контакты РС ОИ", icon: "Users" },
   { id: "access",    label: "Доступы",        icon: "KeyRound" },
-  { id: "tkm",         label: "ТКМ — Доступ",    icon: "ClipboardList" },
-  { id: "tkm_reviews", label: "ТКМ — Проверка",  icon: "CheckSquare" },
-  { id: "tkm_editor",  label: "ТКМ — Тест",      icon: "BookOpen" },
+  { id: "tkm",       label: "ТКМ",            icon: "ClipboardList" },
   { id: "audit",     label: "Журнал изменений", icon: "ScrollText" },
   { id: "password",  label: "Мой пароль",     icon: "Shield" },
+];
+
+const TKM_SUB_TABS: { id: TkmSubTab; label: string }[] = [
+  { id: "access",  label: "Доступ" },
+  { id: "reviews", label: "Проверка" },
+  { id: "editor",  label: "Редактирование" },
 ];
 
 const defaultStaff: StaffMember[] = [
@@ -42,6 +47,7 @@ export default function AdminPanel() {
   const navigate = useNavigate();
   const [me, setMe] = useState<{ nickname: string; role: Role } | null>(null);
   const [tab, setTab] = useState<Tab>("home");
+  const [tkmSubTab, setTkmSubTab] = useState<TkmSubTab>("reviews");
 
   // Whats new state
   const [whatsNew, setWhatsNew] = useState<WhatsNewEntry[]>([]);
@@ -267,9 +273,6 @@ export default function AdminPanel() {
 
   const visibleTabs = TABS.filter(t => {
     if (t.id === "staff") return canEditContacts;
-    if (t.id === "tkm") return canEditContacts;
-    if (t.id === "tkm_reviews") return true;
-    if (t.id === "tkm_editor") return true;
     return true;
   });
 
@@ -296,14 +299,33 @@ export default function AdminPanel() {
           onRefresh={loadAccess} onAdd={addAccess} onRemove={removeAccess} onEdit={editAccess}
           onSaveTkm={async (list) => { await saveTkm(list); }} />
       )}
-      {tab === "tkm" && (
-        <AdminTkm allowed={tkmAllowed} saving={tkmSaving} saved={tkmSaved} onSave={saveTkm} />
-      )}
-      {tab === "tkm_reviews" && me && (
-        <AdminTkmReviews reviewerNick={me.nickname} />
-      )}
-      {tab === "tkm_editor" && (
-        <AdminTkmEditor />
+      {tab === "tkm" && me && (
+        <div className="flex flex-col gap-5">
+          <div className="flex gap-1 border-b border-zinc-800 pb-0">
+            {TKM_SUB_TABS.filter(s => s.id !== "access" || canEditContacts).map(s => (
+              <button
+                key={s.id}
+                onClick={() => setTkmSubTab(s.id)}
+                className={`text-xs px-4 py-2.5 font-semibold tracking-wide transition-colors border-b-2 -mb-px ${
+                  tkmSubTab === s.id
+                    ? "border-red-600 text-red-400"
+                    : "border-transparent text-zinc-500 hover:text-zinc-300"
+                }`}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+          {tkmSubTab === "access" && (
+            <AdminTkm allowed={tkmAllowed} saving={tkmSaving} saved={tkmSaved} onSave={saveTkm} />
+          )}
+          {tkmSubTab === "reviews" && (
+            <AdminTkmReviews reviewerNick={me.nickname} />
+          )}
+          {tkmSubTab === "editor" && (
+            <AdminTkmEditor />
+          )}
+        </div>
       )}
       {tab === "audit" && (
         <AdminAuditLog logs={auditLogs} loading={auditLoading} onRefresh={loadAudit} />
