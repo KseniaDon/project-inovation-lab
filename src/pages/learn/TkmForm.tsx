@@ -22,6 +22,7 @@ export default function TkmForm({ onDepartmentSelected }: TkmFormProps) {
   const [error, setError] = useState("");
   const [codeError, setCodeError] = useState("");
   const [checking, setChecking] = useState(false);
+  const [attemptsLeft, setAttemptsLeft] = useState<number | null>(null);
 
   const handleNext = async () => {
     setError("");
@@ -41,6 +42,7 @@ export default function TkmForm({ onDepartmentSelected }: TkmFormProps) {
         setChecking(false);
         return;
       }
+      setAttemptsLeft(data.attempts_left ?? null);
     } catch {
       setError("Ошибка соединения. Попробуйте ещё раз.");
       setChecking(false);
@@ -175,6 +177,17 @@ export default function TkmForm({ onDepartmentSelected }: TkmFormProps) {
           ))}
         </div>
       </div>
+
+      {attemptsLeft !== null && (
+        <div className={`flex items-center gap-2 text-sm px-4 py-2.5 rounded-lg border ${
+          attemptsLeft <= 1
+            ? "border-yellow-500/40 bg-yellow-500/10 text-yellow-400"
+            : "border-green-700/40 bg-green-900/10 text-green-400"
+        }`}>
+          <Icon name="RefreshCw" size={14} className="shrink-0" />
+          Осталось попыток: <span className="font-bold">{attemptsLeft}</span>
+        </div>
+      )}
 
       {error && (
         <p className="text-sm text-red-500 flex items-center gap-2">

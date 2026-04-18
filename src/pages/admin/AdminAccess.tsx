@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
 import { Role, AccessUser, ROLE_HIERARCHY, ROLE_META, canManage, canAddUsers, normalizeRole, roleRank } from "./adminTypes";
+import { TkmAllowedEntry } from "./AdminTkm";
 
 export const HOSPITAL_ROLES = ["Нет", "ГВ", "ПЗГВ", "КОИ", "ЗОИ", "ЗЗОИ"] as const;
 export type HospitalRole = typeof HOSPITAL_ROLES[number];
@@ -24,12 +25,12 @@ interface Props {
   newHospitalRole: HospitalRole;
   setNewHospitalRole: (v: HospitalRole) => void;
   accessMsg: string;
-  tkmAllowed: string[];
+  tkmAllowed: TkmAllowedEntry[];
   onRefresh: () => void;
   onAdd: () => void;
   onRemove: (nick: string) => void;
   onEdit: (nick: string, data: { role?: Role; href?: string; hospital_role?: string }) => Promise<void>;
-  onSaveTkm: (list: string[]) => Promise<void>;
+  onSaveTkm: (list: TkmAllowedEntry[]) => Promise<void>;
 }
 
 export default function AdminAccess({
@@ -101,7 +102,7 @@ export default function AdminAccess({
       role: normalizeRole(u.role as string),
       href: u.href || "",
       hospital_role: u.hospital_role || "Нет",
-      tkm: tkmAllowed.map(n => n.toLowerCase()).includes(nick),
+      tkm: tkmAllowed.some(e => e.nick.toLowerCase() === nick),
     });
   };
 
@@ -112,12 +113,11 @@ export default function AdminAccess({
     setEditSaving(true);
     await onEdit(editingNick, { role: editState.role, href: editState.href, hospital_role: editState.hospital_role });
     const nick = editingNick.toLowerCase();
-    const currentTkm = tkmAllowed.map(n => n.toLowerCase());
-    const hasTkm = currentTkm.includes(nick);
+    const hasTkm = tkmAllowed.some(e => e.nick.toLowerCase() === nick);
     if (editState.tkm && !hasTkm) {
-      await onSaveTkm([...tkmAllowed, editingNick]);
+      await onSaveTkm([...tkmAllowed, { nick: editingNick.toLowerCase(), attempts: 3 }]);
     } else if (!editState.tkm && hasTkm) {
-      await onSaveTkm(tkmAllowed.filter(n => n.toLowerCase() !== nick));
+      await onSaveTkm(tkmAllowed.filter(e => e.nick.toLowerCase() !== nick));
     }
     setEditSaving(false);
     setEditingNick(null);
@@ -194,8 +194,8 @@ export default function AdminAccess({
                       {u.hospital_role && u.hospital_role !== "Нет" && u.hospital_role !== "" && (
                         <span className="ml-2 text-zinc-600">· {u.hospital_role}</span>
                       )}
-                      {tkmAllowed.map(n => n.toLowerCase()).includes(u.nickname.toLowerCase()) && (
-                        <span className="ml-2 text-blue-500">· ТКМ</span>
+                      {tkmAllowed.some(e => e.nick.toLowerCase() === u.nickname.toLowerCase()) && (
+                        <span className="ml-2 text-blue-500">· ТКМ ({tkmAllowed.find(e => e.nick.toLowerCase() === u.nickname.toLowerCase())?.attempts ?? 0})</span>
                       )}
                     </p>
                   </div>

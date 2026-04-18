@@ -56,12 +56,14 @@ export default function Learn() {
   const introData = useSiteData("intro_data", defaultIntroData);
   const internExam = useSiteData("intern_exam", defaultInternExam);
   const feldsherPage = useSiteData<SimplePageData>("feldsher_page", defaultFeldsherPage);
-  const tkmAllowed = useSiteData<string[]>("tkm_allowed", []);
+  const tkmAllowed = useSiteData<Array<string | { nick: string; attempts: number }>>("tkm_allowed", []);
 
   const myNick = (localStorage.getItem("admin_nickname") || "").toLowerCase();
   const myRole = localStorage.getItem("admin_role") || "";
   const isAdmin = ADMIN_ROLES.includes(myRole);
-  const hasTkmAccess = isAdmin || tkmAllowed.map(n => n.toLowerCase()).includes(myNick);
+  const hasTkmAccess = isAdmin || tkmAllowed.some(e =>
+    (typeof e === "string" ? e.toLowerCase() : e.nick.toLowerCase()) === myNick
+  );
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">

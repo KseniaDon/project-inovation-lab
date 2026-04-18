@@ -11,7 +11,7 @@ import AdminAccess, { HospitalRole } from "./admin/AdminAccess";
 import AdminPassword from "./admin/AdminPassword";
 import AdminAuditLog, { AuditEntry } from "./admin/AdminAuditLog";
 import AdminWhatsNew from "./admin/AdminWhatsNew";
-import AdminTkm from "./admin/AdminTkm";
+import AdminTkm, { TkmAllowedEntry } from "./admin/AdminTkm";
 import AdminTkmReviews from "./admin/AdminTkmReviews";
 import AdminTkmEditor from "./admin/AdminTkmEditor";
 import { WhatsNewEntry } from "@/components/WhatsNew";
@@ -65,7 +65,7 @@ export default function AdminPanel() {
   const [staffSaved, setStaffSaved] = useState(false);
 
   // TKM allowed list
-  const [tkmAllowed, setTkmAllowed] = useState<string[]>([]);
+  const [tkmAllowed, setTkmAllowed] = useState<TkmAllowedEntry[]>([]);
   const [tkmSaving, setTkmSaving] = useState(false);
   const [tkmSaved, setTkmSaved] = useState(false);
 
@@ -209,7 +209,7 @@ export default function AdminPanel() {
     setTimeout(() => setStaffSaved(false), 2200);
   };
 
-  const saveTkm = async (list: string[]) => {
+  const saveTkm = async (list: TkmAllowedEntry[]) => {
     setTkmSaving(true);
     await authFetch(`${API}?action=save_site_data`, { method: "POST", body: JSON.stringify({ key: "tkm_allowed", value: list }) });
     setTkmAllowed(list);
@@ -306,7 +306,7 @@ export default function AdminPanel() {
           newHospitalRole={newHospitalRole} setNewHospitalRole={setNewHospitalRole}
           accessMsg={accessMsg} tkmAllowed={tkmAllowed}
           onRefresh={loadAccess} onAdd={addAccess} onRemove={removeAccess} onEdit={editAccess}
-          onSaveTkm={async (list) => { await saveTkm(list); }} />
+          onSaveTkm={saveTkm} />
       )}
       {tab === "tkm" && me && (
         <div className="flex flex-col gap-5">
