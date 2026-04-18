@@ -6,6 +6,8 @@ import {
   TKM_SECTION4_RADIO, TKM_SECTION4_MULTI, TKM_SECTION4_RADIO2,
   TKM_SECTION4_STYLED, TKM_SECTION4_OPEN,
   TkmStyledMultiQuestion, TkmSection4OpenQuestion,
+  TKM_SECTION5_MULTI, TKM_SECTION5_OPEN,
+  TkmSection5OpenQuestion,
 } from "../learn/tkmAnswerKey";
 
 const DEPT_LABELS: Record<string, string> = {
@@ -32,6 +34,10 @@ function initS4Radio2() { return TKM_SECTION4_RADIO2.map(q => ({ ...q, points: 1
 function initS4Multi() { return TKM_SECTION4_MULTI.map(q => ({ ...q, points: 1 })); }
 function initS4Styled() { return TKM_SECTION4_STYLED.map(q => ({ ...q, points: 4 })); }
 function initS4Open() { return TKM_SECTION4_OPEN.map(q => ({ ...q, points: 4 })); }
+function initS5Multi() { return TKM_SECTION5_MULTI.map(q => ({ ...q, points: 3 })); }
+function initS5Open() { return TKM_SECTION5_OPEN.map(q => ({ ...q, points: q.key === "4.30" ? 5 : 3 })); }
+
+type EditableS5Open = TkmSection5OpenQuestion & { points: number };
 
 /* ─── Компоненты предпросмотра (как на сайте) ─── */
 
@@ -201,6 +207,35 @@ function PreviewSimpleOpen({ num, text }: { num: number; text: string }) {
         <span className="font-bold">№{num}.</span> {text} <span className="text-red-500">*</span>
       </p>
       <textarea disabled rows={3} placeholder="Развернутый ответ" className="w-full rounded border border-zinc-700 bg-zinc-800/50 px-3 py-2 text-xs text-zinc-500 resize-none" />
+    </div>
+  );
+}
+
+function PreviewSection5Open({ num, text, hint, example, notRequired, warning }: { num: number; text: string; hint?: string; example?: string; notRequired?: string; warning?: string }) {
+  return (
+    <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 flex flex-col gap-2.5">
+      <p className="text-sm font-medium text-zinc-200 leading-relaxed">
+        <span className="font-bold">№{num}.</span> {text} <span className="text-red-500">*</span>
+      </p>
+      {hint && <p className="text-xs text-zinc-400 leading-relaxed"><span className="font-bold text-zinc-300">Подсказка: </span>{hint}</p>}
+      {example && <div><p className="text-xs font-bold text-zinc-300">Пример:</p><p className="text-xs text-zinc-500 italic whitespace-pre-line mt-0.5">{example}</p></div>}
+      {notRequired && <p className="text-xs text-zinc-400"><span className="font-bold text-zinc-300">От вас не требуется:</span> {notRequired}</p>}
+      {warning && <p className="text-xs font-bold text-zinc-300">Внимание! {warning}</p>}
+      <textarea disabled rows={2} placeholder="Развернутый ответ" className="w-full rounded border border-zinc-700 bg-zinc-800/50 px-3 py-2 text-xs text-zinc-500 resize-none" />
+    </div>
+  );
+}
+
+function Section4Preview() {
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 flex flex-col gap-1.5">
+        <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded font-semibold self-start">Раздел 4 из 8</span>
+        <p className="text-sm font-bold text-zinc-200 mt-1">Раздел 4. Препараты</p>
+        <p className="text-xs text-zinc-500">3 вопр. · макс. 11 б.</p>
+      </div>
+      {TKM_SECTION5_MULTI.map(q => <PreviewCheckbox key={q.key} num={q.num} text={q.text} options={q.options} />)}
+      {TKM_SECTION5_OPEN.map(q => <PreviewSection5Open key={q.key} num={q.num} text={q.text} hint={q.hint} example={q.example} notRequired={q.notRequired} warning={q.warning} />)}
     </div>
   );
 }
@@ -439,6 +474,53 @@ function SimpleOpenCard({ q, onChange }: { q: EditableSimpleOpen; onChange: (q: 
   );
 }
 
+function S5OpenCard({ q, onChange }: { q: EditableS5Open; onChange: (q: EditableS5Open) => void }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border border-zinc-800 bg-zinc-900/30">
+      <button onClick={() => setOpen(v => !v)} className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-zinc-800/40 transition-colors">
+        <span className="text-xs font-bold text-zinc-500 w-6 shrink-0">#{q.num}</span>
+        <span className="text-sm text-zinc-300 truncate flex-1">{q.text}</span>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-xs text-zinc-500">{q.points} б.</span>
+          <span className="text-xs px-2 py-0.5 border border-zinc-700 text-zinc-500">открытый</span>
+          <Icon name={open ? "ChevronUp" : "ChevronDown"} size={13} className="text-zinc-600" />
+        </div>
+      </button>
+      {open && (
+        <div className="px-4 pb-4 flex flex-col gap-3 border-t border-zinc-800">
+          <div className="flex flex-col gap-1.5 mt-3">
+            <label className="text-xs text-zinc-500 uppercase tracking-widest">Текст вопроса</label>
+            <textarea value={q.text} onChange={e => onChange({ ...q, text: e.target.value })} rows={2} className="bg-zinc-900 border border-zinc-700 text-sm px-3 py-2 text-zinc-200 outline-none focus:border-red-600 transition-colors resize-none" />
+          </div>
+          {q.hint !== undefined && (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs text-zinc-500 uppercase tracking-widest">Подсказка</label>
+              <textarea value={q.hint || ""} onChange={e => onChange({ ...q, hint: e.target.value })} rows={2} className="bg-zinc-900 border border-zinc-700 text-sm px-3 py-2 text-zinc-200 outline-none focus:border-red-600 transition-colors resize-none" />
+            </div>
+          )}
+          {q.example !== undefined && (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs text-zinc-500 uppercase tracking-widest">Пример ответа</label>
+              <textarea value={q.example || ""} onChange={e => onChange({ ...q, example: e.target.value })} rows={3} className="bg-zinc-900 border border-zinc-700 text-sm px-3 py-2 text-zinc-200 outline-none focus:border-red-600 transition-colors resize-none" />
+            </div>
+          )}
+          {q.notRequired !== undefined && (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs text-zinc-500 uppercase tracking-widest">«От вас НЕ требуется»</label>
+              <input value={q.notRequired || ""} onChange={e => onChange({ ...q, notRequired: e.target.value })} className="bg-zinc-900 border border-zinc-700 text-sm px-3 py-2 text-zinc-200 outline-none focus:border-red-600 transition-colors" />
+            </div>
+          )}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-zinc-500 uppercase tracking-widest">Максимум баллов</label>
+            <input type="number" min={0} value={q.points} onChange={e => onChange({ ...q, points: Number(e.target.value) })} className="w-20 bg-zinc-900 border border-zinc-700 text-sm px-3 py-1.5 text-zinc-200 outline-none focus:border-red-600 transition-colors" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ─── Главный компонент ─── */
 
 type ViewMode = "edit" | "preview";
@@ -452,10 +534,12 @@ export default function AdminTkmEditor() {
   const [s4Multi, setS4Multi] = useState<EditableMultiQuestion[]>(initS4Multi);
   const [s4Styled, setS4Styled] = useState<EditableStyledMulti[]>(initS4Styled);
   const [s4Open, setS4Open] = useState<EditableSimpleOpen[]>(initS4Open);
+  const [s5Multi, setS5Multi] = useState<EditableMultiQuestion[]>(initS5Multi);
+  const [s5Open, setS5Open] = useState<EditableS5Open[]>(initS5Open);
   const [activeDept, setActiveDept] = useState<string>("ОИК");
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({ dept: true, s3: false, open: false, s4radio: false, s4styled: false, s4open: false });
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({ dept: true, s3: false, open: false, s4radio: false, s4styled: false, s4open: false, s5multi: false, s5open: false });
   const [viewMode, setViewMode] = useState<ViewMode>("edit");
-  const [previewSection, setPreviewSection] = useState<"1" | "2" | "3">("1");
+  const [previewSection, setPreviewSection] = useState<"1" | "2" | "3" | "4">("1");
 
   const toggle = (k: string) => setExpanded(v => ({ ...v, [k]: !v[k] }));
 
@@ -463,7 +547,8 @@ export default function AdminTkmEditor() {
   const s3Total = section3.reduce((s, q) => s + q.points, 0);
   const openTotal = openQuestions.reduce((s, q) => s + q.points, 0);
   const s4Total = [...s4Radio, ...s4Radio2, ...s4Multi, ...s4Styled, ...s4Open].reduce((s, q) => s + q.points, 0);
-  const grandTotal = deptTotal(activeDept) + s3Total + openTotal + s4Total;
+  const s5Total = [...s5Multi, ...s5Open].reduce((s, q) => s + q.points, 0);
+  const grandTotal = deptTotal(activeDept) + s3Total + openTotal + s4Total + s5Total;
 
   return (
     <div className="flex flex-col gap-5">
@@ -489,7 +574,7 @@ export default function AdminTkmEditor() {
             </button>
           </div>
           <div className="flex items-center gap-2 text-xs text-zinc-400 px-3 py-2 border border-zinc-700 bg-zinc-900">
-            <span>{(deptMcq[activeDept] || []).length + section3.length + openQuestions.length + s4Radio.length + s4Radio2.length + s4Multi.length + s4Styled.length + s4Open.length} вопр.</span>
+            <span>{(deptMcq[activeDept] || []).length + section3.length + openQuestions.length + s4Radio.length + s4Radio2.length + s4Multi.length + s4Styled.length + s4Open.length + s5Multi.length + s5Open.length} вопр.</span>
             <span className="text-zinc-600">·</span>
             <span>макс. {grandTotal} б.</span>
           </div>
@@ -501,13 +586,13 @@ export default function AdminTkmEditor() {
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2 flex-wrap">
             <p className="text-xs text-zinc-500 uppercase tracking-widest">Раздел:</p>
-            {(["1", "2", "3"] as const).map(s => (
+            {(["1", "2", "3", "4"] as const).map(s => (
               <button
                 key={s}
                 onClick={() => setPreviewSection(s)}
                 className={`text-xs px-3 py-1.5 border transition-colors ${previewSection === s ? "border-red-600 text-red-400 bg-red-900/20" : "border-zinc-700 text-zinc-400 hover:border-zinc-500"}`}
               >
-                {s === "1" ? "Раздел 1 — Отделение" : s === "2" ? "Раздел 2 — Уставная документация" : "Раздел 3 — RP-сфера"}
+                {s === "1" ? "Раздел 1 — Отделение" : s === "2" ? "Раздел 2 — Уставная документация" : s === "3" ? "Раздел 3 — RP-сфера" : "Раздел 4 — Препараты"}
               </button>
             ))}
             {previewSection === "1" && (
@@ -524,6 +609,7 @@ export default function AdminTkmEditor() {
             {previewSection === "1" && <SectionPreview dept={activeDept} />}
             {previewSection === "2" && <Section2Preview />}
             {previewSection === "3" && <Section3Preview />}
+            {previewSection === "4" && <Section4Preview />}
           </div>
         </div>
       )}
@@ -638,6 +724,40 @@ export default function AdminTkmEditor() {
             {expanded.s4open && (
               <div className="flex flex-col gap-1 mt-1">
                 {s4Open.map(q => <SimpleOpenCard key={q.key} q={q} onChange={updated => setS4Open(prev => prev.map(x => x.key === q.key ? updated : x))} />)}
+              </div>
+            )}
+          </div>
+
+          {/* Раздел 4 — Препараты — мультивыбор (№29) */}
+          <div className="flex flex-col gap-1">
+            <SectionHeader
+              label="Препараты — верные утверждения (№29)"
+              badge="Раздел 4"
+              expanded={!!expanded.s5multi}
+              onToggle={() => toggle("s5multi")}
+              questionCount={s5Multi.length}
+              maxPoints={s5Multi.reduce((s, q) => s + q.points, 0)}
+            />
+            {expanded.s5multi && (
+              <div className="flex flex-col gap-1 mt-1">
+                {s5Multi.map((q, i) => <McqCard key={q.key} q={{ ...q, correct: q.correct.join(", ") }} index={28 + i} onChange={updated => setS5Multi(prev => prev.map((x, xi) => xi === i ? { ...updated, num: x.num, correct: updated.correct.split(", ").filter(Boolean) } : x))} />)}
+              </div>
+            )}
+          </div>
+
+          {/* Раздел 4 — Препараты — открытые вопросы (№30–31) */}
+          <div className="flex flex-col gap-1">
+            <SectionHeader
+              label="Препараты — открытые вопросы (№30–31)"
+              badge="Раздел 4"
+              expanded={!!expanded.s5open}
+              onToggle={() => toggle("s5open")}
+              questionCount={s5Open.length}
+              maxPoints={s5Open.reduce((s, q) => s + q.points, 0)}
+            />
+            {expanded.s5open && (
+              <div className="flex flex-col gap-1 mt-1">
+                {s5Open.map(q => <S5OpenCard key={q.key} q={q} onChange={updated => setS5Open(prev => prev.map(x => x.key === q.key ? updated : x))} />)}
               </div>
             )}
           </div>
