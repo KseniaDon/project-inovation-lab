@@ -38,7 +38,7 @@ function RadioQuestion({ num, text, options, value, onChange }: RadioQuestionPro
 
 interface Props {
   onNext: (answers: Record<string, string>) => void;
-  onBack: () => void;
+  onBack?: () => void;
 }
 
 const QUESTIONS = TKM_QUESTIONS["СОП"];
@@ -91,9 +91,11 @@ export default function TkmQuestionsSOP({ onNext, onBack }: Props) {
       )}
 
       <div className="flex gap-3">
-        <button onClick={onBack} className="px-5 py-2.5 border border-border text-sm font-semibold rounded-lg hover:bg-muted transition-colors">
-          ← Назад
-        </button>
+        {onBack && (
+          <button onClick={onBack} className="px-5 py-2.5 border border-border text-sm font-semibold rounded-lg hover:bg-muted transition-colors">
+            ← Назад
+          </button>
+        )}
         <button onClick={handleNext} className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg transition-colors">
           Далее
         </button>

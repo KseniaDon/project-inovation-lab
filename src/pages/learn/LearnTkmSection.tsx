@@ -145,13 +145,13 @@ export default function LearnTkmSection({ onActiveChange }: LearnTkmSectionProps
       )}
 
       {!expired && stage === "section2" && meta && meta.department === "ОИК" && (
-        <TkmQuestionsOIK onNext={a => mergeAnswers(a, "section3")} onBack={() => setStage("form")} />
+        <TkmQuestionsOIK onNext={a => mergeAnswers(a, "section3")} />
       )}
       {!expired && stage === "section2" && meta && meta.department === "СОП" && (
-        <TkmQuestionsSOP onNext={a => mergeAnswers(a, "section3")} onBack={() => setStage("form")} />
+        <TkmQuestionsSOP onNext={a => mergeAnswers(a, "section3")} />
       )}
       {!expired && stage === "section2" && meta && meta.department === "ОДС" && (
-        <TkmQuestionsODS onNext={a => mergeAnswers(a, "section3")} onBack={() => setStage("form")} />
+        <TkmQuestionsODS onNext={a => mergeAnswers(a, "section3")} />
       )}
 
       {!expired && stage === "section3" && (
