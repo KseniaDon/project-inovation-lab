@@ -7,12 +7,17 @@ POST ?action=review&id=N — выставить баллы и результат
 GET ?action=scores — получить макс. баллы
 POST ?action=save_scores — сохранить макс. баллы
 GET ?action=check_access — проверить допуск по VK ссылке (возвращает attempts_left)
+GET ?action=get_activation_code — получить текущий код активации (автообновление раз в 30 мин)
+POST ?action=rotate_activation_code — принудительно сгенерировать новый код
 POST ?action=reset_session&nick=X — добавить ник в список на сброс сессии
 GET ?action=check_reset&nick=X — проверить, нужно ли сбросить сессию (и снять флаг)
 """
 import json
 import os
 import re
+import random
+import string
+import time
 import psycopg2
 
 CORS = {
@@ -89,17 +94,55 @@ def find_entry(allowed: list, vk_nick: str) -> tuple:
             return i, entry
     return None, None
 
-def get_activation_code(cur, s: str) -> str:
-    """Получает код активации из site_content, дефолт '78'."""
+CODE_ROTATE_SECONDS = 1800  # 30 минут
+
+def generate_code() -> str:
+    """Генерирует рандомный 6-значный код из цифр."""
+    return "".join(random.choices(string.digits, k=6))
+
+def get_activation_code_entry(cur, s: str) -> dict:
+    """Возвращает {'code': '...', 'generated_at': timestamp} из site_content."""
     cur.execute(f"SELECT value FROM {s}.site_content WHERE key='tkm_activation_code'")
     row = cur.fetchone()
     if not row:
-        return "78"
+        return {}
     try:
         val = json.loads(row[0])
-        return str(val).strip()
+        if isinstance(val, dict) and "code" in val:
+            return val
+        # Старый формат — просто строка
+        return {"code": str(val).strip(), "generated_at": 0}
     except Exception:
-        return "78"
+        return {}
+
+def save_activation_code_entry(cur, conn, s: str, entry: dict):
+    cur.execute(
+        f"INSERT INTO {s}.site_content (key, value) VALUES ('tkm_activation_code', %s) "
+        f"ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value",
+        (json.dumps(entry, ensure_ascii=False),)
+    )
+    conn.commit()
+
+def get_or_rotate_activation_code(cur, conn, s: str, force: bool = False) -> dict:
+    """
+    Возвращает текущий код. Если прошло >= 30 мин или force=True — генерирует новый.
+    Возвращает {'code': '...', 'generated_at': timestamp, 'expires_at': timestamp}
+    """
+    entry = get_activation_code_entry(cur, s)
+    now = int(time.time())
+    generated_at = entry.get("generated_at", 0)
+    code = entry.get("code", "")
+    if force or not code or (now - generated_at) >= CODE_ROTATE_SECONDS:
+        code = generate_code()
+        generated_at = now
+        save_activation_code_entry(cur, conn, s, {"code": code, "generated_at": generated_at})
+    expires_at = generated_at + CODE_ROTATE_SECONDS
+    return {"code": code, "generated_at": generated_at, "expires_at": expires_at}
+
+def get_activation_code(cur, s: str) -> str:
+    """Получает текущий код активации (строка)."""
+    entry = get_activation_code_entry(cur, s)
+    return entry.get("code", "")
 
 def handler(event: dict, context) -> dict:
     """Приём и проверка ответов ТКМ."""
@@ -122,9 +165,21 @@ def handler(event: dict, context) -> dict:
         department = (body.get("department") or "").strip()
         answers = body.get("answers") or {}
 
+        activation_code_input = (body.get("activation_code") or "").strip()
+
         if not vk_link or not department:
             conn.close()
             return {"statusCode": 400, "headers": CORS, "body": json.dumps({"error": "Заполните все обязательные поля"})}
+
+        # Проверка кода активации
+        if not activation_code_input:
+            conn.close()
+            return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Введите код активации, полученный от куратора."})}
+        current_entry = get_activation_code_entry(cur, s)
+        current_code = current_entry.get("code", "")
+        if not current_code or activation_code_input != current_code:
+            conn.close()
+            return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Неверный код активации. Уточните код у куратора."})}
 
         # Проверка VK ссылки против списка допущенных
         allowed_list = get_tkm_allowed(cur, s)
@@ -296,6 +351,18 @@ def handler(event: dict, context) -> dict:
         conn.commit()
         conn.close()
         return {"statusCode": 200, "headers": CORS, "body": json.dumps({"ok": True})}
+
+    # GET get_activation_code — получить текущий код (автообновление раз в 30 мин)
+    if method == "GET" and action == "get_activation_code":
+        entry = get_or_rotate_activation_code(cur, conn, s, force=False)
+        conn.close()
+        return {"statusCode": 200, "headers": CORS, "body": json.dumps(entry)}
+
+    # POST rotate_activation_code — принудительно сгенерировать новый код
+    if method == "POST" and action == "rotate_activation_code":
+        entry = get_or_rotate_activation_code(cur, conn, s, force=True)
+        conn.close()
+        return {"statusCode": 200, "headers": CORS, "body": json.dumps(entry)}
 
     # GET scores — загрузить макс. баллы из БД
     if method == "GET" and action == "scores":

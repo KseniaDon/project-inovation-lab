@@ -18,6 +18,7 @@ export default function TkmForm({ onDepartmentSelected }: TkmFormProps) {
   const [nickname, setNickname] = useState("");
   const [vkLink, setVkLink] = useState("");
   const [department, setDepartment] = useState("");
+  const [activationCode, setActivationCode] = useState("");
   const [error, setError] = useState("");
   const [checking, setChecking] = useState(false);
   const [attemptNumber, setAttemptNumber] = useState<number | null>(null);
@@ -29,6 +30,7 @@ export default function TkmForm({ onDepartmentSelected }: TkmFormProps) {
     if (!nickname.trim()) { setError("Введите ваш никнейм"); return; }
     if (!vkLink.trim()) { setError("Введите ссылку на страницу ВКонтакте"); return; }
     if (!department) { setError("Выберите отделение"); return; }
+    if (!activationCode.trim()) { setError("Введите код активации, полученный от куратора"); return; }
 
     setChecking(true);
     try {
@@ -47,7 +49,7 @@ export default function TkmForm({ onDepartmentSelected }: TkmFormProps) {
     }
     setChecking(false);
 
-    onDepartmentSelected(department, { nickname: nickname.trim(), vkLink: vkLink.trim(), activationCode: "" });
+    onDepartmentSelected(department, { nickname: nickname.trim(), vkLink: vkLink.trim(), activationCode: activationCode.trim() });
   };
 
   return (
@@ -108,7 +110,7 @@ export default function TkmForm({ onDepartmentSelected }: TkmFormProps) {
         <input
           type="url"
           value={vkLink}
-          onChange={e => { setVkLink(e.target.value); setError(""); setAttemptsLeft(null); }}
+          onChange={e => { setVkLink(e.target.value); setError(""); setAttemptNumber(null); }}
           placeholder="https://vk.com/..."
           className="bg-transparent border-b border-border focus:border-red-500 outline-none text-sm py-1.5 text-foreground placeholder:text-muted-foreground/50 transition-colors w-full"
         />
@@ -148,6 +150,26 @@ export default function TkmForm({ onDepartmentSelected }: TkmFormProps) {
             </label>
           ))}
         </div>
+      </div>
+
+      {/* Код активации */}
+      <div className="rounded-xl border border-border bg-card p-5 flex flex-col gap-3">
+        <div>
+          <p className="text-sm font-semibold">
+            Код активации: <span className="text-red-500">*</span>
+          </p>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Получите код у куратора перед началом теста. Без верного кода отправка теста невозможна.
+          </p>
+        </div>
+        <input
+          type="text"
+          value={activationCode}
+          onChange={e => { setActivationCode(e.target.value); setError(""); }}
+          placeholder="Введите код"
+          maxLength={12}
+          className="bg-transparent border-b border-border focus:border-red-500 outline-none text-sm py-1.5 text-foreground placeholder:text-muted-foreground/50 transition-colors w-full font-mono tracking-widest"
+        />
       </div>
 
       {attemptNumber !== null && (

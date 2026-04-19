@@ -63,6 +63,7 @@ export default function LearnTkmSection() {
           nickname: meta.nickname,
           vk_link: meta.vkLink,
           department: meta.department,
+          activation_code: meta.activationCode,
           answers: finalAnswers ?? answers,
         }),
       });

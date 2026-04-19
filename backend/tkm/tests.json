@@ -56,6 +56,20 @@
       "body": {"scores": {"3.10": 5, "3.11": 5}},
       "expectedStatus": 200,
       "bodyMatcher": "partial"
+    },
+    {
+      "name": "Получить код активации",
+      "method": "GET",
+      "path": "/?action=get_activation_code",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Принудительно обновить код активации",
+      "method": "POST",
+      "path": "/?action=rotate_activation_code",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
     }
   ]
 }
