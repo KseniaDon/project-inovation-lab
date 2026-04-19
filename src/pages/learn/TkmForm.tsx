@@ -15,48 +15,39 @@ interface TkmFormProps {
 }
 
 export default function TkmForm({ onDepartmentSelected }: TkmFormProps) {
+  const [nickname, setNickname] = useState("");
   const [vkLink, setVkLink] = useState("");
   const [department, setDepartment] = useState("");
   const [error, setError] = useState("");
   const [checking, setChecking] = useState(false);
   const [attemptsLeft, setAttemptsLeft] = useState<number | null>(null);
-  const [accessChecked, setAccessChecked] = useState(false);
 
-  const handleCheckAccess = async () => {
+  const handleNext = async () => {
     setError("");
-    setAccessChecked(false);
     setAttemptsLeft(null);
 
-    if (!vkLink.trim()) {
-      setError("Введите ссылку на страницу ВКонтакте");
-      return;
-    }
+    if (!nickname.trim()) { setError("Введите ваш никнейм"); return; }
+    if (!vkLink.trim()) { setError("Введите ссылку на страницу ВКонтакте"); return; }
+    if (!department) { setError("Выберите отделение"); return; }
 
     setChecking(true);
     try {
       const res = await fetch(`${TKM_URL}?action=check_access&vk_link=${encodeURIComponent(vkLink.trim())}`);
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || "У вас нет доступа к прохождению ТКМ");
+        setError(data.error || "У вас нет доступа к прохождению ТКМ. Обратитесь к куратору.");
         setChecking(false);
         return;
       }
       setAttemptsLeft(data.attempts_left ?? null);
-      setAccessChecked(true);
     } catch {
       setError("Ошибка соединения. Попробуйте ещё раз.");
-    }
-    setChecking(false);
-  };
-
-  const handleStart = () => {
-    if (!department) {
-      setError("Выберите отделение");
+      setChecking(false);
       return;
     }
+    setChecking(false);
 
-    const nick = vkLink.trim().replace(/^https?:\/\/(vk\.com|vk\.ru)\//, "").replace(/\/$/, "") || vkLink.trim();
-    onDepartmentSelected(department, { nickname: nick, vkLink: vkLink.trim(), activationCode: "" });
+    onDepartmentSelected(department, { nickname: nickname.trim(), vkLink: vkLink.trim(), activationCode: "" });
   };
 
   return (
@@ -89,7 +80,24 @@ export default function TkmForm({ onDepartmentSelected }: TkmFormProps) {
         </p>
       </div>
 
-      {/* Ввод ВК */}
+      {/* Никнейм */}
+      <div className="rounded-xl border border-border bg-card p-5 flex flex-col gap-3">
+        <div>
+          <p className="text-sm font-semibold">
+            Ваш никнейм: <span className="text-red-500">*</span>
+          </p>
+          <p className="text-xs text-muted-foreground mt-0.5">Пример: Ivan_Ivanov</p>
+        </div>
+        <input
+          type="text"
+          value={nickname}
+          onChange={e => setNickname(e.target.value)}
+          placeholder="Краткий ответ"
+          className="bg-transparent border-b border-border focus:border-red-500 outline-none text-sm py-1.5 text-foreground placeholder:text-muted-foreground/50 transition-colors w-full"
+        />
+      </div>
+
+      {/* ВКонтакте */}
       <div className="rounded-xl border border-border bg-card p-5 flex flex-col gap-3">
         <div>
           <p className="text-sm font-semibold">
@@ -97,93 +105,85 @@ export default function TkmForm({ onDepartmentSelected }: TkmFormProps) {
           </p>
           <p className="text-xs text-muted-foreground mt-0.5">Пример: https://vk.com/id... или https://vk.ru/никнейм</p>
         </div>
-        <div className="flex gap-2 items-end">
-          <input
-            type="url"
-            value={vkLink}
-            onChange={e => { setVkLink(e.target.value); setAccessChecked(false); setAttemptsLeft(null); setError(""); }}
-            onKeyDown={e => e.key === "Enter" && handleCheckAccess()}
-            placeholder="https://vk.com/..."
-            className="flex-1 bg-transparent border-b border-border focus:border-red-500 outline-none text-sm py-1.5 text-foreground placeholder:text-muted-foreground/50 transition-colors"
-          />
-          <button
-            onClick={handleCheckAccess}
-            disabled={checking}
-            className="px-4 py-1.5 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-60 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 shrink-0"
-          >
-            {checking ? <Icon name="Loader2" size={13} className="animate-spin" /> : <Icon name="Search" size={13} />}
-            Проверить
-          </button>
-        </div>
-
-        {/* Нет доступа */}
-        {error && (
-          <div className="flex items-start gap-2 text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2.5">
-            <Icon name="ShieldX" size={15} className="shrink-0 mt-0.5" />
-            <span>{error}</span>
-          </div>
-        )}
-
-        {/* Есть доступ */}
-        {accessChecked && attemptsLeft !== null && (
-          <div className={`flex items-center gap-2 text-sm px-3 py-2.5 rounded-lg border ${
-            attemptsLeft <= 1
-              ? "border-yellow-500/40 bg-yellow-500/10 text-yellow-400"
-              : "border-green-700/40 bg-green-900/10 text-green-400"
-          }`}>
-            <Icon name="ShieldCheck" size={15} className="shrink-0" />
-            <span>Доступ подтверждён. Осталось попыток: <span className="font-bold">{attemptsLeft}</span></span>
-          </div>
-        )}
+        <input
+          type="url"
+          value={vkLink}
+          onChange={e => { setVkLink(e.target.value); setError(""); setAttemptsLeft(null); }}
+          placeholder="https://vk.com/..."
+          className="bg-transparent border-b border-border focus:border-red-500 outline-none text-sm py-1.5 text-foreground placeholder:text-muted-foreground/50 transition-colors w-full"
+        />
       </div>
 
-      {/* Выбор отделения — только если доступ подтверждён */}
-      {accessChecked && (
-        <div className="rounded-xl border border-border bg-card p-5 flex flex-col gap-3">
-          <div>
-            <p className="text-sm font-semibold">
-              В какое отделение ЦГБ вы собираетесь пойти: <span className="text-red-500">*</span>
-            </p>
-            <p className="text-xs text-yellow-500 font-medium mt-1.5">
-              Надеемся, что Вы определились.
-            </p>
-          </div>
-          <div className="flex flex-col gap-2.5 mt-1">
-            {DEPARTMENTS.map(dept => (
-              <label key={dept.value} className="flex items-center gap-3 cursor-pointer group">
-                <div
-                  className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors shrink-0 ${
-                    department === dept.value
-                      ? "border-red-500 bg-red-500"
-                      : "border-muted-foreground group-hover:border-red-400"
-                  }`}
-                  onClick={() => setDepartment(dept.value)}
-                >
-                  {department === dept.value && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-white" />
-                  )}
-                </div>
-                <span
-                  className="text-sm text-foreground"
-                  onClick={() => setDepartment(dept.value)}
-                >
-                  {dept.label}
-                </span>
-              </label>
-            ))}
-          </div>
+      {/* Выбор отделения */}
+      <div className="rounded-xl border border-border bg-card p-5 flex flex-col gap-3">
+        <div>
+          <p className="text-sm font-semibold">
+            В какое отделение ЦГБ вы собираетесь пойти: <span className="text-red-500">*</span>
+          </p>
+          <p className="text-xs text-yellow-500 font-medium mt-1.5">
+            Надеемся, что Вы определились.
+          </p>
+        </div>
+        <div className="flex flex-col gap-2.5 mt-1">
+          {DEPARTMENTS.map(dept => (
+            <label key={dept.value} className="flex items-center gap-3 cursor-pointer group">
+              <div
+                className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors shrink-0 ${
+                  department === dept.value
+                    ? "border-red-500 bg-red-500"
+                    : "border-muted-foreground group-hover:border-red-400"
+                }`}
+                onClick={() => setDepartment(dept.value)}
+              >
+                {department === dept.value && (
+                  <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                )}
+              </div>
+              <span
+                className="text-sm text-foreground"
+                onClick={() => setDepartment(dept.value)}
+              >
+                {dept.label}
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {attemptsLeft !== null && (
+        <div className={`flex items-center gap-2 text-sm px-4 py-2.5 rounded-lg border ${
+          attemptsLeft <= 1
+            ? "border-yellow-500/40 bg-yellow-500/10 text-yellow-400"
+            : "border-green-700/40 bg-green-900/10 text-green-400"
+        }`}>
+          <Icon name="RefreshCw" size={14} className="shrink-0" />
+          Осталось попыток: <span className="font-bold">{attemptsLeft}</span>
         </div>
       )}
 
-      {accessChecked && (
-        <button
-          onClick={handleStart}
-          className="w-full sm:w-auto self-start px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg transition-colors flex items-center gap-2"
-        >
-          <Icon name="PlayCircle" size={16} />
-          Начать прохождение ТКМ
-        </button>
+      {error && (
+        <div className="flex items-start gap-2 text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3">
+          <Icon name="AlertCircle" size={15} className="shrink-0 mt-0.5" />
+          <span>{error}</span>
+        </div>
       )}
+
+      <button
+        onClick={handleNext}
+        disabled={checking}
+        className="w-full sm:w-auto self-start px-6 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm font-semibold rounded-lg transition-colors flex items-center gap-2"
+      >
+        {checking ? (
+          <>
+            <Icon name="Loader2" size={15} className="animate-spin" />
+            Проверка доступа...
+          </>
+        ) : (
+          <>
+            Далее →
+          </>
+        )}
+      </button>
     </div>
   );
 }
