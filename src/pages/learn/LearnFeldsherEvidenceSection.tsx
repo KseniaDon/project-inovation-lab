@@ -61,7 +61,7 @@ export default function LearnFeldsherEvidenceSection({ go }: Props) {
               { label: "Когда с Вами прощаются и говорят «Все свободны»", italic: true },
             ].map((item, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-foreground">
-                <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
+                {!item.italic && <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />}
                 {item.italic ? (
                   <em className="text-red-500 text-xs">{item.label}</em>
                 ) : (
@@ -71,21 +71,13 @@ export default function LearnFeldsherEvidenceSection({ go }: Props) {
             ))}
           </ul>
 
-          {/* Совет */}
-          <div className="flex items-start gap-3 bg-sky-50 dark:bg-sky-950/40 border border-sky-300 dark:border-sky-700 rounded-sm px-4 py-3">
-            <Icon name="Lightbulb" size={18} className="text-sky-500 shrink-0 mt-0.5" />
-            <p className="text-sm text-sky-800 dark:text-sky-200 leading-relaxed">
-              <strong>Совет:</strong> Лекция, тренировка, мероприятие — является по значению общим понятием «Строй». Разница в их фиксации лишь в том, что на Лекции мы фиксируем только «Начало строя» и «Конец строя». В остальных строях (тренировка, мероприятия) полная фиксация с серединой строя.
-            </p>
-          </div>
-
           {/* Важно */}
           <div className="flex items-start gap-3 bg-orange-500/10 border border-orange-500/40 px-4 py-3">
             <Icon name="TriangleAlert" size={16} className="text-orange-400 shrink-0 mt-0.5" />
             <p className="text-sm text-orange-300 leading-relaxed">
-              <span className="font-bold">ВАЖНО:</span> Фиксируйте лечение с уведомлением «Пациент согласился на лечение» и чтобы было видно дата и время над HUD'ом (либо использованный{" "}
+              <span className="font-bold">ВАЖНО:</span> Фиксируйте строи, где видно дата и время над HUD'ом (либо использованный{" "}
               <code className="bg-secondary border border-border rounded px-1.5 py-0.5 text-xs font-mono text-foreground">/timestamp</code>
-              {" "}при прощании с пациентом).
+              ).
             </p>
           </div>
 
@@ -113,6 +105,14 @@ export default function LearnFeldsherEvidenceSection({ go }: Props) {
             className="w-full max-w-3xl rounded-sm border border-border"
             caption="Скриншот №3: Конец строя."
           />
+
+          {/* Совет */}
+          <div className="flex items-start gap-3 bg-sky-50 dark:bg-sky-950/40 border border-sky-300 dark:border-sky-700 rounded-sm px-4 py-3">
+            <Icon name="Lightbulb" size={18} className="text-sky-500 shrink-0 mt-0.5" />
+            <p className="text-sm text-sky-800 dark:text-sky-200 leading-relaxed">
+              <strong>Совет:</strong> Лекция, тренировка, мероприятие — является по значению общим понятием «Строй». Разница в их фиксации лишь в том, что на Лекции мы фиксируем только «Начало строя» и «Конец строя». В остальных строях (тренировка, мероприятия) полная фиксация с серединой строя.
+            </p>
+          </div>
         </div>
       </div>
     </div>
