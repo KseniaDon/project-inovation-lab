@@ -7,6 +7,8 @@ POST ?action=review&id=N — выставить баллы и результат
 GET ?action=scores — получить макс. баллы
 POST ?action=save_scores — сохранить макс. баллы
 GET ?action=check_access — проверить допуск по VK ссылке (возвращает attempts_left)
+POST ?action=reset_session&nick=X — добавить ник в список на сброс сессии
+GET ?action=check_reset&nick=X — проверить, нужно ли сбросить сессию (и снять флаг)
 """
 import json
 import os
@@ -219,6 +221,58 @@ def handler(event: dict, context) -> dict:
         if entry["attempts"] <= 0:
             return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Попытки исчерпаны. Обратитесь к куратору для получения дополнительной попытки."})}
         return {"statusCode": 200, "headers": CORS, "body": json.dumps({"ok": True, "attempts_left": entry["attempts"]})}
+
+    # POST reset_session — добавить ник в список на сброс сессии
+    if method == "POST" and action == "reset_session":
+        nick = normalize_vk((qs.get("nick") or "").strip())
+        if not nick:
+            conn.close()
+            return {"statusCode": 400, "headers": CORS, "body": json.dumps({"error": "Укажите nick"})}
+        cur.execute(f"SELECT value FROM {s}.site_content WHERE key='tkm_reset_nicks'")
+        row = cur.fetchone()
+        try:
+            nicks = json.loads(row[0]) if row else []
+            if not isinstance(nicks, list):
+                nicks = []
+        except Exception:
+            nicks = []
+        if nick not in nicks:
+            nicks.append(nick)
+        cur.execute(
+            f"INSERT INTO {s}.site_content (key, value) VALUES ('tkm_reset_nicks', %s) "
+            f"ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value",
+            (json.dumps(nicks),)
+        )
+        conn.commit()
+        conn.close()
+        return {"statusCode": 200, "headers": CORS, "body": json.dumps({"ok": True})}
+
+    # GET check_reset — проверить сброс и снять флаг если нужно
+    if method == "GET" and action == "check_reset":
+        nick = normalize_vk((qs.get("nick") or "").strip())
+        if not nick:
+            conn.close()
+            return {"statusCode": 400, "headers": CORS, "body": json.dumps({"error": "Укажите nick"})}
+        cur.execute(f"SELECT value FROM {s}.site_content WHERE key='tkm_reset_nicks'")
+        row = cur.fetchone()
+        try:
+            nicks = json.loads(row[0]) if row else []
+            if not isinstance(nicks, list):
+                nicks = []
+        except Exception:
+            nicks = []
+        if nick in nicks:
+            nicks = [n for n in nicks if n != nick]
+            cur.execute(
+                f"INSERT INTO {s}.site_content (key, value) VALUES ('tkm_reset_nicks', %s) "
+                f"ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value",
+                (json.dumps(nicks),)
+            )
+            conn.commit()
+            conn.close()
+            return {"statusCode": 200, "headers": CORS, "body": json.dumps({"reset": True})}
+        conn.close()
+        return {"statusCode": 200, "headers": CORS, "body": json.dumps({"reset": False})}
 
     # POST delete — удалить заявку
     if method == "POST" and action == "delete":

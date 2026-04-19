@@ -2,6 +2,9 @@ import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import { SectionHeader, Inp } from "./adminHelpers";
 import type { TkmAllowedEntry } from "./adminTypes";
+import func2url from "../../../backend/func2url.json";
+
+const TKM_URL = func2url["tkm"];
 
 export type { TkmAllowedEntry };
 
@@ -17,6 +20,19 @@ const MAX_ATTEMPTS = 3;
 export default function AdminTkm({ allowed, saving, saved, onSave }: Props) {
   const [list, setList] = useState<TkmAllowedEntry[]>(allowed);
   const [input, setInput] = useState("");
+  const [resetting, setResetting] = useState<string | null>(null);
+  const [resetDone, setResetDone] = useState<string | null>(null);
+
+  const resetSession = async (nick: string) => {
+    setResetting(nick);
+    try {
+      await fetch(`${TKM_URL}?action=reset_session&nick=${encodeURIComponent(nick)}`, { method: "POST" });
+      setResetDone(nick);
+      setTimeout(() => setResetDone(null), 2500);
+    } finally {
+      setResetting(null);
+    }
+  };
 
   const add = () => {
     const nick = input.trim().toLowerCase().replace(/^(https?:\/\/)?(vk\.(ru|com)\/)?@?/, "").replace(/\/$/, "");
@@ -89,6 +105,22 @@ export default function AdminTkm({ allowed, saving, saved, onSave }: Props) {
                 >
                   <Icon name="Unlock" size={12} />
                   Допустить
+                </button>
+
+                {/* Кнопка сброса сессии */}
+                <button
+                  onClick={() => resetSession(entry.nick)}
+                  disabled={resetting === entry.nick}
+                  title="Сбросить активную сессию ТКМ у пользователя"
+                  className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 border transition-colors shrink-0 border-yellow-700 text-yellow-400 hover:bg-yellow-900/30 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {resetDone === entry.nick ? (
+                    <><Icon name="Check" size={12} />Сброшено</>
+                  ) : resetting === entry.nick ? (
+                    <><Icon name="Loader2" size={12} className="animate-spin" />...</>
+                  ) : (
+                    <><Icon name="RotateCcw" size={12} />Сброс</>
+                  )}
                 </button>
 
                 <button

@@ -29,6 +29,20 @@
       "bodyMatcher": "partial"
     },
     {
+      "name": "Сброс сессии — добавить ник в стоп-лист",
+      "method": "POST",
+      "path": "/?action=reset_session&nick=test_user_reset",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Проверка сброса — ник в стоп-листе, вернуть reset=true и снять флаг",
+      "method": "GET",
+      "path": "/?action=check_reset&nick=test_user_reset",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
       "name": "Загрузить макс. баллы",
       "method": "GET",
       "path": "/?action=scores",

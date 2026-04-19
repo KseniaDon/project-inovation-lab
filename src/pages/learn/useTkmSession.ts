@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import func2url from "../../../backend/func2url.json";
 
 export type TkmStage = "form" | "section2" | "section3" | "section4" | "section5" | "section6" | "submit" | "done";
 
@@ -18,6 +19,7 @@ interface TkmSessionData {
 
 const STORAGE_KEY = "tkm_session";
 const DURATION_MS = 90 * 60 * 1000;
+const TKM_URL = func2url["tkm"];
 
 function loadSession(): TkmSessionData | null {
   try {
@@ -37,6 +39,10 @@ export function clearTkmSession() {
   localStorage.removeItem(STORAGE_KEY);
 }
 
+function normalizeVk(link: string): string {
+  return link.trim().toLowerCase().replace(/^(https?:\/\/)?(www\.)?(vk\.(ru|com))\/@?/, "").replace(/\/$/, "");
+}
+
 export function useTkmSession() {
   const saved = loadSession();
 
@@ -53,6 +59,28 @@ export function useTkmSession() {
     if (!saved?.startedAt) return false;
     return Date.now() - saved.startedAt >= DURATION_MS;
   });
+
+  // Проверяем при загрузке, не сбросил ли администратор сессию
+  useEffect(() => {
+    const session = loadSession();
+    if (!session || session.stage === "form" || session.stage === "done") return;
+    const nick = normalizeVk(session.meta.vkLink);
+    if (!nick) return;
+    fetch(`${TKM_URL}?action=check_reset&nick=${encodeURIComponent(nick)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.reset) {
+          clearTkmSession();
+          setStageRaw("form");
+          setMeta(null);
+          setAnswersRaw({});
+          setStartedAt(null);
+          setTimeLeft(DURATION_MS);
+          setExpired(false);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
