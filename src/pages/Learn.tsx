@@ -34,7 +34,10 @@ import LearnFeldsherKsmpSection from "./learn/LearnFeldsherKsmpSection";
 import LearnFeldsherPrmoSection from "./learn/LearnFeldsherPrmoSection";
 import LearnFeldsherMedhelpSection from "./learn/LearnFeldsherMedhelpSection";
 import LearnFeldsherWardsSection from "./learn/LearnFeldsherWardsSection";
-import LearnFeldsherReportSection from "./learn/LearnFeldsherReportSection";
+import LearnFeldsherPrepSection from "./learn/LearnFeldsherPrepSection";
+import LearnFeldsherEvidenceSection from "./learn/LearnFeldsherEvidenceSection";
+import LearnFeldsherMisSection from "./learn/LearnFeldsherMisSection";
+import LearnFeldsherGovSection from "./learn/LearnFeldsherGovSection";
 import LearnTkmSection from "./learn/LearnTkmSection";
 
 
@@ -241,8 +244,17 @@ export default function Learn() {
           {/* ФЕЛЬДШЕР — РАБОТА ОТДЕЛЕНИЙ */}
           {active === "feldsher-wards" && <LearnFeldsherWardsSection go={go} />}
 
-          {/* ФЕЛЬДШЕР — ОТЧЕТ НА ДОПУСК */}
-          {active === "feldsher-report" && <LearnFeldsherReportSection go={go} />}
+          {/* ФЕЛЬДШЕР — ПОДГОТОВКА К ДОПУСКУ */}
+          {active === "feldsher-prep" && <LearnFeldsherPrepSection go={go} />}
+
+          {/* ФЕЛЬДШЕР — ФИКСАЦИЯ ДОКАЗАТЕЛЬСТВ */}
+          {active === "feldsher-evidence" && <LearnFeldsherEvidenceSection go={go} />}
+
+          {/* ФЕЛЬДШЕР — МИС ЗДОРОВЬЕ */}
+          {active === "feldsher-mis" && <LearnFeldsherMisSection go={go} />}
+
+          {/* ФЕЛЬДШЕР — ГОСПОРТАЛ */}
+          {active === "feldsher-gov" && <LearnFeldsherGovSection go={go} />}
 
           {/* ТКМ */}
           {active === "tkm" && <LearnTkmSection />}
