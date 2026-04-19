@@ -50,6 +50,23 @@ export default function LearnFeldsherPrepSection({ go }: Props) {
         </ol>
       </div>
 
+      <div className="flex flex-col gap-3 text-sm text-foreground leading-relaxed">
+        <p>
+          Как загружать в МИС «Здоровье» рассказано в этом разделе:{" "}
+          <button onClick={() => go("intern-mis")} className="text-red-500 hover:text-red-400 transition-colors font-semibold">
+            Интерн | МИС «Здоровье»
+          </button>{" "}
+          — меняете только критерии, которые уже нужны на допуск к ТКМ.
+        </p>
+        <p>
+          Как написать заявление на госпортал рассказано в этом разделе:{" "}
+          <button onClick={() => go("intern-gov")} className="text-red-500 hover:text-red-400 transition-colors font-semibold">
+            Интерн | Госпортал
+          </button>{" "}
+          — там же Вы найдете форму подачи отчета на допуск к ТКМ.
+        </p>
+      </div>
+
       <div className="flex flex-col gap-3 border border-border rounded-sm p-4 bg-secondary/30">
         <p className="text-sm text-foreground leading-relaxed">
           Доказательства проделанной работы публикуются в{" "}
