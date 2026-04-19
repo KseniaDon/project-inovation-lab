@@ -37,7 +37,24 @@ export default function LearnFeldsherPrepSection({ go }: Props) {
           </li>
           <li className="flex gap-2">
             <span className="font-semibold text-foreground shrink-0">3.</span>
-            <span>Успешно сдать <span className="text-red-500 font-semibold">Основной Медицинский Экзамен (ОМЭ)</span>;</span>
+            <span>Сдать <span className="text-red-500 font-semibold">Первичный Медицинский Экзамен (ПМЭ)</span>, который включает: информацию о больнице, практический экзамен по выдаче препаратов, вопросы по Внутреннему уставу;</span>
+          </li>
+          <li className="list-none">
+            <div className="border border-border rounded-sm px-5 py-4 flex flex-col gap-3 mt-1 ml-5">
+              <p className="text-base font-semibold text-foreground">Первичный Медицинский Экзамен (ПМЭ) включает в себя:</p>
+              <ul className="flex flex-col gap-1.5 pl-1">
+                {[
+                  "Информацию о больнице;",
+                  "Практический экзамен по выдаче препаратов;",
+                  "Вопросы по Внутреннему уставу.",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-foreground leading-relaxed">
+                    <span className="mt-1.5 w-2 h-2 rounded-full bg-red-500 shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </li>
           <li className="flex gap-2">
             <span className="font-semibold text-foreground shrink-0">4.</span>
