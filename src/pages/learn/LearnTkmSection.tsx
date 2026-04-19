@@ -102,6 +102,14 @@ export default function LearnTkmSection({ onActiveChange }: LearnTkmSectionProps
           <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Раздел</p>
           <h1 className="text-2xl sm:text-3xl font-bold">ТКМ</h1>
           <p className="text-xs text-muted-foreground mt-1">{SECTION_LABELS[stage]}</p>
+          {isActive && (
+            <button
+              onClick={resetSession}
+              className="mt-1.5 text-xs text-zinc-700 hover:text-zinc-500 transition-colors"
+            >
+              Сбросить сессию
+            </button>
+          )}
         </div>
 
         {isActive && !expired && (
