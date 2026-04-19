@@ -37,20 +37,8 @@ import LearnFeldsherWardsSection from "./learn/LearnFeldsherWardsSection";
 import LearnTkmSection from "./learn/LearnTkmSection";
 
 
-function isTkmSessionActive() {
-  try {
-    const raw = localStorage.getItem("tkm_session");
-    if (!raw) return false;
-    const data = JSON.parse(raw);
-    return data?.stage && data.stage !== "form" && data.stage !== "done";
-  } catch {
-    return false;
-  }
-}
-
 export default function Learn() {
   const [active, setActive] = useState<SectionId>("intro");
-  const [isTkmActive, setIsTkmActive] = useState(() => isTkmSessionActive());
   const navigate = useNavigate();
 
   const go = (id: SectionId) => {
@@ -64,11 +52,7 @@ export default function Learn() {
     if (hash) setActive(hash);
   }, []);
 
-  useEffect(() => {
-    if (active !== "tkm") {
-      setIsTkmActive(isTkmSessionActive());
-    }
-  }, [active]);
+
   const introData = useSiteData("intro_data", defaultIntroData);
   const internExam = useSiteData("intern_exam", defaultInternExam);
   const feldsherPage = useSiteData<SimplePageData>("feldsher_page", defaultFeldsherPage);
@@ -79,10 +63,8 @@ export default function Learn() {
       {/* Top bar */}
       <div className="border-b border-border px-3 sm:px-4 md:px-8 xl:px-12 py-2.5 sm:py-3 md:py-4 flex items-center gap-2 sm:gap-3">
         <button
-          onClick={() => { if (isTkmActive) return; playClickSound(); navigate("/"); }}
-          disabled={isTkmActive}
-          title={isTkmActive ? "Недоступно во время ТКМ" : undefined}
-          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors shrink-0 py-1 disabled:opacity-30 disabled:cursor-not-allowed"
+          onClick={() => { playClickSound(); navigate("/"); }}
+          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors shrink-0 py-1"
         >
           <Icon name="ArrowLeft" size={16} />
           <span className="hidden sm:inline">На главную</span>
@@ -92,7 +74,7 @@ export default function Learn() {
       </div>
 
       <div className="flex flex-1 pb-16 md:pb-0">
-        <LearnSidebar active={active} go={go} tkmLocked={isTkmActive} />
+        <LearnSidebar active={active} go={go} />
 
         {/* ── Content ── */}
         <main className={`flex-1 px-4 md:px-10 xl:px-16 py-6 md:py-10 min-w-0 mx-auto w-full ${active === "intern-binds" || active === "intern-evidence" || active === "intern-mis" || active === "intern-gov" ? "max-w-6xl" : "max-w-4xl"}`}>
@@ -259,7 +241,7 @@ export default function Learn() {
           {active === "feldsher-wards" && <LearnFeldsherWardsSection go={go} />}
 
           {/* ТКМ */}
-          {active === "tkm" && <LearnTkmSection onActiveChange={setIsTkmActive} />}
+          {active === "tkm" && <LearnTkmSection />}
 
         </motion.div>
         </AnimatePresence>

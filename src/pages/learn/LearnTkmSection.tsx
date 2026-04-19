@@ -32,11 +32,7 @@ function formatTime(ms: number) {
   return `${m}:${s}`;
 }
 
-interface LearnTkmSectionProps {
-  onActiveChange?: (active: boolean) => void;
-}
-
-export default function LearnTkmSection({ onActiveChange }: LearnTkmSectionProps) {
+export default function LearnTkmSection() {
   const {
     stage,
     setStage,
@@ -54,10 +50,6 @@ export default function LearnTkmSection({ onActiveChange }: LearnTkmSectionProps
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const autoSubmittedRef = useRef(false);
-
-  useEffect(() => {
-    onActiveChange?.(isActive);
-  }, [isActive, onActiveChange]);
 
   const handleSubmit = async (finalAnswers?: Record<string, string>) => {
     if (!meta) return;
@@ -102,14 +94,6 @@ export default function LearnTkmSection({ onActiveChange }: LearnTkmSectionProps
           <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Раздел</p>
           <h1 className="text-2xl sm:text-3xl font-bold">ТКМ</h1>
           <p className="text-xs text-muted-foreground mt-1">{SECTION_LABELS[stage]}</p>
-          {isActive && (
-            <button
-              onClick={resetSession}
-              className="mt-1.5 text-xs text-zinc-700 hover:text-zinc-500 transition-colors"
-            >
-              Сбросить сессию
-            </button>
-          )}
         </div>
 
         {isActive && !expired && (
