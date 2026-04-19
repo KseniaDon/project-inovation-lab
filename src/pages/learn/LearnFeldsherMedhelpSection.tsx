@@ -129,7 +129,7 @@ export default function LearnFeldsherMedhelpSection({ go }: Props) {
       </div>
 
       <p className="text-base text-foreground leading-relaxed">
-        Отыгровки имеющихся обследований можно найти на{" "}
+        Отыгровки имеющихся обследований можно найти на МЗ Портале:{" "}
         <a
           href="https://mz.kaze.red/dash/types/6"
           target="_blank"
@@ -214,6 +214,19 @@ export default function LearnFeldsherMedhelpSection({ go }: Props) {
 
         </div>
       </div>
+
+      <p className="text-base text-foreground leading-relaxed">
+        Отыгровки имеющихся процедур можно найти на МЗ Портале:{" "}
+        <a
+          href="https://mz.kaze.red/dash/types/8"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-red-600 dark:text-red-400 hover:underline font-semibold"
+        >
+          МЗ Портал | Процедуры
+        </a>
+        .
+      </p>
 
     </div>
   );
