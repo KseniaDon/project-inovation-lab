@@ -67,7 +67,7 @@ export default function TkmForm({ onDepartmentSelected }: TkmFormProps) {
           <p>5. Медицина — <span className="font-semibold text-red-500">19 баллов</span>.</p>
         </div>
         <p className="text-sm text-muted-foreground leading-relaxed">
-          На выполнение всех заданий отводится <span className="font-semibold text-foreground">60 минут</span>. Задания рекомендуется выполнять по порядку.
+          На выполнение всех заданий отводится <span className="font-semibold text-foreground">90 минут</span>. Задания рекомендуется выполнять по порядку.
           Если какое-либо из них вызовет у Вас затруднение, перейдите к следующему. После выполнения всех заданий вернитесь к пропущенным.
         </p>
         <p className="text-sm font-semibold text-foreground">
