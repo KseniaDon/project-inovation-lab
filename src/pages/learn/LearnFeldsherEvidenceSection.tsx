@@ -185,6 +185,53 @@ export default function LearnFeldsherEvidenceSection({ go }: Props) {
             caption="Скриншот №7: Доклад о приезде на базу."
           />
         </div>
+
+        {/* Шаг 3 */}
+        <div className="flex flex-col gap-3 pt-2 border-t border-border">
+          <p className="text-base font-semibold text-center text-foreground">Шаг 3. Как правильно фиксировать пост</p>
+          <p className="text-base text-foreground leading-relaxed">
+            Так как на посту Вы будете в качестве напарника и будете сидеть на пассажирском сидении рядом с опытным врачом, Вам возможно предстоит делать доклады.
+          </p>
+          <p className="text-base text-foreground leading-relaxed">
+            Фиксировать доклады не сложно, вот последовательность фиксации:
+          </p>
+          <ul className="flex flex-col gap-2 ml-4 border-l-2 border-red-600/40 pl-4">
+            {[
+              {
+                label: "Доклад о выезде на пост и его название;",
+                hint: "Ваш доклад, где будет видно ТЭГ, АСМП, статус поста: «Выехал(-а) на пост: Название поста», напарники.",
+              },
+              {
+                label: "Доклад о прибытии на местоположение поста;",
+                hint: "Ваш доклад, где будет видно ТЭГ, АСМП, статус поста: «Прибыл(-а) на пост: Название поста», напарники.",
+              },
+              {
+                label: "Доклад о продолжении поста (каждые 10 мин);",
+                hint: "Ваш доклад, где будет видно ТЭГ, АСМП, статус поста: «Пост: Название поста. Состояние: стабильно», напарники.",
+              },
+              {
+                label: "Доклад о том, что Вы завершаете пост;",
+                hint: "Ваш доклад, где будет видно ТЭГ, АСМП, статус поста: «Пост: Название поста. Возвращаюсь на базу», напарники.",
+              },
+              {
+                label: "Доклад о том, что Вы вернулись на базу.",
+                hint: "Ваш доклад, где будет видно ТЭГ, АСМП, статус поста: «Пост: Название поста. На базе», напарники.",
+              },
+            ].map((item, i) => (
+              <li key={i} className="flex flex-col gap-1">
+                <div className="flex items-start gap-2 text-sm text-foreground">
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
+                  <span>{item.label}</span>
+                </div>
+                <em className="text-red-500 text-xs ml-4">{item.hint}</em>
+              </li>
+            ))}
+          </ul>
+
+          <p className="text-base text-foreground leading-relaxed">
+            Для примера, как должны выглядеть фиксации поста возьмите во внимание скриншот №8, скриншот №9, скриншот №10, скриншот №11 и скриншот №12:
+          </p>
+        </div>
       </div>
     </div>
   );
