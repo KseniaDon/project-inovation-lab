@@ -110,9 +110,52 @@ export default function LearnFeldsherEvidenceSection({ go }: Props) {
           <div className="flex items-start gap-3 bg-sky-50 dark:bg-sky-950/40 border border-sky-300 dark:border-sky-700 rounded-sm px-4 py-3">
             <Icon name="Lightbulb" size={18} className="text-sky-500 shrink-0 mt-0.5" />
             <p className="text-sm text-sky-800 dark:text-sky-200 leading-relaxed">
-              <strong>Совет:</strong> Лекция, тренировка, мероприятие — является по значению общим понятием «Строй». Разница в их фиксации лишь в том, что на Лекции мы фиксируем только «Начало строя» и «Конец строя». В остальных строях (тренировка, мероприятия) полная фиксация с серединой строя.
+              <strong>Совет:</strong> Лекция, тренировка, мероприятие — является по значению общим понятием «Строй». Разница в их фиксации лишь в том, что на Лекции мы фиксируем только «Начало строя» и «Конец строя». В остальных строях (тренировка, мероприятие) полная фиксация с серединой строя.
             </p>
           </div>
+        </div>
+
+        {/* Шаг 2 */}
+        <div className="flex flex-col gap-3 pt-2 border-t border-border">
+          <p className="text-base font-semibold text-center text-foreground">Шаг 2. Как правильно фиксировать выезд на вызов</p>
+          <p className="text-base text-foreground leading-relaxed">
+            Так как на вызове Вы будете в качестве напарника и будете сидеть на пассажирском сидении рядом с опытным врачом, Вам возможно предстоит делать доклады.
+          </p>
+          <p className="text-base text-foreground leading-relaxed">
+            Фиксировать доклады не сложно, вот последовательность фиксации:
+          </p>
+          <ul className="flex flex-col gap-2 ml-4 border-l-2 border-red-600/40 pl-4">
+            {[
+              {
+                label: "Доклад о принятии вызова;",
+                hint: "Ваш доклад, где будет видно ТЭГ, РАСМП, статус вызова: «Вызов [ID] - Принят», напарники.",
+              },
+              {
+                label: "Фиксация оказания ПМП пострадавшему на вызове;",
+                hint: "Ваши действия во время вызова, оказание ПМП.",
+              },
+              {
+                label: "Доклад о госпитализации или оказания помощи на месте;",
+                hint: "Ваш доклад, где будет видно ТЭГ, РАСМП, статус вызова: «Вызов [ID] - Госпитализация» или «Вызов [ID] - Помощь оказана на месте», напарники.",
+              },
+              {
+                label: "Доклад о том, что Вы на базе.",
+                hint: "Ваш доклад, где будет видно ТЭГ, РАСМП, статус вызова: «Вызов [ID] - На базе», напарники.",
+              },
+            ].map((item, i) => (
+              <li key={i} className="flex flex-col gap-1">
+                <div className="flex items-start gap-2 text-sm text-foreground">
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
+                  <span>{item.label}</span>
+                </div>
+                <em className="text-red-500 text-xs ml-4">{item.hint}</em>
+              </li>
+            ))}
+          </ul>
+
+          <p className="text-base text-foreground leading-relaxed">
+            Для примера, как должны выглядеть фиксации вызова возьмите во внимание скриншот №4, скриншот №5, скриншот №6 и скриншот №7:
+          </p>
         </div>
       </div>
     </div>
