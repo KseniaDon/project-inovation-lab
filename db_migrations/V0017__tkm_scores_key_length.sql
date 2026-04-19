@@ -1,0 +1,1 @@
+ALTER TABLE t_p7851806_project_inovation_la.tkm_scores ALTER COLUMN key TYPE character varying(256);
