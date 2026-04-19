@@ -125,7 +125,8 @@ def save_activation_code_entry(cur, conn, s: str, entry: dict):
 
 def get_or_rotate_activation_code(cur, conn, s: str, force: bool = False) -> dict:
     """
-    Возвращает текущий код. Если прошло >= 30 мин или force=True — генерирует новый.
+    Возвращает текущий код. Если прошло >= 15 мин или force=True — генерирует новый.
+    Сохраняет предыдущий код (prev_code) для валидации тестов, начатых в предыдущем периоде.
     Возвращает {'code': '...', 'generated_at': timestamp, 'expires_at': timestamp}
     """
     entry = get_activation_code_entry(cur, s)
@@ -133,9 +134,14 @@ def get_or_rotate_activation_code(cur, conn, s: str, force: bool = False) -> dic
     generated_at = entry.get("generated_at", 0)
     code = entry.get("code", "")
     if force or not code or (now - generated_at) >= CODE_ROTATE_SECONDS:
-        code = generate_code()
+        new_entry = {
+            "code": generate_code(),
+            "generated_at": now,
+            "prev_code": code,  # сохраняем старый код
+        }
+        save_activation_code_entry(cur, conn, s, new_entry)
+        code = new_entry["code"]
         generated_at = now
-        save_activation_code_entry(cur, conn, s, {"code": code, "generated_at": generated_at})
     expires_at = generated_at + CODE_ROTATE_SECONDS
     return {"code": code, "generated_at": generated_at, "expires_at": expires_at}
 
@@ -177,7 +183,9 @@ def handler(event: dict, context) -> dict:
             return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Введите код активации, полученный от куратора."})}
         current_entry = get_activation_code_entry(cur, s)
         current_code = current_entry.get("code", "")
-        if not current_code or activation_code_input != current_code:
+        prev_code = current_entry.get("prev_code", "")
+        valid_codes = {c for c in [current_code, prev_code] if c}
+        if not valid_codes or activation_code_input not in valid_codes:
             conn.close()
             return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Неверный код активации. Уточните код у куратора."})}
 
