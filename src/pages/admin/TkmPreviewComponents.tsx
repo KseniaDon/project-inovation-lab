@@ -195,7 +195,7 @@ export function SectionPreview({ dept }: { dept: string }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 flex flex-col gap-1.5">
-        <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded font-semibold self-start">Раздел 1 из 8</span>
+        <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded font-semibold self-start">Раздел 1 из 5</span>
         <p className="text-sm font-bold text-zinc-200 mt-1">Ваше будущее отделение — {dept}</p>
         <p className="text-xs text-zinc-500">3 вопр. · макс. 3 б.</p>
       </div>
@@ -214,7 +214,7 @@ export function Section2Preview() {
   return (
     <div className="flex flex-col gap-3">
       <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 flex flex-col gap-1.5">
-        <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded font-semibold self-start">Раздел 2 из 8</span>
+        <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded font-semibold self-start">Раздел 2 из 5</span>
         <p className="text-sm font-bold text-zinc-200 mt-1">Раздел 2. Уставная документация</p>
         <p className="text-xs text-zinc-500">17 вопр. · макс. 40 б.</p>
       </div>
@@ -232,7 +232,7 @@ export function Section3Preview() {
   return (
     <div className="flex flex-col gap-3">
       <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 flex flex-col gap-1.5">
-        <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded font-semibold self-start">Раздел 3 из 8</span>
+        <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded font-semibold self-start">Раздел 3 из 5</span>
         <p className="text-sm font-bold text-zinc-200 mt-1">Раздел 3. RP-сфера</p>
         <p className="text-xs text-zinc-500">11 вопр. · макс. 31 б.</p>
       </div>
