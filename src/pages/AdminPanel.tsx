@@ -12,12 +12,13 @@ import AdminPassword from "./admin/AdminPassword";
 import AdminWhatsNew from "./admin/AdminWhatsNew";
 import AdminTkm from "./admin/AdminTkm";
 import AdminTkmReviews from "./admin/AdminTkmReviews";
+import AdminTkmPreview from "./admin/AdminTkmPreview";
 import { WhatsNewEntry } from "@/components/WhatsNew";
 
 const API = "https://functions.poehali.dev/ee0c9d49-3da0-4e2e-a2ab-1f68f29a1405";
 
 type Tab = "home" | "whats_new" | "staff" | "access" | "tkm" | "password";
-type TkmSubTab = "access" | "reviews";
+type TkmSubTab = "access" | "reviews" | "preview";
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "home",      label: "Главная",        icon: "Home" },
@@ -32,6 +33,7 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
 const TKM_SUB_TABS: { id: TkmSubTab; label: string }[] = [
   { id: "access",  label: "Доступ" },
   { id: "reviews", label: "Проверка" },
+  { id: "preview", label: "Предпросмотр" },
 ];
 
 const defaultStaff: StaffMember[] = [
@@ -322,6 +324,9 @@ export default function AdminPanel() {
           )}
           {tkmSubTab === "reviews" && (
             <AdminTkmReviews reviewerNick={me.nickname} />
+          )}
+          {tkmSubTab === "preview" && (
+            <AdminTkmPreview />
           )}
         </div>
       )}
