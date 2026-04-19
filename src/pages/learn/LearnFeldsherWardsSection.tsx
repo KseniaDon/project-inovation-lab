@@ -37,6 +37,78 @@ export default function LearnFeldsherWardsSection({ go }: Props) {
       <WardOIK />
       <WardSOP />
       <WardODS />
+
+      <div className="flex flex-col gap-2">
+        <p className="text-sm text-muted-foreground">
+          Информационный раздел нашей больницы на госпортале по отделениям:{" "}
+          <a
+            href="https://forum.gtaprovince.ru/topic/995733-cgb-g-nevskiy-informacionnyy-razdel/?do=findComment&comment=6982152"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+          >
+            Раздел 5. Отделения ЦГБ.
+            <Icon name="ExternalLink" size={13} />
+          </a>
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Информационный раздел нашей больницы на госпортале по ОИК:{" "}
+          <a
+            href="https://forum.gtaprovince.ru/topic/995720-cgb-g-nevskiy-informacionnyy-razdel-otdeleniya-infekcionnogo-kontrolya/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+          >
+            Информационный раздел Отделения Инфекционного Контроля
+            <Icon name="ExternalLink" size={13} />
+          </a>
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Сайт ОИК (разработка РС ОИК —{" "}
+          <a
+            href="https://vk.com/ilinskiya"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-red-500 hover:text-red-400 transition-colors font-medium"
+          >
+            Ivan_Nikiforov
+          </a>
+          ):{" "}
+          <a
+            href="https://cgb-n.github.io/informational-portal-oik/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+          >
+            Архитектура Порядка
+            <Icon name="ExternalLink" size={13} />
+          </a>
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Информационный раздел нашей больницы на госпортале по СОП:{" "}
+          <a
+            href="https://forum.gtaprovince.ru/topic/995674-cgb-g-nevskiy-informacionnyy-razdel-stomatologicheskogo-otdeleniya-polikliniki/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+          >
+            Информационный раздел Стоматологического Отделения Поликлиники
+            <Icon name="ExternalLink" size={13} />
+          </a>
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Информационный раздел нашей больницы на госпортале по ОДС:{" "}
+          <a
+            href="https://forum.gtaprovince.ru/topic/995721-cgb-g-nevskiy-informacionnyy-razdel-otdeleniya-dnevnogo-stacionara/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+          >
+            Информационный раздел Отделения Дневного Стационара
+            <Icon name="ExternalLink" size={13} />
+          </a>
+        </p>
+      </div>
     </div>
   );
 }
