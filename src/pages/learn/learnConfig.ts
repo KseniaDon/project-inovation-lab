@@ -31,8 +31,6 @@ export const NAV: { id: SectionId; label: string; icon: string; parent?: string;
   { id: "feldsher-wards",      label: "Специализация отделений", icon: "Microscope",    parent: "feldsher" },
   { id: "feldsher-prep",       label: "Подготовка к допуску",    icon: "ClipboardCheck", parent: "feldsher", divider: "Шаг 2: Отчет на допуск" },
   { id: "feldsher-evidence",   label: "Фиксация доказательств",  icon: "Camera",         parent: "feldsher" },
-  { id: "feldsher-mis",        label: "МИС «Здоровье»",          icon: "MonitorCheck",   parent: "feldsher" },
-  { id: "feldsher-gov",        label: "Госпортал",               icon: "Globe",          parent: "feldsher" },
   { id: "feldsher-tkm",        label: "Тест ТКМ",                icon: "FileCheck",      parent: "feldsher", divider: "Шаг 3: Решающий экзамен" },
   { id: "tkm",                 label: "ТКМ",                     icon: "ClipboardList" },
 ];
