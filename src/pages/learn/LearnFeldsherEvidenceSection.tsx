@@ -182,7 +182,7 @@ export default function LearnFeldsherEvidenceSection({ go }: Props) {
             src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/a99f91e2-38a7-4bd2-926b-ac88859cec86.png"
             alt="Скриншот №7"
             className="w-full max-w-3xl rounded-sm border border-border"
-            caption="Скриншот №7: Доклад о приезде на базу."
+            caption="Скриншот №7: Доклад о прибытии на базу."
           />
         </div>
 
@@ -264,7 +264,7 @@ export default function LearnFeldsherEvidenceSection({ go }: Props) {
             src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/d0299e42-89b9-493d-b243-76759287878a.png"
             alt="Скриншот №12"
             className="w-full max-w-3xl rounded-sm border border-border"
-            caption="Скриншот №12: Доклад о приезде на базу."
+            caption="Скриншот №12: Доклад о прибытии на базу."
           />
         </div>
 
