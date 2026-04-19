@@ -138,29 +138,29 @@ export default function LearnTkmSection() {
       )}
 
       {!expired && stage === "section2" && meta && meta.department === "ОИК" && (
-        <TkmQuestionsOIK onNext={a => mergeAnswers(a, "section3")} />
+        <TkmQuestionsOIK onNext={a => mergeAnswers(a, "section3")} initialAnswers={answers} />
       )}
       {!expired && stage === "section2" && meta && meta.department === "СОП" && (
-        <TkmQuestionsSOP onNext={a => mergeAnswers(a, "section3")} />
+        <TkmQuestionsSOP onNext={a => mergeAnswers(a, "section3")} initialAnswers={answers} />
       )}
       {!expired && stage === "section2" && meta && meta.department === "ОДС" && (
-        <TkmQuestionsODS onNext={a => mergeAnswers(a, "section3")} />
+        <TkmQuestionsODS onNext={a => mergeAnswers(a, "section3")} initialAnswers={answers} />
       )}
 
       {!expired && stage === "section3" && (
-        <TkmSection3 onNext={a => mergeAnswers(a, "section4")} onBack={() => setStage("section2")} />
+        <TkmSection3 onNext={a => mergeAnswers(a, "section4")} onBack={() => setStage("section2")} initialAnswers={answers} />
       )}
 
       {!expired && stage === "section4" && (
-        <TkmSection4 onNext={a => mergeAnswers(a, "section5")} onBack={() => setStage("section3")} />
+        <TkmSection4 onNext={a => mergeAnswers(a, "section5")} onBack={() => setStage("section3")} initialAnswers={answers} />
       )}
 
       {!expired && stage === "section5" && (
-        <TkmSection5 onNext={a => mergeAnswers(a, "section6")} onBack={() => setStage("section4")} />
+        <TkmSection5 onNext={a => mergeAnswers(a, "section6")} onBack={() => setStage("section4")} initialAnswers={answers} />
       )}
 
       {!expired && stage === "section6" && (
-        <TkmSection6 onNext={a => mergeAnswers(a, "submit")} onBack={() => setStage("section5")} />
+        <TkmSection6 onNext={a => mergeAnswers(a, "submit")} onBack={() => setStage("section5")} initialAnswers={answers} />
       )}
 
       {!expired && stage === "submit" && meta && (

@@ -159,12 +159,34 @@ function OpenQuestionSimple({ q, value, onChange }: OpenQuestionSimpleProps) {
 interface Props {
   onNext: (answers: Record<string, string>) => void;
   onBack: () => void;
+  initialAnswers?: Record<string, string>;
 }
 
-export default function TkmSection4({ onNext, onBack }: Props) {
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [multiAnswers, setMultiAnswers] = useState<Record<string, string[]>>({});
-  const [styledAnswers, setStyledAnswers] = useState<Record<string, string[]>>({});
+export default function TkmSection4({ onNext, onBack, initialAnswers = {} }: Props) {
+  const multiKeys = new Set(TKM_SECTION4_MULTI.map(q => q.key));
+  const styledKeys = new Set(TKM_SECTION4_STYLED.map(q => q.key));
+
+  const [answers, setAnswers] = useState<Record<string, string>>(() => {
+    const r: Record<string, string> = {};
+    for (const [k, v] of Object.entries(initialAnswers)) {
+      if (!multiKeys.has(k) && !styledKeys.has(k)) r[k] = v;
+    }
+    return r;
+  });
+  const [multiAnswers, setMultiAnswers] = useState<Record<string, string[]>>(() => {
+    const r: Record<string, string[]> = {};
+    for (const q of TKM_SECTION4_MULTI) {
+      if (initialAnswers[q.key]) { try { r[q.key] = JSON.parse(initialAnswers[q.key]); } catch { r[q.key] = []; } }
+    }
+    return r;
+  });
+  const [styledAnswers, setStyledAnswers] = useState<Record<string, string[]>>(() => {
+    const r: Record<string, string[]> = {};
+    for (const q of TKM_SECTION4_STYLED) {
+      if (initialAnswers[q.key]) { try { r[q.key] = JSON.parse(initialAnswers[q.key]); } catch { r[q.key] = []; } }
+    }
+    return r;
+  });
 
   const set = (key: string, val: string) => setAnswers(prev => ({ ...prev, [key]: val }));
 

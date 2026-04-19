@@ -37,12 +37,13 @@ function RadioQuestion({ num, text, options, value, onChange }: RadioQuestionPro
 interface Props {
   onNext: (answers: Record<string, string>) => void;
   onBack?: () => void;
+  initialAnswers?: Record<string, string>;
 }
 
 const QUESTIONS = TKM_QUESTIONS["ОИК"];
 
-export default function TkmQuestionsOIK({ onNext, onBack }: Props) {
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+export default function TkmQuestionsOIK({ onNext, onBack, initialAnswers = {} }: Props) {
+  const [answers, setAnswers] = useState<Record<string, string>>(initialAnswers);
 
   const set = (key: string, val: string) => setAnswers(prev => ({ ...prev, [key]: val }));
 

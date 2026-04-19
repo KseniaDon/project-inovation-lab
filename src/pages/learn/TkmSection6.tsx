@@ -127,12 +127,35 @@ function OpenQuestion({ q, value, onChange }: OpenQuestionProps) {
 interface Props {
   onNext: (answers: Record<string, string>) => void;
   onBack: () => void;
+  initialAnswers?: Record<string, string>;
 }
 
-export default function TkmSection6({ onNext, onBack }: Props) {
-  const [singleAnswers, setSingleAnswers] = useState<Record<string, string>>({});
-  const [multiAnswers, setMultiAnswers] = useState<Record<string, string[]>>({});
-  const [openAnswers, setOpenAnswers] = useState<Record<string, string>>({});
+export default function TkmSection6({ onNext, onBack, initialAnswers = {} }: Props) {
+  const multiKeys = new Set(TKM_SECTION6_MULTI.map(q => q.key));
+  const singleKeys = new Set(TKM_SECTION6_SINGLE.map(q => q.key));
+  const openKeys = new Set(TKM_SECTION6_OPEN.map(q => q.key));
+
+  const [singleAnswers, setSingleAnswers] = useState<Record<string, string>>(() => {
+    const r: Record<string, string> = {};
+    for (const [k, v] of Object.entries(initialAnswers)) {
+      if (singleKeys.has(k)) r[k] = v;
+    }
+    return r;
+  });
+  const [multiAnswers, setMultiAnswers] = useState<Record<string, string[]>>(() => {
+    const r: Record<string, string[]> = {};
+    for (const q of TKM_SECTION6_MULTI) {
+      if (initialAnswers[q.key]) { try { r[q.key] = JSON.parse(initialAnswers[q.key]); } catch { r[q.key] = []; } }
+    }
+    return r;
+  });
+  const [openAnswers, setOpenAnswers] = useState<Record<string, string>>(() => {
+    const r: Record<string, string> = {};
+    for (const [k, v] of Object.entries(initialAnswers)) {
+      if (openKeys.has(k)) r[k] = v;
+    }
+    return r;
+  });
 
   const handleNext = () => {
     const allAnswers: Record<string, string> = { ...singleAnswers, ...openAnswers };
