@@ -267,6 +267,49 @@ export default function LearnFeldsherEvidenceSection({ go }: Props) {
             caption="Скриншот №12: Доклад о приезде на базу."
           />
         </div>
+
+        {/* Шаг 4 */}
+        <div className="flex flex-col gap-3 pt-2 border-t border-border">
+          <p className="text-base font-semibold text-center text-foreground">Шаг 4. Как правильно фиксировать патрулирование</p>
+          <p className="text-base text-foreground leading-relaxed">
+            Так как на патрулировании Вы будете в качестве напарника и будете сидеть на пассажирском сидении рядом с опытным врачом, Вам возможно предстоит делать доклады.
+          </p>
+          <p className="text-base text-foreground leading-relaxed">
+            Фиксировать доклады не сложно, вот последовательность фиксации:
+          </p>
+          <ul className="flex flex-col gap-2 ml-4 border-l-2 border-red-600/40 pl-4">
+            {[
+              {
+                label: "Доклад о выезде на патрулирование;",
+                hint: "Ваш доклад, где будет видно ТЭГ, АСМП, статус патрулирования: «Выехал(-а) на патрулирование», напарники.",
+              },
+              {
+                label: "Доклад о продолжении патрулирования (каждые 10 минут);",
+                hint: "Ваш доклад, где будет видно ТЭГ, АСМП, статус патрулирования: «Продолжаю патрулирование», напарники.",
+              },
+              {
+                label: "Доклад о возвращении на базу;",
+                hint: "Ваш доклад, где будет видно ТЭГ, АСМП, статус патрулирования: «Закончил(-а) патрулирование. Возвращаюсь на базу», напарники.",
+              },
+              {
+                label: "Доклад о том, что Вы вернулись на базу.",
+                hint: "Ваш доклад, где будет видно ТЭГ, АСМП, статус патрулирования: «Патрулирование. На базе», напарники.",
+              },
+            ].map((item, i) => (
+              <li key={i} className="flex flex-col gap-1">
+                <div className="flex items-start gap-2 text-sm text-foreground">
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
+                  <span>{item.label}</span>
+                </div>
+                <em className="text-red-500 text-xs ml-4">{item.hint}</em>
+              </li>
+            ))}
+          </ul>
+
+          <p className="text-base text-foreground leading-relaxed">
+            Для примера, как должны выглядеть фиксации патрулирования возьмите во внимание скриншот №13, скриншот №14, скриншот №15 и скриншот №16:
+          </p>
+        </div>
       </div>
     </div>
   );
