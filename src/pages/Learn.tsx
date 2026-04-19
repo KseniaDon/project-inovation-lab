@@ -34,6 +34,7 @@ import LearnFeldsherKsmpSection from "./learn/LearnFeldsherKsmpSection";
 import LearnFeldsherPrmoSection from "./learn/LearnFeldsherPrmoSection";
 import LearnFeldsherMedhelpSection from "./learn/LearnFeldsherMedhelpSection";
 import LearnFeldsherWardsSection from "./learn/LearnFeldsherWardsSection";
+import LearnFeldsherReportSection from "./learn/LearnFeldsherReportSection";
 import LearnTkmSection from "./learn/LearnTkmSection";
 
 
@@ -239,6 +240,9 @@ export default function Learn() {
 
           {/* ФЕЛЬДШЕР — РАБОТА ОТДЕЛЕНИЙ */}
           {active === "feldsher-wards" && <LearnFeldsherWardsSection go={go} />}
+
+          {/* ФЕЛЬДШЕР — ОТЧЕТ НА ДОПУСК */}
+          {active === "feldsher-report" && <LearnFeldsherReportSection go={go} />}
 
           {/* ТКМ */}
           {active === "tkm" && <LearnTkmSection />}
