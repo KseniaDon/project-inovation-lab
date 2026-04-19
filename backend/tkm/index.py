@@ -94,11 +94,11 @@ def find_entry(allowed: list, vk_nick: str) -> tuple:
             return i, entry
     return None, None
 
-CODE_ROTATE_SECONDS = 1800  # 30 минут
+CODE_ROTATE_SECONDS = 900  # 15 минут
 
 def generate_code() -> str:
-    """Генерирует рандомный 6-значный код из цифр."""
-    return "".join(random.choices(string.digits, k=6))
+    """Генерирует рандомный 4-значный код из цифр."""
+    return "".join(random.choices(string.digits, k=4))
 
 def get_activation_code_entry(cur, s: str) -> dict:
     """Возвращает {'code': '...', 'generated_at': timestamp} из site_content."""

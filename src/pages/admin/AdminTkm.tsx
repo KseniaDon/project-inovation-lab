@@ -70,8 +70,8 @@ function ActivationCodeBlock() {
 
   const mins = Math.floor(secondsLeft / 60);
   const secs = secondsLeft % 60;
-  const pct = expiresAt > 0 ? (secondsLeft / 1800) * 100 : 100;
-  const isExpiring = secondsLeft < 120;
+  const pct = expiresAt > 0 ? (secondsLeft / 900) * 100 : 100;
+  const isExpiring = secondsLeft < 60;
 
   return (
     <div className="mb-6 border border-zinc-700 bg-zinc-900/60 p-4 flex flex-col gap-3">
@@ -115,13 +115,14 @@ function ActivationCodeBlock() {
             <div
               className={`h-full rounded-full transition-all duration-1000 ${isExpiring ? "bg-red-500" : "bg-green-600"}`}
               style={{ width: `${pct}%` }}
+
             />
           </div>
         </div>
       )}
 
       <p className="text-xs text-zinc-500 leading-relaxed">
-        Код обновляется автоматически раз в 30 минут. Сообщите текущий код проходящему тест — без него отправить тест невозможно.
+        Код обновляется автоматически раз в 15 минут. Сообщите текущий код проходящему тест — без него отправить тест невозможно.
       </p>
     </div>
   );
