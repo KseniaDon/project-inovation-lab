@@ -37,9 +37,20 @@ import LearnFeldsherWardsSection from "./learn/LearnFeldsherWardsSection";
 import LearnTkmSection from "./learn/LearnTkmSection";
 
 
+function isTkmSessionActive() {
+  try {
+    const raw = localStorage.getItem("tkm_session");
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    return data?.stage && data.stage !== "form" && data.stage !== "done";
+  } catch {
+    return false;
+  }
+}
+
 export default function Learn() {
   const [active, setActive] = useState<SectionId>("intro");
-  const [isTkmActive, setIsTkmActive] = useState(false);
+  const [isTkmActive, setIsTkmActive] = useState(() => isTkmSessionActive());
   const navigate = useNavigate();
 
   const go = (id: SectionId) => {
@@ -52,6 +63,12 @@ export default function Learn() {
     const hash = window.location.hash.replace("#", "") as SectionId;
     if (hash) setActive(hash);
   }, []);
+
+  useEffect(() => {
+    if (active !== "tkm") {
+      setIsTkmActive(isTkmSessionActive());
+    }
+  }, [active]);
   const introData = useSiteData("intro_data", defaultIntroData);
   const internExam = useSiteData("intern_exam", defaultInternExam);
   const feldsherPage = useSiteData<SimplePageData>("feldsher_page", defaultFeldsherPage);
