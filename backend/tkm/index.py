@@ -37,9 +37,10 @@ def normalize_vk(link: str) -> str:
 def get_tkm_allowed(cur, s: str) -> list:
     """
     Получает список допущенных из site_content.
-    Поддерживает оба формата:
-      - старый: ["nick1", "nick2"]  -> конвертирует в новый с attempts=3
-      - новый:  [{"nick": "nick1", "attempts": 2}, ...]
+    Формат записи: {"nick": "...", "attempts": N, "allowed": true/false}
+      - attempts — сколько раз уже писал тест (0, 1, 2, 3)
+      - allowed  — допущен ли к следующей попытке (true = да)
+    Поддерживает старый формат для обратной совместимости.
     """
     cur.execute(f"SELECT value FROM {s}.site_content WHERE key='tkm_allowed'")
     row = cur.fetchone()
@@ -52,12 +53,22 @@ def get_tkm_allowed(cur, s: str) -> list:
         result = []
         for item in data:
             if isinstance(item, str):
-                result.append({"nick": item.strip().lower(), "attempts": 3})
+                # старый формат — просто ник, считаем допущенным с 0 попыток
+                result.append({"nick": item.strip().lower(), "attempts": 0, "allowed": True})
             elif isinstance(item, dict) and "nick" in item:
-                result.append({
-                    "nick": str(item["nick"]).strip().lower(),
-                    "attempts": int(item.get("attempts", 3)),
-                })
+                nick = str(item["nick"]).strip().lower()
+                # если старый формат с attempts как "осталось попыток" — конвертируем
+                if "allowed" not in item:
+                    old_attempts = int(item.get("attempts", 3))
+                    # старый: attempts = сколько осталось; новый: attempts = сколько написал
+                    used = max(0, 3 - old_attempts)
+                    result.append({"nick": nick, "attempts": used, "allowed": old_attempts > 0})
+                else:
+                    result.append({
+                        "nick": nick,
+                        "attempts": int(item.get("attempts", 0)),
+                        "allowed": bool(item.get("allowed", True)),
+                    })
         return result
     except Exception:
         return []
@@ -103,7 +114,7 @@ def handler(event: dict, context) -> dict:
     conn = get_conn()
     cur = conn.cursor()
 
-    # POST submit — сохранить ответы (с проверкой допуска и попыток)
+    # POST submit — сохранить ответы (с проверкой допуска)
     if method == "POST" and action == "submit":
         body = json.loads(event.get("body") or "{}")
         nickname = (body.get("nickname") or "").strip()
@@ -116,24 +127,24 @@ def handler(event: dict, context) -> dict:
             return {"statusCode": 400, "headers": CORS, "body": json.dumps({"error": "Заполните все обязательные поля"})}
 
         # Проверка VK ссылки против списка допущенных
-        allowed = get_tkm_allowed(cur, s)
-        if not allowed:
+        allowed_list = get_tkm_allowed(cur, s)
+        if not allowed_list:
             conn.close()
             return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Список допущенных к ТКМ пуст. Обратитесь к куратору."})}
         vk_nick = normalize_vk(vk_link)
-        idx, entry = find_entry(allowed, vk_nick)
+        idx, entry = find_entry(allowed_list, vk_nick)
         if entry is None:
             conn.close()
             return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Ваша страница ВКонтакте не найдена в списке допущенных к ТКМ. Обратитесь к куратору."})}
-        if entry["attempts"] <= 0:
+        if not entry.get("allowed", True):
             conn.close()
-            return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Попытки исчерпаны. Обратитесь к куратору для получения дополнительной попытки."})}
+            return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Пересдача ещё не разрешена. Ожидайте решения куратора."})}
 
-        # Уменьшаем счётчик попыток
-        allowed[idx]["attempts"] -= 1
-        save_tkm_allowed(cur, conn, s, allowed)
+        # Увеличиваем счётчик использованных попыток, закрываем допуск
+        allowed_list[idx]["attempts"] = entry.get("attempts", 0) + 1
+        allowed_list[idx]["allowed"] = False
+        save_tkm_allowed(cur, conn, s, allowed_list)
 
-        # Если никнейм не передан — берём из VK ссылки
         if not nickname:
             nickname = vk_nick
 
@@ -204,23 +215,24 @@ def handler(event: dict, context) -> dict:
         item["reviewed_at"] = item["reviewed_at"].isoformat() if item["reviewed_at"] else None
         return {"statusCode": 200, "headers": CORS, "body": json.dumps(item, ensure_ascii=False)}
 
-    # GET check_access — проверить допуск по VK ссылке (возвращает attempts_left)
+    # GET check_access — проверить допуск по VK ссылке (возвращает attempt_number — какая по счёту попытка будет)
     if method == "GET" and action == "check_access":
         vk_link = (qs.get("vk_link") or "").strip()
         if not vk_link:
             conn.close()
             return {"statusCode": 400, "headers": CORS, "body": json.dumps({"error": "Укажите vk_link"})}
-        allowed = get_tkm_allowed(cur, s)
+        allowed_list = get_tkm_allowed(cur, s)
         conn.close()
-        if not allowed:
+        if not allowed_list:
             return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Список допущенных к ТКМ пуст. Обратитесь к куратору."})}
         vk_nick = normalize_vk(vk_link)
-        _, entry = find_entry(allowed, vk_nick)
+        _, entry = find_entry(allowed_list, vk_nick)
         if entry is None:
             return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Ваша страница ВКонтакте не найдена в списке допущенных к ТКМ. Обратитесь к куратору."})}
-        if entry["attempts"] <= 0:
-            return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Попытки исчерпаны. Обратитесь к куратору для получения дополнительной попытки."})}
-        return {"statusCode": 200, "headers": CORS, "body": json.dumps({"ok": True, "attempts_left": entry["attempts"]})}
+        if not entry.get("allowed", True):
+            return {"statusCode": 403, "headers": CORS, "body": json.dumps({"error": "Пересдача ещё не разрешена. Ожидайте решения куратора."})}
+        attempt_number = entry.get("attempts", 0) + 1  # какая по счёту попытка будет
+        return {"statusCode": 200, "headers": CORS, "body": json.dumps({"ok": True, "attempt_number": attempt_number})}
 
     # POST reset_session — добавить ник в список на сброс сессии
     if method == "POST" and action == "reset_session":

@@ -18,7 +18,9 @@ interface Props {
 const MAX_ATTEMPTS = 3;
 
 export default function AdminTkm({ allowed, saving, saved, onSave }: Props) {
-  const [list, setList] = useState<TkmAllowedEntry[]>(allowed);
+  const [list, setList] = useState<TkmAllowedEntry[]>(
+    allowed.map(e => ({ ...e, allowed: e.allowed ?? true }))
+  );
   const [input, setInput] = useState("");
   const [resetting, setResetting] = useState<string | null>(null);
   const [resetDone, setResetDone] = useState<string | null>(null);
@@ -38,28 +40,29 @@ export default function AdminTkm({ allowed, saving, saved, onSave }: Props) {
     const nick = input.trim().toLowerCase().replace(/^(https?:\/\/)?(vk\.(ru|com)\/)?@?/, "").replace(/\/$/, "");
     if (!nick) { setInput(""); return; }
     if (list.some(e => e.nick === nick)) { setInput(""); return; }
-    setList(prev => [...prev, { nick, attempts: 0 }]);
+    setList(prev => [...prev, { nick, attempts: 0, allowed: true }]);
     setInput("");
   };
 
   const remove = (nick: string) => setList(prev => prev.filter(e => e.nick !== nick));
 
-  // Выдать следующую попытку (+1, но не выше MAX)
-  const grantAttempt = (nick: string) => {
+  const allowRetake = (nick: string) => {
     setList(prev => prev.map(e =>
-      e.nick === nick ? { ...e, attempts: Math.min(MAX_ATTEMPTS, e.attempts + 1) } : e
+      e.nick === nick ? { ...e, allowed: true } : e
     ));
   };
 
-  const attemptLabel = (n: number) => {
-    if (n === 0) return { text: "Нет попыток", color: "text-red-500", bg: "" };
-    if (n === MAX_ATTEMPTS) return { text: `${n} из ${MAX_ATTEMPTS}`, color: "text-green-400", bg: "" };
-    return { text: `${n} из ${MAX_ATTEMPTS}`, color: "text-yellow-400", bg: "" };
+  const attemptsLabel = (entry: TkmAllowedEntry) => {
+    const { attempts, allowed: isAllowed } = entry;
+    if (attempts === 0 && isAllowed) return { text: "Ещё не писал", color: "text-zinc-400" };
+    if (attempts >= MAX_ATTEMPTS && !isAllowed) return { text: `${attempts} из ${MAX_ATTEMPTS} — лимит`, color: "text-red-400" };
+    if (!isAllowed) return { text: `${attempts} из ${MAX_ATTEMPTS} — ожидает`, color: "text-yellow-400" };
+    return { text: `${attempts} из ${MAX_ATTEMPTS} — допущен`, color: "text-green-400" };
   };
 
   return (
     <div className="max-w-xl">
-      <SectionHeader title="Допуск к ТКМ" desc="Добавьте сотрудника и нажмите «Допустить до теста», чтобы выдать попытку." />
+      <SectionHeader title="Допуск к ТКМ" desc="Добавьте сотрудника — он сразу допущен к первой попытке. После сдачи теста разрешайте пересдачу вручную." />
 
       <div className="flex gap-2 mb-4">
         <Inp
@@ -83,31 +86,39 @@ export default function AdminTkm({ allowed, saving, saved, onSave }: Props) {
       ) : (
         <div className="flex flex-col gap-1 mb-6">
           {list.map((entry) => {
-            const label = attemptLabel(entry.attempts);
-            const canGrant = entry.attempts < MAX_ATTEMPTS;
+            const label = attemptsLabel(entry);
+            const canRetake = !entry.allowed && entry.attempts < MAX_ATTEMPTS;
+            const limitReached = entry.attempts >= MAX_ATTEMPTS && !entry.allowed;
             return (
               <div key={entry.nick} className="flex items-center gap-3 px-3 py-2.5 border border-zinc-800 bg-zinc-900/40">
                 <Icon name="User" size={14} className="text-zinc-500 shrink-0" />
 
                 <span className="text-sm text-zinc-200 flex-1 min-w-0 truncate">{entry.nick}</span>
 
-                {/* Счётчик попыток */}
                 <span className={`text-xs font-semibold tabular-nums shrink-0 ${label.color}`}>
                   {label.text}
                 </span>
 
-                {/* Кнопка допуска */}
-                <button
-                  onClick={() => grantAttempt(entry.nick)}
-                  disabled={!canGrant}
-                  title={canGrant ? `Выдать попытку (будет ${entry.attempts + 1} из ${MAX_ATTEMPTS})` : "Максимум попыток выдан"}
-                  className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 border transition-colors shrink-0 disabled:opacity-30 disabled:cursor-not-allowed border-green-700 text-green-400 hover:bg-green-900/30 disabled:border-zinc-700 disabled:text-zinc-500"
-                >
-                  <Icon name="Unlock" size={12} />
-                  Допустить
-                </button>
+                {/* Разрешить пересдачу */}
+                {canRetake && (
+                  <button
+                    onClick={() => allowRetake(entry.nick)}
+                    title="Разрешить пересдачу"
+                    className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 border transition-colors shrink-0 border-green-700 text-green-400 hover:bg-green-900/30"
+                  >
+                    <Icon name="Unlock" size={12} />
+                    Пересдача
+                  </button>
+                )}
 
-                {/* Кнопка сброса сессии */}
+                {/* Лимит исчерпан */}
+                {limitReached && (
+                  <span className="text-xs text-red-500 font-semibold px-2.5 py-1.5 border border-red-900 shrink-0">
+                    Лимит
+                  </span>
+                )}
+
+                {/* Сброс сессии */}
                 <button
                   onClick={() => resetSession(entry.nick)}
                   disabled={resetting === entry.nick}
@@ -145,7 +156,7 @@ export default function AdminTkm({ allowed, saving, saved, onSave }: Props) {
           {saved ? <><Icon name="Check" size={14} />Сохранено</> : saving ? "Сохраняю..." : <><Icon name="Save" size={14} />Сохранить</>}
         </button>
         <p className="text-xs text-zinc-600">
-          Нажмите «Допустить» после проверки теста, чтобы выдать следующую попытку
+          После проверки теста нажмите «Пересдача», чтобы разрешить следующую попытку
         </p>
       </div>
     </div>
