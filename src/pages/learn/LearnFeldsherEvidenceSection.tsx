@@ -231,6 +231,41 @@ export default function LearnFeldsherEvidenceSection({ go }: Props) {
           <p className="text-base text-foreground leading-relaxed">
             Для примера, как должны выглядеть фиксации поста возьмите во внимание скриншот №8, скриншот №9, скриншот №10, скриншот №11 и скриншот №12:
           </p>
+
+          <ImageLightbox
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/da92853e-db09-409e-bca2-28d4d1f9d8fa.png"
+            alt="Скриншот №8"
+            className="w-full max-w-3xl rounded-sm border border-border"
+            caption="Скриншот №8: Доклад о выезде на пост."
+          />
+
+          <ImageLightbox
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/bb06f8c0-1909-4404-9a92-0b501b1bb6d3.png"
+            alt="Скриншот №9"
+            className="w-full max-w-3xl rounded-sm border border-border"
+            caption="Скриншот №9: Доклад о прибытии на пост."
+          />
+
+          <ImageLightbox
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/01f71055-2424-4879-8254-c211b98ec548.png"
+            alt="Скриншот №10"
+            className="w-full max-w-3xl rounded-sm border border-border"
+            caption="Скриншот №10: Доклад о продолжении поста."
+          />
+
+          <ImageLightbox
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/826404e9-ca59-4e67-b0d5-57a282a95676.png"
+            alt="Скриншот №11"
+            className="w-full max-w-3xl rounded-sm border border-border"
+            caption="Скриншот №11: Доклад о возвращении на базу."
+          />
+
+          <ImageLightbox
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/d0299e42-89b9-493d-b243-76759287878a.png"
+            alt="Скриншот №12"
+            className="w-full max-w-3xl rounded-sm border border-border"
+            caption="Скриншот №12: Доклад о приезде на базу."
+          />
         </div>
       </div>
     </div>
