@@ -99,19 +99,10 @@ interface Props {
 export default function TkmSection5({ onNext, onBack }: Props) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [multiAnswers, setMultiAnswers] = useState<Record<string, string[]>>({});
-  const [error, setError] = useState("");
 
   const set = (key: string, val: string) => setAnswers(prev => ({ ...prev, [key]: val }));
 
   const handleNext = () => {
-    setError("");
-
-    const unansweredMulti = TKM_SECTION5_MULTI.find(q => !(multiAnswers[q.key]?.length));
-    if (unansweredMulti) { setError("Ответьте на все вопросы раздела"); return; }
-
-    const unansweredOpen = TKM_SECTION5_OPEN.find(q => !answers[q.key]?.trim());
-    if (unansweredOpen) { setError("Ответьте на все вопросы раздела"); return; }
-
     const allAnswers: Record<string, string> = { ...answers };
     for (const q of TKM_SECTION5_MULTI) {
       allAnswers[q.key] = JSON.stringify(multiAnswers[q.key] || []);
@@ -152,13 +143,6 @@ export default function TkmSection5({ onNext, onBack }: Props) {
           onChange={val => set(q.key, val)}
         />
       ))}
-
-      {error && (
-        <p className="text-sm text-red-500 flex items-start gap-2">
-          <Icon name="AlertCircle" size={15} className="mt-0.5 shrink-0" />
-          {error}
-        </p>
-      )}
 
       <div className="flex gap-3">
         <button onClick={onBack} className="px-5 py-2.5 border border-border text-sm font-semibold rounded-lg hover:bg-muted transition-colors">

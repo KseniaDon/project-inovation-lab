@@ -133,20 +133,8 @@ export default function TkmSection6({ onNext, onBack }: Props) {
   const [singleAnswers, setSingleAnswers] = useState<Record<string, string>>({});
   const [multiAnswers, setMultiAnswers] = useState<Record<string, string[]>>({});
   const [openAnswers, setOpenAnswers] = useState<Record<string, string>>({});
-  const [error, setError] = useState("");
 
   const handleNext = () => {
-    setError("");
-
-    const unansweredSingle = TKM_SECTION6_SINGLE.find(q => !singleAnswers[q.key]);
-    if (unansweredSingle) { setError("Ответьте на все вопросы раздела"); return; }
-
-    const unansweredMulti = TKM_SECTION6_MULTI.find(q => !(multiAnswers[q.key]?.length));
-    if (unansweredMulti) { setError("Ответьте на все вопросы раздела"); return; }
-
-    const unansweredOpen = TKM_SECTION6_OPEN.find(q => !openAnswers[q.key]?.trim());
-    if (unansweredOpen) { setError("Ответьте на все вопросы раздела"); return; }
-
     const allAnswers: Record<string, string> = { ...singleAnswers, ...openAnswers };
     for (const q of TKM_SECTION6_MULTI) {
       allAnswers[q.key] = JSON.stringify(multiAnswers[q.key] || []);
@@ -202,13 +190,6 @@ export default function TkmSection6({ onNext, onBack }: Props) {
           onChange={val => setOpenAnswers(prev => ({ ...prev, [q.key]: val }))}
         />
       ))}
-
-      {error && (
-        <p className="text-sm text-red-500 flex items-start gap-2">
-          <Icon name="AlertCircle" size={15} className="mt-0.5 shrink-0" />
-          {error}
-        </p>
-      )}
 
       <div className="flex gap-3">
         <button onClick={onBack} className="px-5 py-2.5 border border-border text-sm font-semibold rounded-lg hover:bg-muted transition-colors">

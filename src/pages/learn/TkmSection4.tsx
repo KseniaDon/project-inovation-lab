@@ -165,28 +165,10 @@ export default function TkmSection4({ onNext, onBack }: Props) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [multiAnswers, setMultiAnswers] = useState<Record<string, string[]>>({});
   const [styledAnswers, setStyledAnswers] = useState<Record<string, string[]>>({});
-  const [error, setError] = useState("");
 
   const set = (key: string, val: string) => setAnswers(prev => ({ ...prev, [key]: val }));
 
   const handleNext = () => {
-    setError("");
-
-    const unansweredRadio = TKM_SECTION4_RADIO.find(q => !answers[q.key]);
-    if (unansweredRadio) { setError("Ответьте на все вопросы раздела"); return; }
-
-    const unansweredRadio2 = TKM_SECTION4_RADIO2.find(q => !answers[q.key]);
-    if (unansweredRadio2) { setError("Ответьте на все вопросы раздела"); return; }
-
-    const unansweredMulti = TKM_SECTION4_MULTI.find(q => !(multiAnswers[q.key]?.length));
-    if (unansweredMulti) { setError("Ответьте на все вопросы раздела"); return; }
-
-    const unansweredStyled = TKM_SECTION4_STYLED.find(q => !(styledAnswers[q.key]?.length));
-    if (unansweredStyled) { setError("Ответьте на все вопросы раздела"); return; }
-
-    const unansweredOpen = TKM_SECTION4_OPEN.find(q => !answers[q.key]?.trim());
-    if (unansweredOpen) { setError("Ответьте на все вопросы раздела"); return; }
-
     const allAnswers: Record<string, string> = { ...answers };
     for (const q of TKM_SECTION4_MULTI) {
       allAnswers[q.key] = JSON.stringify(multiAnswers[q.key] || []);
@@ -261,13 +243,6 @@ export default function TkmSection4({ onNext, onBack }: Props) {
           onChange={val => set(q.key, val)}
         />
       ))}
-
-      {error && (
-        <p className="text-sm text-red-500 flex items-start gap-2">
-          <Icon name="AlertCircle" size={15} className="mt-0.5 shrink-0" />
-          {error}
-        </p>
-      )}
 
       <div className="flex gap-3">
         <button onClick={onBack} className="px-5 py-2.5 border border-border text-sm font-semibold rounded-lg hover:bg-muted transition-colors">

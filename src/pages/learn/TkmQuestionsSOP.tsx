@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Icon from "@/components/ui/icon";
 import { TKM_QUESTIONS } from "./tkmAnswerKey";
 
 interface RadioQuestionProps {
@@ -14,8 +13,7 @@ function RadioQuestion({ num, text, options, value, onChange }: RadioQuestionPro
   return (
     <div className="rounded-xl border border-border bg-card p-5 flex flex-col gap-3">
       <p className="text-sm font-medium leading-relaxed">
-        <span className="font-bold">№{num}.</span> {text}{" "}
-        <span className="text-red-500">*</span>
+        <span className="font-bold">№{num}.</span> {text}
       </p>
       <div className="flex flex-col gap-2.5 mt-1">
         {options.map(opt => (
@@ -45,14 +43,10 @@ const QUESTIONS = TKM_QUESTIONS["СОП"];
 
 export default function TkmQuestionsSOP({ onNext, onBack }: Props) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [error, setError] = useState("");
 
   const set = (key: string, val: string) => setAnswers(prev => ({ ...prev, [key]: val }));
 
   const handleNext = () => {
-    setError("");
-    const unanswered = QUESTIONS.find(q => !answers[q.key]);
-    if (unanswered) { setError(`Ответьте на вопрос: ${unanswered.text.slice(0, 50)}...`); return; }
     onNext(answers);
   };
 
@@ -82,13 +76,6 @@ export default function TkmQuestionsSOP({ onNext, onBack }: Props) {
           onChange={val => set(q.key, val)}
         />
       ))}
-
-      {error && (
-        <p className="text-sm text-red-500 flex items-start gap-2">
-          <Icon name="AlertCircle" size={15} className="mt-0.5 shrink-0" />
-          {error}
-        </p>
-      )}
 
       <div className="flex gap-3">
         {onBack && (

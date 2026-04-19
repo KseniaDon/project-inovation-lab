@@ -188,29 +188,10 @@ export default function TkmSection3({ onNext, onBack }: Props) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [multiAnswers, setMultiAnswers] = useState<Record<string, string[]>>({});
   const [matchAnswers, setMatchAnswers] = useState<Record<string, Record<string, string>>>({});
-  const [error, setError] = useState("");
 
   const set = (key: string, val: string) => setAnswers(prev => ({ ...prev, [key]: val }));
 
   const handleNext = () => {
-    setError("");
-    const unanswered = TKM_SECTION3.find(q => !answers[q.key]);
-    if (unanswered) { setError("Ответьте на все вопросы раздела"); return; }
-
-    const unanswered2 = TKM_SECTION3_RADIO2.find(q => !answers[q.key]);
-    if (unanswered2) { setError("Ответьте на все вопросы раздела"); return; }
-
-    const unansweredMulti = TKM_SECTION3_MULTI.find(q => !(multiAnswers[q.key]?.length));
-    if (unansweredMulti) { setError("Ответьте на все вопросы раздела"); return; }
-
-    const unansweredMatch = TKM_SECTION3_MATCH.find(q =>
-      q.rows.some(row => !matchAnswers[q.key]?.[row.label])
-    );
-    if (unansweredMatch) { setError("Ответьте на все вопросы раздела"); return; }
-
-    const unansweredOpen = TKM_SECTION3_OPEN.find(q => !answers[q.key]?.trim());
-    if (unansweredOpen) { setError("Ответьте на все вопросы раздела"); return; }
-
     const allAnswers: Record<string, string> = { ...answers };
     for (const q of TKM_SECTION3_MULTI) {
       allAnswers[q.key] = JSON.stringify(multiAnswers[q.key] || []);
@@ -285,13 +266,6 @@ export default function TkmSection3({ onNext, onBack }: Props) {
           onChange={val => setMatchAnswers(prev => ({ ...prev, [q.key]: val }))}
         />
       ))}
-
-      {error && (
-        <p className="text-sm text-red-500 flex items-start gap-2">
-          <Icon name="AlertCircle" size={15} className="mt-0.5 shrink-0" />
-          {error}
-        </p>
-      )}
 
       <div className="flex gap-3">
         <button onClick={onBack} className="px-5 py-2.5 border border-border text-sm font-semibold rounded-lg hover:bg-muted transition-colors">
