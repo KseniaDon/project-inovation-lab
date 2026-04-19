@@ -22,12 +22,23 @@ function ActivationCodeBlock() {
   const [expiresAt, setExpiresAt] = useState<number>(0);
   const [secondsLeft, setSecondsLeft] = useState<number>(0);
   const [rotating, setRotating] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+  const prevCodeRef = useState<string | null>(null);
 
-  const loadCode = useCallback(async () => {
+  const showToast = (newCode: string) => {
+    setToast(newCode);
+    setTimeout(() => setToast(null), 6000);
+  };
+
+  const loadCode = useCallback(async (isAutoRefresh = false) => {
     try {
       const res = await fetch(`${TKM_URL}?action=get_activation_code`);
       const data = await res.json();
       if (data.code) {
+        if (isAutoRefresh && prevCodeRef[0] && prevCodeRef[0] !== data.code) {
+          showToast(data.code);
+        }
+        prevCodeRef[0] = data.code;
         setCode(data.code);
         setExpiresAt(data.expires_at ?? 0);
       }
@@ -42,8 +53,10 @@ function ActivationCodeBlock() {
       const res = await fetch(`${TKM_URL}?action=rotate_activation_code`, { method: "POST" });
       const data = await res.json();
       if (data.code) {
+        prevCodeRef[0] = data.code;
         setCode(data.code);
         setExpiresAt(data.expires_at ?? 0);
+        showToast(data.code);
       }
     } finally {
       setRotating(false);
@@ -51,7 +64,7 @@ function ActivationCodeBlock() {
   };
 
   useEffect(() => {
-    loadCode();
+    loadCode(false);
   }, [loadCode]);
 
   useEffect(() => {
@@ -60,7 +73,7 @@ function ActivationCodeBlock() {
       const left = Math.max(0, expiresAt - now);
       setSecondsLeft(left);
       if (left === 0 && expiresAt > 0) {
-        loadCode();
+        loadCode(true);
       }
     };
     tick();
@@ -74,6 +87,24 @@ function ActivationCodeBlock() {
   const isExpiring = secondsLeft < 60;
 
   return (
+    <>
+      {/* Toast-уведомление о новом коде */}
+      <div
+        className={`fixed top-5 right-5 z-50 flex items-center gap-3 px-4 py-3 rounded-lg border border-green-600 bg-zinc-900 shadow-xl transition-all duration-500 ${
+          toast ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
+        }`}
+        style={{ minWidth: 220 }}
+      >
+        <Icon name="KeyRound" size={16} className="text-green-400 shrink-0" />
+        <div className="flex flex-col">
+          <span className="text-xs text-zinc-400 font-medium">Новый код активации</span>
+          <span className="text-xl font-mono font-bold tracking-[0.25em] text-white">{toast}</span>
+        </div>
+        <button onClick={() => setToast(null)} className="ml-2 text-zinc-500 hover:text-zinc-300 transition-colors">
+          <Icon name="X" size={14} />
+        </button>
+      </div>
+
     <div className="mb-6 border border-zinc-700 bg-zinc-900/60 p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
@@ -125,6 +156,7 @@ function ActivationCodeBlock() {
         Код обновляется автоматически раз в 15 минут. Сообщите текущий код проходящему тест — без него отправить тест невозможно.
       </p>
     </div>
+    </>
   );
 }
 
