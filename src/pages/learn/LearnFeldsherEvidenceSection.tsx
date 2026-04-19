@@ -156,6 +156,34 @@ export default function LearnFeldsherEvidenceSection({ go }: Props) {
           <p className="text-base text-foreground leading-relaxed">
             Для примера, как должны выглядеть фиксации вызова возьмите во внимание скриншот №4, скриншот №5, скриншот №6 и скриншот №7:
           </p>
+
+          <ImageLightbox
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/10ddb0be-a407-4af7-bc3a-1354ddff561f.png"
+            alt="Скриншот №4"
+            className="w-full max-w-3xl rounded-sm border border-border"
+            caption="Скриншот №4: Доклад о принятии вызова."
+          />
+
+          <ImageLightbox
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/e9ca8096-09ca-4ee3-95ce-20ed3f749239.png"
+            alt="Скриншот №5"
+            className="w-full max-w-3xl rounded-sm border border-border"
+            caption="Скриншот №5: Действия на вызове, оказание помощи."
+          />
+
+          <ImageLightbox
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/e1fe37f7-ecf6-4678-b8c6-7bc5c24995f4.png"
+            alt="Скриншот №6"
+            className="w-full max-w-3xl rounded-sm border border-border"
+            caption="Скриншот №6: Доклад об оказании помощи на месте."
+          />
+
+          <ImageLightbox
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/a99f91e2-38a7-4bd2-926b-ac88859cec86.png"
+            alt="Скриншот №7"
+            className="w-full max-w-3xl rounded-sm border border-border"
+            caption="Скриншот №7: Доклад о приезде на базу."
+          />
         </div>
       </div>
     </div>
