@@ -57,7 +57,7 @@ export const BADGE_COLORS = ["bg-red-600", "bg-blue-600", "bg-green-600", "bg-ye
 export const DEPT_COLORS = ["text-green-400", "text-sky-400", "text-red-400", "text-pink-400", "text-orange-400", "text-yellow-400", "text-purple-400"];
 
 export type IntroData = { welcome: string; content: string };
-export type InternExam = { title: string; content: string; binds_link: string; charter_link: string };
+export type InternExam = { title: string; content: string; content_after_pme?: string; binds_link: string; charter_link: string };
 
 export const defaultIntroData: IntroData = {
   welcome: "Добро пожаловать в ЦГБ города Невский!",
@@ -66,7 +66,8 @@ export const defaultIntroData: IntroData = {
 
 export const defaultInternExam: InternExam = {
   title: "Ваша первая и главная задача: Получить допуск к лечению.",
-  content: `<p>До получения допуска к лечению Вам нельзя абсолютно ничего. Лечить пациентов сможете только тогда, когда получите допуск к лечению.</p><p><strong>Чтобы получить допуск, Вам нужно сдать:</strong></p><ol><li>Прослушать вступительную лекцию;</li><li><strong>Сдать устную речь</strong> — это бинды. Слово «Бинд» в РП мы не используем!</li><li><strong>Сдать Первичный Медицинский Экзамен (ПМЭ);</strong></li><li>Сдать клятву врача.</li></ol>`,
+  content: `<p>До получения допуска к лечению Вам нельзя абсолютно ничего. Лечить пациентов сможете только тогда, когда получите допуск к лечению.</p><p><strong>Чтобы получить допуск, Вам нужно сдать:</strong></p><ol><li>Прослушать вступительную лекцию;</li><li><strong>Сдать устную речь</strong> — это бинды. Слово «Бинд» в РП мы не используем!</li><li><strong>Сдать Первичный Медицинский Экзамен (ПМЭ);</strong></li></ol>`,
+  content_after_pme: `<ol start="4"><li>Сдать клятву врача.</li></ol>`,
   binds_link: "https://forum.gtaprovince.ru/topic/995732-cgb-g-nevskiy-bindy-dlya-sotrudnikov/",
   charter_link: "https://forum.gtaprovince.ru/topic/995741-cgb-g-nevskiy-vnutrenniy-ustav/",
 };

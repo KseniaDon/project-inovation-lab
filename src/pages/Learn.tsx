@@ -132,6 +132,12 @@ export default function Learn() {
                 </ul>
               </div>
 
+              {internExam.content_after_pme && (
+                <div className="text-base text-foreground leading-relaxed rich-content">
+                  <RichContent html={internExam.content_after_pme} />
+                </div>
+              )}
+
               {/* Совет */}
               <div className="flex items-start gap-3 bg-sky-50 dark:bg-sky-950/40 border border-sky-300 dark:border-sky-700 rounded-sm px-4 py-3">
                 <Icon name="Lightbulb" size={18} className="text-sky-500 shrink-0 mt-0.5" />
