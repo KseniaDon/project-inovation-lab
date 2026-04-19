@@ -38,6 +38,7 @@ import LearnFeldsherPrepSection from "./learn/LearnFeldsherPrepSection";
 import LearnFeldsherEvidenceSection from "./learn/LearnFeldsherEvidenceSection";
 import LearnFeldsherMisSection from "./learn/LearnFeldsherMisSection";
 import LearnFeldsherGovSection from "./learn/LearnFeldsherGovSection";
+import LearnFeldsherTkmSection from "./learn/LearnFeldsherTkmSection";
 import LearnTkmSection from "./learn/LearnTkmSection";
 
 
@@ -255,6 +256,9 @@ export default function Learn() {
 
           {/* ФЕЛЬДШЕР — ГОСПОРТАЛ */}
           {active === "feldsher-gov" && <LearnFeldsherGovSection go={go} />}
+
+          {/* ФЕЛЬДШЕР — ТЕСТ ТКМ */}
+          {active === "feldsher-tkm" && <LearnFeldsherTkmSection go={go} />}
 
           {/* ТКМ */}
           {active === "tkm" && <LearnTkmSection />}

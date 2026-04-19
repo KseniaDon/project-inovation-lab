@@ -1,4 +1,4 @@
-export type SectionId = "intro" | "intern" | "intern-binds" | "intern-radio" | "intern-reports" | "intern-commands" | "intern-abbr" | "intern-hierarchy" | "intern-schedule" | "intern-floors" | "intern-activity" | "intern-charter" | "intern-departments" | "intern-drugs" | "intern-oath" | "intern-report" | "intern-mis" | "intern-evidence" | "intern-gov" | "feldsher" | "feldsher-ksmp" | "feldsher-radio" | "feldsher-pmp" | "feldsher-mzportal" | "feldsher-patrol" | "feldsher-prmo" | "feldsher-medhelp" | "feldsher-wards" | "feldsher-prep" | "feldsher-evidence" | "feldsher-mis" | "feldsher-gov" | "tkm";
+export type SectionId = "intro" | "intern" | "intern-binds" | "intern-radio" | "intern-reports" | "intern-commands" | "intern-abbr" | "intern-hierarchy" | "intern-schedule" | "intern-floors" | "intern-activity" | "intern-charter" | "intern-departments" | "intern-drugs" | "intern-oath" | "intern-report" | "intern-mis" | "intern-evidence" | "intern-gov" | "feldsher" | "feldsher-ksmp" | "feldsher-radio" | "feldsher-pmp" | "feldsher-mzportal" | "feldsher-patrol" | "feldsher-prmo" | "feldsher-medhelp" | "feldsher-wards" | "feldsher-prep" | "feldsher-evidence" | "feldsher-mis" | "feldsher-gov" | "feldsher-tkm" | "tkm";
 
 export const NAV: { id: SectionId; label: string; icon: string; parent?: string; divider?: string }[] = [
   { id: "intro",           label: "Вступление",         icon: "Flag" },
@@ -33,5 +33,6 @@ export const NAV: { id: SectionId; label: string; icon: string; parent?: string;
   { id: "feldsher-evidence",   label: "Фиксация доказательств",  icon: "Camera",         parent: "feldsher" },
   { id: "feldsher-mis",        label: "МИС «Здоровье»",          icon: "MonitorCheck",   parent: "feldsher" },
   { id: "feldsher-gov",        label: "Госпортал",               icon: "Globe",          parent: "feldsher" },
+  { id: "feldsher-tkm",        label: "Тест ТКМ",                icon: "FileCheck",      parent: "feldsher", divider: "Шаг 3: Решающий экзамен" },
   { id: "tkm",                 label: "ТКМ",                     icon: "ClipboardList" },
 ];
