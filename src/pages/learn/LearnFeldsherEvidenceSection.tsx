@@ -309,6 +309,34 @@ export default function LearnFeldsherEvidenceSection({ go }: Props) {
           <p className="text-base text-foreground leading-relaxed">
             Для примера, как должны выглядеть фиксации патрулирования возьмите во внимание скриншот №13, скриншот №14, скриншот №15 и скриншот №16:
           </p>
+
+          <ImageLightbox
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/2978600e-f74a-49c2-a0de-61da8d2b9710.png"
+            alt="Скриншот №13"
+            className="w-full max-w-3xl rounded-sm border border-border"
+            caption="Скриншот №13: Доклад о выезде на патрулирование."
+          />
+
+          <ImageLightbox
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/e4d9d560-e380-45a7-9369-deedc1631a3a.png"
+            alt="Скриншот №14"
+            className="w-full max-w-3xl rounded-sm border border-border"
+            caption="Скриншот №14: Доклад о продолжении патрулирования."
+          />
+
+          <ImageLightbox
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/b822cb9e-3f24-43a8-b8cc-37d21ad2480c.png"
+            alt="Скриншот №15"
+            className="w-full max-w-3xl rounded-sm border border-border"
+            caption="Скриншот №15: Доклад о завершении патрулирования и возвращение на базу."
+          />
+
+          <ImageLightbox
+            src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/599e041d-2a19-4162-af42-7d7912236231.png"
+            alt="Скриншот №16"
+            className="w-full max-w-3xl rounded-sm border border-border"
+            caption="Скриншот №16: Доклад о прибытии на базу."
+          />
         </div>
       </div>
     </div>
