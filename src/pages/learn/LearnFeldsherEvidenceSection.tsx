@@ -339,6 +339,45 @@ export default function LearnFeldsherEvidenceSection({ go }: Props) {
           />
         </div>
       </div>
+
+      <div className="flex flex-col gap-2 pt-2">
+        <p className="text-sm text-muted-foreground">
+          Всё о предыдущих фиксациях доказательств:{" "}
+          <a
+            href="https://mz-cgb-n-otdelenie-internatury.ru/learn#intern-evidence"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+          >
+            Интерн | Фиксация доказательств
+            <Icon name="ExternalLink" size={13} />
+          </a>
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Всё о рабочем транспорте:{" "}
+          <a
+            href="https://mz-cgb-n-otdelenie-internatury.ru/learn#feldsher-ksmp"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+          >
+            Фельдшер | Рабочий транспорт
+            <Icon name="ExternalLink" size={13} />
+          </a>
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Всё о докладах:{" "}
+          <a
+            href="https://mz-cgb-n-otdelenie-internatury.ru/learn#feldsher-radio"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-red-500 hover:text-red-400 transition-colors font-medium"
+          >
+            Фельдшер | Работа с рацией
+            <Icon name="ExternalLink" size={13} />
+          </a>
+        </p>
+      </div>
     </div>
   );
 }
