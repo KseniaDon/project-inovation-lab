@@ -18,7 +18,7 @@ export default function LearnFeldsherTkmSection({ go }: Props) {
         </button>
         <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Шаг 3: Решающий экзамен</p>
         <h1 className="text-2xl sm:text-3xl font-bold">Тест ТКМ</h1>
-        <p className="text-base font-semibold text-muted-foreground">1.1 Тест ТКМ.</p>
+        <p className="text-base font-semibold text-muted-foreground">3.1 Тест ТКМ.</p>
       </div>
       <p className="text-base text-muted-foreground leading-relaxed">
         Содержимое раздела будет добавлено позже.
