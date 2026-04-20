@@ -206,6 +206,28 @@ export default function Hero() {
           </button>
         </motion.div>
 
+        {/* Цитата Гиппократа */}
+        <motion.div
+          className="flex flex-col items-center gap-1 pt-2"
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={1.0}
+        >
+          <p
+            className="text-red-500/80 text-center tracking-wide"
+            style={{ fontFamily: "'Cinzel', serif", fontSize: "0.95rem", lineHeight: 1.6 }}
+          >
+            Aliis inserviendo consumor
+          </p>
+          <p
+            className="text-white/40 text-center text-xs tracking-wider"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            «Сгорая сам, свети другим» &mdash; &copy;&nbsp;Гиппократ
+          </p>
+        </motion.div>
+
       </div>
     </div>
   );
