@@ -70,6 +70,21 @@
       "path": "/?action=rotate_activation_code",
       "expectedStatus": 200,
       "bodyMatcher": "partial"
+    },
+    {
+      "name": "Получить кастомные вопросы",
+      "method": "GET",
+      "path": "/?action=get_questions",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Сохранить кастомные вопросы",
+      "method": "POST",
+      "path": "/?action=save_questions",
+      "body": {"questions": {"3.4": {"text": "Тестовый вопрос", "options": ["A", "B"], "correct": "A"}}},
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
     }
   ]
 }

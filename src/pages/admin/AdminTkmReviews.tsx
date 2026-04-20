@@ -70,13 +70,14 @@ export default function AdminTkmReviews({ reviewerNick }: Props) {
       const res = await fetch(`${TKM_URL}?action=get&id=${id}`);
       const data = await res.json();
       setSelected(data);
+      const savedScores: Record<string, string | number> = data.manual_scores || {};
       const initScores: Record<string, string> = {};
       for (const key of Object.keys(data.answers || {})) {
         const qType = getQuestionType(key, data.department);
         const isOpenScored = getMaxScore(key) !== undefined && dbScores[key] !== undefined;
         const isWrongMulti = qType === "multi" && checkAnswer(key, data.answers[key], data.department) === "wrong";
         if (isOpenScored || isWrongMulti) {
-          initScores[key] = "0";
+          initScores[key] = savedScores[key] !== undefined ? String(savedScores[key]) : "0";
         }
       }
       setManualScores(initScores);
@@ -123,6 +124,7 @@ export default function AdminTkmReviews({ reviewerNick }: Props) {
           status: reviewStatus,
           reviewer: reviewerNick,
           comment,
+          manual_scores: manualScores,
         }),
       });
       setSaved(true);

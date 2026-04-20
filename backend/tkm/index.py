@@ -229,10 +229,11 @@ def handler(event: dict, context) -> dict:
         status = body.get("status", "reviewed")
         reviewer = (body.get("reviewer") or "").strip()
         comment = (body.get("comment") or "").strip()
+        manual_scores = body.get("manual_scores") or {}
 
         cur.execute(
-            f"UPDATE {s}.tkm_submissions SET score=%s, max_score=%s, status=%s, reviewer=%s, reviewer_comment=%s, reviewed_at=NOW() WHERE id=%s",
-            (score, max_score, status, reviewer, comment, sub_id)
+            f"UPDATE {s}.tkm_submissions SET score=%s, max_score=%s, status=%s, reviewer=%s, reviewer_comment=%s, reviewed_at=NOW(), manual_scores=%s WHERE id=%s",
+            (score, max_score, status, reviewer, comment, json.dumps(manual_scores, ensure_ascii=False), sub_id)
         )
         conn.commit()
         conn.close()
@@ -265,17 +266,19 @@ def handler(event: dict, context) -> dict:
     if method == "GET" and action == "get":
         sub_id = qs.get("id")
         cur.execute(
-            f"SELECT id, nickname, vk_link, department, answers, score, max_score, status, reviewer, reviewer_comment, submitted_at, reviewed_at FROM {s}.tkm_submissions WHERE id=%s",
+            f"SELECT id, nickname, vk_link, department, answers, score, max_score, status, reviewer, reviewer_comment, submitted_at, reviewed_at, manual_scores FROM {s}.tkm_submissions WHERE id=%s",
             (sub_id,)
         )
         row = cur.fetchone()
         conn.close()
         if not row:
             return {"statusCode": 404, "headers": CORS, "body": json.dumps({"error": "Не найдено"})}
-        cols = ["id", "nickname", "vk_link", "department", "answers", "score", "max_score", "status", "reviewer", "reviewer_comment", "submitted_at", "reviewed_at"]
+        cols = ["id", "nickname", "vk_link", "department", "answers", "score", "max_score", "status", "reviewer", "reviewer_comment", "submitted_at", "reviewed_at", "manual_scores"]
         item = dict(zip(cols, row))
         item["submitted_at"] = item["submitted_at"].isoformat() if item["submitted_at"] else None
         item["reviewed_at"] = item["reviewed_at"].isoformat() if item["reviewed_at"] else None
+        if not item.get("manual_scores"):
+            item["manual_scores"] = {}
         return {"statusCode": 200, "headers": CORS, "body": json.dumps(item, ensure_ascii=False)}
 
     # GET check_access — проверить допуск по VK ссылке (возвращает attempt_number — какая по счёту попытка будет)
@@ -388,6 +391,32 @@ def handler(event: dict, context) -> dict:
                 f"INSERT INTO {s}.tkm_scores (key, max_score) VALUES (%s, %s) ON CONFLICT (key) DO UPDATE SET max_score = EXCLUDED.max_score",
                 (key, int(val))
             )
+        conn.commit()
+        conn.close()
+        return {"statusCode": 200, "headers": CORS, "body": json.dumps({"ok": True})}
+
+    # GET get_questions — получить кастомные вопросы из БД
+    if method == "GET" and action == "get_questions":
+        cur.execute(f"SELECT value FROM {s}.site_content WHERE key='tkm_custom_questions'")
+        row = cur.fetchone()
+        conn.close()
+        if not row:
+            return {"statusCode": 200, "headers": CORS, "body": json.dumps({})}
+        try:
+            data = json.loads(row[0])
+        except Exception:
+            data = {}
+        return {"statusCode": 200, "headers": CORS, "body": json.dumps(data, ensure_ascii=False)}
+
+    # POST save_questions — сохранить кастомные вопросы
+    if method == "POST" and action == "save_questions":
+        body = json.loads(event.get("body") or "{}")
+        questions = body.get("questions", {})
+        cur.execute(
+            f"INSERT INTO {s}.site_content (key, value) VALUES ('tkm_custom_questions', %s) "
+            f"ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value",
+            (json.dumps(questions, ensure_ascii=False),)
+        )
         conn.commit()
         conn.close()
         return {"statusCode": 200, "headers": CORS, "body": json.dumps({"ok": True})}

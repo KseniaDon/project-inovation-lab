@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
+import type { CustomQuestions } from "./AdminTkmPreview";
 import {
   TKM_QUESTIONS,
   TKM_SECTION3,
@@ -19,51 +20,99 @@ import {
   TKM_SECTION6_OPEN,
 } from "../learn/tkmAnswerKey";
 
-export function PreviewRadio({ num, text, options }: { num: number; text: string; options: string[] }) {
+type EditProps = { qKey: string; onEdit?: (key: string) => void };
+
+function EditButton({ qKey, onEdit }: EditProps) {
+  if (!onEdit) return null;
+  return (
+    <button
+      onClick={() => onEdit(qKey)}
+      title="Редактировать вопрос"
+      className="ml-auto shrink-0 text-zinc-600 hover:text-amber-400 transition-colors p-1 rounded"
+    >
+      <Icon name="Pencil" size={13} />
+    </button>
+  );
+}
+
+function mergeText(key: string, defaultText: string, cq?: CustomQuestions) {
+  return cq?.[key]?.text ?? defaultText;
+}
+function mergeOptions(key: string, defaultOptions: string[], cq?: CustomQuestions): string[] {
+  return (cq?.[key]?.options as string[] | undefined) ?? defaultOptions;
+}
+function mergeCorrectStr(key: string, defaultCorrect: string, cq?: CustomQuestions): string {
+  const c = cq?.[key]?.correct;
+  if (typeof c === "string") return c;
+  return defaultCorrect;
+}
+function mergeCorrectArr(key: string, defaultCorrect: string[], cq?: CustomQuestions): string[] {
+  const c = cq?.[key]?.correct;
+  if (Array.isArray(c)) return c;
+  return defaultCorrect;
+}
+
+export function PreviewRadio({ num, text, options, correct, qKey, onEdit }: { num: number; text: string; options: string[]; correct?: string; qKey?: string; onEdit?: (key: string) => void }) {
   const [val, setVal] = useState("");
   return (
     <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 flex flex-col gap-3">
-      <p className="text-sm font-medium text-zinc-200 leading-relaxed">
-        <span className="font-bold">№{num}.</span> {text} <span className="text-red-500">*</span>
-      </p>
-      <div className="flex flex-col gap-2">
-        {options.map(opt => (
-          <label key={opt} className="flex items-center gap-3 cursor-pointer group">
-            <div
-              onClick={() => setVal(opt)}
-              className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${val === opt ? "border-red-500 bg-red-500" : "border-zinc-500 group-hover:border-red-400"}`}
-            >
-              {val === opt && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-            </div>
-            <span className="text-sm text-zinc-300" onClick={() => setVal(opt)}>{opt}</span>
-          </label>
-        ))}
+      <div className="flex items-start gap-2">
+        <p className="flex-1 text-sm font-medium text-zinc-200 leading-relaxed">
+          <span className="font-bold">№{num}.</span> {text} <span className="text-red-500">*</span>
+        </p>
+        {qKey && <EditButton qKey={qKey} onEdit={onEdit} />}
       </div>
+      <div className="flex flex-col gap-2">
+        {options.map(opt => {
+          const isCorrect = correct && correct === opt;
+          return (
+            <label key={opt} className="flex items-center gap-3 cursor-pointer group">
+              <div
+                onClick={() => setVal(opt)}
+                className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${val === opt ? "border-red-500 bg-red-500" : "border-zinc-500 group-hover:border-red-400"}`}
+              >
+                {val === opt && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+              </div>
+              <span className={`text-sm leading-snug ${isCorrect ? "text-green-400 font-medium" : "text-zinc-300"}`} onClick={() => setVal(opt)}>{opt}</span>
+              {isCorrect && <span className="text-xs text-green-500 shrink-0">✓</span>}
+            </label>
+          );
+        })}
+      </div>
+      {correct && <p className="text-xs text-zinc-600">Зелёный — правильный ответ (видно только в предпросмотре)</p>}
     </div>
   );
 }
 
-export function PreviewCheckbox({ num, text, options }: { num: number; text: string; options: string[] }) {
+export function PreviewCheckbox({ num, text, options, correct, qKey, onEdit }: { num: number; text: string; options: string[]; correct?: string[]; qKey?: string; onEdit?: (key: string) => void }) {
   const [vals, setVals] = useState<string[]>([]);
   const toggle = (o: string) => setVals(v => v.includes(o) ? v.filter(x => x !== o) : [...v, o]);
   return (
     <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 flex flex-col gap-3">
-      <p className="text-sm font-medium text-zinc-200 leading-relaxed">
-        <span className="font-bold">№{num}.</span> {text} <span className="text-red-500">*</span>
-      </p>
-      <div className="flex flex-col gap-2">
-        {options.map(opt => (
-          <label key={opt} className="flex items-start gap-3 cursor-pointer group">
-            <div
-              onClick={() => toggle(opt)}
-              className={`w-4 h-4 rounded border-2 flex items-center justify-center shrink-0 mt-0.5 transition-colors ${vals.includes(opt) ? "border-red-500 bg-red-500" : "border-zinc-500 group-hover:border-red-400"}`}
-            >
-              {vals.includes(opt) && <Icon name="Check" size={10} className="text-white" />}
-            </div>
-            <span className="text-sm text-zinc-300 leading-snug" onClick={() => toggle(opt)}>{opt}</span>
-          </label>
-        ))}
+      <div className="flex items-start gap-2">
+        <p className="flex-1 text-sm font-medium text-zinc-200 leading-relaxed">
+          <span className="font-bold">№{num}.</span> {text} <span className="text-red-500">*</span>
+        </p>
+        {qKey && <EditButton qKey={qKey} onEdit={onEdit} />}
       </div>
+      <div className="flex flex-col gap-2">
+        {options.map(opt => {
+          const isCorrect = correct && correct.includes(opt);
+          return (
+            <label key={opt} className="flex items-start gap-3 cursor-pointer group">
+              <div
+                onClick={() => toggle(opt)}
+                className={`w-4 h-4 rounded border-2 flex items-center justify-center shrink-0 mt-0.5 transition-colors ${vals.includes(opt) ? "border-red-500 bg-red-500" : "border-zinc-500 group-hover:border-red-400"}`}
+              >
+                {vals.includes(opt) && <Icon name="Check" size={10} className="text-white" />}
+              </div>
+              <span className={`text-sm leading-snug ${isCorrect ? "text-green-400 font-medium" : "text-zinc-300"}`} onClick={() => toggle(opt)}>{opt}</span>
+              {isCorrect && <span className="text-xs text-green-500 shrink-0 mt-0.5">✓</span>}
+            </label>
+          );
+        })}
+      </div>
+      {correct && <p className="text-xs text-zinc-600">Зелёный — правильный ответ (видно только в предпросмотре)</p>}
     </div>
   );
 }
@@ -83,6 +132,7 @@ export function PreviewMatch({ num, text, rows, columns }: { num: number; text: 
               {columns.map(col => (
                 <th key={col} className="text-center text-xs font-semibold text-zinc-300 pb-3 px-3 min-w-[80px]">{col}</th>
               ))}
+              <th className="text-center text-xs font-semibold text-green-500 pb-3 px-3 min-w-[80px]">✓ Ответ</th>
             </tr>
           </thead>
           <tbody>
@@ -102,21 +152,28 @@ export function PreviewMatch({ num, text, rows, columns }: { num: number; text: 
                     </td>
                   );
                 })}
+                <td className="text-center py-2.5 px-3 align-middle">
+                  <span className="text-xs font-semibold text-green-400 bg-green-900/30 border border-green-700/40 px-2 py-0.5 rounded">{row.correct}</span>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <p className="text-xs text-zinc-600">Колонка «✓ Ответ» видна только в предпросмотре</p>
     </div>
   );
 }
 
-export function PreviewOpen({ num, title, situation, example, notRequired, warning }: { num: number; title: string; situation?: string; example: string; notRequired: string; warning: string }) {
+export function PreviewOpen({ num, title, situation, example, notRequired, warning, qKey, onEdit }: { num: number; title: string; situation?: string; example: string; notRequired: string; warning: string; qKey?: string; onEdit?: (key: string) => void }) {
   return (
     <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 flex flex-col gap-2.5">
-      <p className="text-sm font-medium text-zinc-200 leading-relaxed">
-        <span className="font-bold">№{num}.</span> {title} <span className="text-red-500">*</span>
-      </p>
+      <div className="flex items-start gap-2">
+        <p className="flex-1 text-sm font-medium text-zinc-200 leading-relaxed">
+          <span className="font-bold">№{num}.</span> {title} <span className="text-red-500">*</span>
+        </p>
+        {qKey && <EditButton qKey={qKey} onEdit={onEdit} />}
+      </div>
       {situation && (
         <div><p className="text-xs font-bold text-zinc-300">Описание ситуации:</p><p className="text-xs text-zinc-400 leading-relaxed mt-0.5">{situation}</p></div>
       )}
@@ -164,23 +221,29 @@ export function PreviewStyledCheckbox({ num, text, options, correct, highlightMo
   );
 }
 
-export function PreviewSimpleOpen({ num, text }: { num: number; text: string }) {
+export function PreviewSimpleOpen({ num, text, qKey, onEdit }: { num: number; text: string; qKey?: string; onEdit?: (key: string) => void }) {
   return (
     <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 flex flex-col gap-3">
-      <p className="text-sm font-medium text-zinc-200 leading-relaxed">
-        <span className="font-bold">№{num}.</span> {text} <span className="text-red-500">*</span>
-      </p>
+      <div className="flex items-start gap-2">
+        <p className="flex-1 text-sm font-medium text-zinc-200 leading-relaxed">
+          <span className="font-bold">№{num}.</span> {text} <span className="text-red-500">*</span>
+        </p>
+        {qKey && <EditButton qKey={qKey} onEdit={onEdit} />}
+      </div>
       <textarea disabled rows={3} placeholder="Развернутый ответ" className="w-full rounded border border-zinc-700 bg-zinc-800/50 px-3 py-2 text-xs text-zinc-500 resize-none" />
     </div>
   );
 }
 
-export function PreviewSection5Open({ num, text, hint, example, notRequired, warning }: { num: number; text: string; hint?: string; example?: string; notRequired?: string; warning?: string }) {
+export function PreviewSection5Open({ num, text, hint, example, notRequired, warning, qKey, onEdit }: { num: number; text: string; hint?: string; example?: string; notRequired?: string; warning?: string; qKey?: string; onEdit?: (key: string) => void }) {
   return (
     <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 flex flex-col gap-2.5">
-      <p className="text-sm font-medium text-zinc-200 leading-relaxed">
-        <span className="font-bold">№{num}.</span> {text} <span className="text-red-500">*</span>
-      </p>
+      <div className="flex items-start gap-2">
+        <p className="flex-1 text-sm font-medium text-zinc-200 leading-relaxed">
+          <span className="font-bold">№{num}.</span> {text} <span className="text-red-500">*</span>
+        </p>
+        {qKey && <EditButton qKey={qKey} onEdit={onEdit} />}
+      </div>
       {hint && <p className="text-xs text-zinc-400 leading-relaxed"><span className="font-bold text-zinc-300">Подсказка: </span>{hint}</p>}
       {example && <div><p className="text-xs font-bold text-zinc-300">Пример:</p><p className="text-xs text-zinc-500 italic whitespace-pre-line mt-0.5">{example}</p></div>}
       {notRequired && <p className="text-xs text-zinc-400"><span className="font-bold text-zinc-300">От вас не требуется:</span> {notRequired}</p>}
@@ -190,7 +253,9 @@ export function PreviewSection5Open({ num, text, hint, example, notRequired, war
   );
 }
 
-export function SectionPreview({ dept }: { dept: string }) {
+type SectionProps = { customQuestions?: CustomQuestions; onEdit?: (key: string) => void };
+
+export function SectionPreview({ dept, customQuestions: cq, onEdit }: { dept: string } & SectionProps) {
   const deptQs = TKM_QUESTIONS[dept] || [];
   return (
     <div className="flex flex-col gap-3">
@@ -199,12 +264,18 @@ export function SectionPreview({ dept }: { dept: string }) {
         <p className="text-sm font-bold text-zinc-200 mt-1">Ваше будущее отделение — {dept}</p>
         <p className="text-xs text-zinc-500">3 вопр. · макс. 3 б.</p>
       </div>
-      {deptQs.map((q, i) => <PreviewRadio key={q.key} num={i + 1} text={q.text} options={q.options} />)}
+      {deptQs.map((q, i) => (
+        <PreviewRadio key={q.key} qKey={q.key} onEdit={onEdit} num={i + 1}
+          text={mergeText(q.key, q.text, cq)}
+          options={mergeOptions(q.key, q.options, cq)}
+          correct={mergeCorrectStr(q.key, q.correct, cq)}
+        />
+      ))}
     </div>
   );
 }
 
-export function Section2Preview() {
+export function Section2Preview({ customQuestions: cq, onEdit }: SectionProps) {
   const s3Qs = TKM_SECTION3;
   const openQs = TKM_SECTION3_OPEN;
   const radio2Qs = TKM_SECTION3_RADIO2;
@@ -216,18 +287,18 @@ export function Section2Preview() {
       <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 flex flex-col gap-1.5">
         <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded font-semibold self-start">Раздел 2 из 5</span>
         <p className="text-sm font-bold text-zinc-200 mt-1">Раздел 2. Уставная документация</p>
-        <p className="text-xs text-zinc-500">17 вопр. · макс. 40 б.</p>
+        <p className="text-xs text-zinc-500">14 вопр. · макс. 40 б.</p>
       </div>
-      {s3Qs.map(q => { const n = num++; return <PreviewRadio key={q.key} num={n} text={q.text} options={q.options} />; })}
-      {openQs.map(q => { const n = num++; return <PreviewOpen key={q.key} num={n} title={q.title} situation={q.situation} example={q.example} notRequired={q.notRequired} warning={q.warning} />; })}
-      {radio2Qs.map(q => { const n = num++; return <PreviewRadio key={q.key} num={n} text={q.text} options={q.options} />; })}
-      {multiQs.map(q => { const n = num++; return <PreviewCheckbox key={q.key} num={n} text={q.text} options={q.options} />; })}
+      {s3Qs.map(q => { const n = num++; return <PreviewRadio key={q.key} qKey={q.key} onEdit={onEdit} num={n} text={mergeText(q.key, q.text, cq)} options={mergeOptions(q.key, q.options, cq)} correct={mergeCorrectStr(q.key, q.correct, cq)} />; })}
+      {openQs.map(q => { const n = num++; return <PreviewOpen key={q.key} qKey={q.key} onEdit={onEdit} num={n} title={mergeText(q.key, q.title, cq)} situation={q.situation} example={q.example} notRequired={q.notRequired} warning={q.warning} />; })}
+      {radio2Qs.map(q => { const n = num++; return <PreviewRadio key={q.key} qKey={q.key} onEdit={onEdit} num={n} text={mergeText(q.key, q.text, cq)} options={mergeOptions(q.key, q.options, cq)} correct={mergeCorrectStr(q.key, q.correct, cq)} />; })}
+      {multiQs.map(q => { const n = num++; return <PreviewCheckbox key={q.key} qKey={q.key} onEdit={onEdit} num={n} text={mergeText(q.key, q.text, cq)} options={mergeOptions(q.key, q.options, cq)} correct={mergeCorrectArr(q.key, q.correct, cq)} />; })}
       {matchQs.map(q => { const n = num++; return <PreviewMatch key={q.key} num={n} text={q.text} rows={q.rows} columns={q.columns} />; })}
     </div>
   );
 }
 
-export function Section3Preview() {
+export function Section3Preview({ customQuestions: cq, onEdit }: SectionProps) {
   let num = 18;
   return (
     <div className="flex flex-col gap-3">
@@ -236,16 +307,16 @@ export function Section3Preview() {
         <p className="text-sm font-bold text-zinc-200 mt-1">Раздел 3. RP-сфера</p>
         <p className="text-xs text-zinc-500">11 вопр. · макс. 31 б.</p>
       </div>
-      {TKM_SECTION4_RADIO.map(q => { const n = num++; return <PreviewRadio key={q.key} num={n} text={q.text} options={q.options} />; })}
-      {TKM_SECTION4_MULTI.map(q => { const n = num++; return <PreviewCheckbox key={q.key} num={n} text={q.text} options={q.options} />; })}
-      {TKM_SECTION4_RADIO2.map(q => { const n = num++; return <PreviewRadio key={q.key} num={n} text={q.text} options={q.options} />; })}
+      {TKM_SECTION4_RADIO.map(q => { const n = num++; return <PreviewRadio key={q.key} qKey={q.key} onEdit={onEdit} num={n} text={mergeText(q.key, q.text, cq)} options={mergeOptions(q.key, q.options, cq)} correct={mergeCorrectStr(q.key, q.correct, cq)} />; })}
+      {TKM_SECTION4_MULTI.map(q => { const n = num++; return <PreviewCheckbox key={q.key} qKey={q.key} onEdit={onEdit} num={n} text={mergeText(q.key, q.text, cq)} options={mergeOptions(q.key, q.options, cq)} correct={mergeCorrectArr(q.key, q.correct, cq)} />; })}
+      {TKM_SECTION4_RADIO2.map(q => { const n = num++; return <PreviewRadio key={q.key} qKey={q.key} onEdit={onEdit} num={n} text={mergeText(q.key, q.text, cq)} options={mergeOptions(q.key, q.options, cq)} correct={mergeCorrectStr(q.key, q.correct, cq)} />; })}
       {TKM_SECTION4_STYLED.map(q => { const n = num++; return <PreviewStyledCheckbox key={q.key} num={n} text={q.text} options={q.options} correct={q.correct} highlightMode={q.highlightMode} />; })}
-      {TKM_SECTION4_OPEN.map(q => { const n = num++; return <PreviewSimpleOpen key={q.key} num={n} text={q.text} />; })}
+      {TKM_SECTION4_OPEN.map(q => { const n = num++; return <PreviewSimpleOpen key={q.key} qKey={q.key} onEdit={onEdit} num={n} text={mergeText(q.key, q.text, cq)} />; })}
     </div>
   );
 }
 
-export function Section4Preview() {
+export function Section4Preview({ customQuestions: cq, onEdit }: SectionProps) {
   return (
     <div className="flex flex-col gap-3">
       <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 flex flex-col gap-1.5">
@@ -253,13 +324,13 @@ export function Section4Preview() {
         <p className="text-sm font-bold text-zinc-200 mt-1">Раздел 4. Препараты</p>
         <p className="text-xs text-zinc-500">3 вопр. · макс. 11 б.</p>
       </div>
-      {TKM_SECTION5_MULTI.map(q => <PreviewCheckbox key={q.key} num={q.num} text={q.text} options={q.options} />)}
-      {TKM_SECTION5_OPEN.map(q => <PreviewSection5Open key={q.key} num={q.num} text={q.text} hint={q.hint} example={q.example} notRequired={q.notRequired} warning={q.warning} />)}
+      {TKM_SECTION5_MULTI.map(q => <PreviewCheckbox key={q.key} qKey={q.key} onEdit={onEdit} num={q.num} text={mergeText(q.key, q.text, cq)} options={mergeOptions(q.key, q.options, cq)} correct={mergeCorrectArr(q.key, q.correct, cq)} />)}
+      {TKM_SECTION5_OPEN.map(q => <PreviewSection5Open key={q.key} qKey={q.key} onEdit={onEdit} num={q.num} text={mergeText(q.key, q.text, cq)} hint={q.hint} example={q.example} notRequired={q.notRequired} warning={q.warning} />)}
     </div>
   );
 }
 
-export function Section5Preview() {
+export function Section5Preview({ customQuestions: cq, onEdit }: SectionProps) {
   return (
     <div className="flex flex-col gap-3">
       <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 flex flex-col gap-1.5">
@@ -269,14 +340,17 @@ export function Section5Preview() {
       </div>
       {TKM_SECTION6_SINGLE.map((q, i) => {
         const nums: Record<string, number> = { "5.32": 32, "5.34": 34 };
-        return <PreviewRadio key={q.key} num={nums[q.key] ?? (32 + i)} text={q.text} options={q.options} />;
+        return <PreviewRadio key={q.key} qKey={q.key} onEdit={onEdit} num={nums[q.key] ?? (32 + i)} text={mergeText(q.key, q.text, cq)} options={mergeOptions(q.key, q.options, cq)} correct={mergeCorrectStr(q.key, q.correct, cq)} />;
       })}
-      {TKM_SECTION6_MULTI.map(q => <PreviewCheckbox key={q.key} num={q.num} text={q.text} options={q.options} />)}
+      {TKM_SECTION6_MULTI.map(q => <PreviewCheckbox key={q.key} qKey={q.key} onEdit={onEdit} num={q.num} text={mergeText(q.key, q.text, cq)} options={mergeOptions(q.key, q.options, cq)} correct={mergeCorrectArr(q.key, q.correct, cq)} />)}
       {TKM_SECTION6_OPEN.map(q => (
         <div key={q.key} className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 flex flex-col gap-2.5">
-          <p className="text-sm font-medium text-zinc-200 leading-relaxed">
-            <span className="font-bold">№{q.num}.</span> {q.text} <span className="text-red-500">*</span>
-          </p>
+          <div className="flex items-start gap-2">
+            <p className="flex-1 text-sm font-medium text-zinc-200 leading-relaxed">
+              <span className="font-bold">№{q.num}.</span> {mergeText(q.key, q.text, cq)} <span className="text-red-500">*</span>
+            </p>
+            <EditButton qKey={q.key} onEdit={onEdit} />
+          </div>
           {q.subQuestions && (
             <ol className="flex flex-col gap-0.5">
               {q.subQuestions.map((sq, i) => (

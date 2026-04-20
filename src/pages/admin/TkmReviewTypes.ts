@@ -35,6 +35,7 @@ export interface Submission {
 
 export interface SubmissionDetail extends Submission {
   answers: Record<string, string>;
+  manual_scores?: Record<string, string | number>;
 }
 
 export const STATUS_LABELS: Record<string, { label: string; color: string }> = {
