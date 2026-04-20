@@ -206,9 +206,22 @@ export default function Hero() {
           </button>
         </motion.div>
 
+        {/* Разделитель */}
+        <motion.div
+          className="flex items-center gap-3 w-full max-w-xs sm:max-w-sm"
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={0.9}
+        >
+          <span className="flex-1 h-px bg-gradient-to-r from-transparent to-red-800/40" />
+          <span className="w-1 h-1 rounded-full bg-red-700/50" />
+          <span className="flex-1 h-px bg-gradient-to-l from-transparent to-red-800/40" />
+        </motion.div>
+
         {/* Цитата Гиппократа */}
         <motion.div
-          className="flex flex-col items-center gap-1 pt-2"
+          className="flex flex-col items-center gap-1 pt-0"
           variants={fadeUp}
           initial="hidden"
           animate="visible"
