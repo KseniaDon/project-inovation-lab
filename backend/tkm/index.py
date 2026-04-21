@@ -106,9 +106,9 @@ GOOGLE_FORM_ENTRIES = {
     "department":      "entry.672956656",
     "activation_code": "entry.933578577",
     # Раздел 1 — Отделение (числовые баллы за вопросы отделения)
-    "1.1": "entry.2142688093",
-    "1.2": "entry.2096928011",
-    "1.3": "entry.783813198",
+    "2.1": "entry.2142688093",
+    "2.2": "entry.2096928011",
+    "2.3": "entry.783813198",
     # Раздел 1 — описание функций отделений (текстовые)
     "dept.1": "entry.869238404",
     "dept.2": "entry.1788518830",
@@ -218,8 +218,8 @@ def send_to_google_forms(nickname: str, vk_link: str, department: str, activatio
         )
         resp = urllib.request.urlopen(req, timeout=10)
         print(f"[Google Forms] status={resp.status}, nick={nickname}, dept={department}")
-        print(f"[Google Forms] answer_keys={list(answers.keys())[:10]}")
-        print(f"[Google Forms] matched_entries={[k for k in answers if GOOGLE_FORM_ENTRIES.get(k)][:10]}")
+        print(f"[Google Forms] answer_keys={list(answers.keys())}")
+        print(f"[Google Forms] unmatched={[k for k in answers if not GOOGLE_FORM_ENTRIES.get(k)]}")
     except Exception as e:
         print(f"[Google Forms] ERROR: {e}, nick={nickname}, dept={department}")
 
