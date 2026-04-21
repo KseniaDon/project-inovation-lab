@@ -210,6 +210,14 @@ def send_to_google_forms(nickname: str, vk_link: str, department: str, activatio
             entry_id = GOOGLE_FORM_ENTRIES.get(key)
             if not entry_id:
                 continue
+            # Если значение — JSON-строка массива, распарсим её
+            if isinstance(value, str):
+                try:
+                    parsed = json.loads(value)
+                    if isinstance(parsed, list):
+                        value = parsed
+                except Exception:
+                    pass
             if isinstance(value, list):
                 # Множественный выбор — несколько значений с одним entry ID
                 for v in value:
