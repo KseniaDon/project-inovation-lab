@@ -46,7 +46,6 @@ export const STATUS_LABELS: Record<string, { label: string; color: string }> = {
 
 export const OPEN_MAX_SCORES: Record<string, number> = {
   "3.10": 5, "3.11": 5, "3.12": 5, "3.13": 5, "3.14": 5,
-  "3.17": 4,
   "3.28": 4,
   "4.30": 5, "4.31": 3,
   "5.35": 3, "5.36": 3, "5.37": 2, "5.38": 5,
@@ -128,6 +127,16 @@ export function checkAnswer(key: string, answer: string, dept: string): "correct
       const selected: string[] = JSON.parse(answer);
       const correct = multi.correct;
       const isCorrect = selected.length === correct.length && correct.every(c => selected.includes(c));
+      return isCorrect ? "correct" : "wrong";
+    } catch { return "wrong"; }
+  }
+
+  // Matching вопрос 3.17
+  const match = TKM_SECTION3_MATCH.find(q => q.key === key);
+  if (match) {
+    try {
+      const selected: Record<string, string> = JSON.parse(answer);
+      const isCorrect = match.rows.every(row => selected[row.label] === row.correct);
       return isCorrect ? "correct" : "wrong";
     } catch { return "wrong"; }
   }
