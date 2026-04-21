@@ -107,8 +107,15 @@ GOOGLE_FORM_ENTRIES = {
     "activation_code": "entry.933578577",
     # Раздел 1 — Отделение (числовые баллы за вопросы отделения)
     "2.1": "entry.2142688093",
+    "Сначала немного базового — сколько отделений в ЦГБ-Н существует согласно внутреннему уставу?": "entry.2142688093",
     "2.2": "entry.2096928011",
+    "Чем занимается ОИК?": "entry.2096928011",
+    "Чем занимается СОП?": "entry.2096928011",
+    "Чем занимается ОДС?": "entry.2096928011",
     "2.3": "entry.783813198",
+    "На каком этаже проводятся услуги НИИ Эпидемиологии?": "entry.783813198",
+    "На каком этаже проводятся услуги Стоматологической поликлиники «Дентист»?": "entry.783813198",
+    "На каком этаже проводятся услуги Травматолого-ортопедического центра?": "entry.783813198",
     # Раздел 1 — описание функций отделений (текстовые)
     "dept.1": "entry.869238404",
     "dept.2": "entry.1788518830",
@@ -184,7 +191,22 @@ def send_to_google_forms(nickname: str, vk_link: str, department: str, activatio
         form_data["entry.672956656"] = dept_map.get(department, department)
         form_data["entry.933578577"] = activation_code
 
+        # Обработка 3.17 — matching, приходит как JSON-строка {"label": "значение"}
+        match_17 = answers.get("3.17")
+        if match_17:
+            try:
+                parsed = json.loads(match_17) if isinstance(match_17, str) else match_17
+                for label, val in parsed.items():
+                    map_key = f"3.17_{label}"
+                    eid = GOOGLE_FORM_ENTRIES.get(map_key)
+                    if eid:
+                        form_data[eid] = str(val)
+            except Exception:
+                pass
+
         for key, value in answers.items():
+            if key == "3.17":
+                continue
             entry_id = GOOGLE_FORM_ENTRIES.get(key)
             if not entry_id:
                 continue
