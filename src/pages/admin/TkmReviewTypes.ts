@@ -225,35 +225,41 @@ export function getQuestionLabel(key: string, dept: string): string {
   return key;
 }
 
+function sortKeys(keys: string[]): string[] {
+  return keys.sort((a, b) => {
+    const numA = parseFloat(a.match(/^(\d+\.\d+)/)?.[1] || "0");
+    const numB = parseFloat(b.match(/^(\d+\.\d+)/)?.[1] || "0");
+    return numA - numB;
+  });
+}
+
 export function groupAnswersBySection(answers: Record<string, string>): { label: string; keys: string[] }[] {
   const usedKeys = new Set<string>();
   const result: { label: string; keys: string[] }[] = [];
 
-  const s5Keys = Object.keys(answers).filter(k => k.startsWith("5."));
+  const s5Keys = sortKeys(Object.keys(answers).filter(k => k.startsWith("5.")));
   if (s5Keys.length) result.push({ label: "Раздел 5 — Медицина", keys: s5Keys });
   s5Keys.forEach(k => usedKeys.add(k));
 
-  const s4Keys = Object.keys(answers).filter(k => {
+  const s4Keys = sortKeys(Object.keys(answers).filter(k => {
     if (usedKeys.has(k)) return false;
-    const n = parseFloat(k.replace("4.", ""));
-    return k.startsWith("4.") && n >= 29;
-  });
+    return k.startsWith("4.");
+  }));
   if (s4Keys.length) result.push({ label: "Раздел 4 — Препараты", keys: s4Keys });
   s4Keys.forEach(k => usedKeys.add(k));
 
-  const rpKeys = Object.keys(answers).filter(k => {
+  const rpKeys = sortKeys(Object.keys(answers).filter(k => {
     if (usedKeys.has(k)) return false;
-    const n = parseFloat(k.replace("4.", ""));
-    return k.startsWith("4.") && n >= 18 && n <= 28;
-  });
+    return k.startsWith("3.") && parseFloat(k) >= 3.18;
+  }));
   if (rpKeys.length) result.push({ label: "Раздел 3 — RP-сфера", keys: rpKeys });
   rpKeys.forEach(k => usedKeys.add(k));
 
-  const s2Keys = Object.keys(answers).filter(k => !usedKeys.has(k) && k.startsWith("3."));
+  const s2Keys = sortKeys(Object.keys(answers).filter(k => !usedKeys.has(k) && k.startsWith("3.")));
   if (s2Keys.length) result.push({ label: "Раздел 2 — Уставная документация", keys: s2Keys });
   s2Keys.forEach(k => usedKeys.add(k));
 
-  const s1Keys = Object.keys(answers).filter(k => !usedKeys.has(k) && k.startsWith("2."));
+  const s1Keys = sortKeys(Object.keys(answers).filter(k => !usedKeys.has(k) && k.startsWith("2.")));
   if (s1Keys.length) result.push({ label: "Раздел 1 — Отделение", keys: s1Keys });
   s1Keys.forEach(k => usedKeys.add(k));
 

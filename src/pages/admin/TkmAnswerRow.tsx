@@ -70,7 +70,6 @@ export default function AnswerRow({ qKey, answer, dept, manualScore, maxScore, o
         <div className="flex items-start gap-2 flex-1">
           {statusIcon}
           <p className="text-sm font-medium text-zinc-200 leading-snug">
-            {num != null && <span className="text-zinc-500 font-normal mr-1">№{num}.</span>}
             {label || qKey}
           </p>
         </div>
