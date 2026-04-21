@@ -170,6 +170,7 @@ GOOGLE_FORM_ENTRIES = {
 
 def send_to_google_forms(nickname: str, vk_link: str, department: str, activation_code: str, answers: dict):
     """Дублирует ответы теста в Google Forms (тихо, без исключений)."""
+    print(f"[Google Forms] START send, nick={nickname}, dept={department}, answers_count={len(answers)}")
     try:
         form_data = {}
         # Мета-данные
