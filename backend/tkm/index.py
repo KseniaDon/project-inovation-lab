@@ -192,6 +192,14 @@ def send_to_google_forms(nickname: str, vk_link: str, department: str, activatio
         }
         form_data["entry.672956656"] = dept_map.get(department, department)
         form_data["entry.933578577"] = activation_code
+        # pageHistory — список посещённых страниц (0-индекс)
+        # Раздел 1=0, ОИК=1, СОП=2, ОДС=3, Устав=4, RP=5, Препараты=6, Медицина=7
+        page_history_map = {
+            "ОИК": "0,1,4,5,6,7",
+            "СОП": "0,2,4,5,6,7",
+            "ОДС": "0,3,4,5,6,7",
+        }
+        form_data["pageHistory"] = page_history_map.get(department, "0,1,4,5,6,7")
 
         # Обработка 3.17 — matching, приходит как JSON-строка {"label": "значение"}
         match_17 = answers.get("3.17")
