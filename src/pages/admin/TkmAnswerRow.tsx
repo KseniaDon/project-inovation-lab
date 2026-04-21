@@ -86,16 +86,7 @@ export default function AnswerRow({ qKey, answer, dept, manualScore, maxScore, o
             );
           })}
           <div className="flex items-center gap-2 mt-1 border-t border-zinc-700/30 pt-2">
-            <span className="text-xs text-zinc-500">Баллов:</span>
-            <input
-              type="number"
-              min={0}
-              max={maxScore}
-              value={manualScore}
-              onChange={e => onManualScore(e.target.value)}
-              className="w-14 bg-zinc-900 border border-zinc-700 text-xs px-2 py-1 text-zinc-200 outline-none focus:border-red-600 text-center rounded"
-            />
-            <span className="text-xs text-zinc-500">из {maxScore}</span>
+            <span className="text-xs text-zinc-500">Баллов (авто): {matchQ.rows.every(row => { try { const sel: Record<string,string> = JSON.parse(answer); return sel[row.label] === row.correct; } catch { return false; } }) ? maxScore : 0} из {maxScore}</span>
           </div>
         </div>
       )}
