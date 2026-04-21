@@ -74,9 +74,10 @@ export default function AdminTkmReviews({ reviewerNick }: Props) {
       const initScores: Record<string, string> = {};
       for (const key of Object.keys(data.answers || {})) {
         const qType = getQuestionType(key, data.department);
-        const isAutoChecked = checkAnswer(key, data.answers[key], data.department) !== "open";
+        const answerStatus = checkAnswer(key, data.answers[key], data.department);
+        const isAutoChecked = qType === "single" || qType === "multi" || qType === "match";
         const isOpenScored = !isAutoChecked && getMaxScore(key) !== undefined && dbScores[key] !== undefined;
-        const isWrongMulti = qType === "multi" && checkAnswer(key, data.answers[key], data.department) === "wrong";
+        const isWrongMulti = qType === "multi" && answerStatus === "wrong";
         if (isOpenScored || isWrongMulti) {
           initScores[key] = savedScores[key] !== undefined ? String(savedScores[key]) : "0";
         }

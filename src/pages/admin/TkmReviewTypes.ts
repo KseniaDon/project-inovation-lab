@@ -105,12 +105,14 @@ export function getQuestionOptions(key: string, dept: string): string[] | null {
   return null;
 }
 
-export function getQuestionType(key: string, dept: string): "single" | "multi" | "open" {
+export function getQuestionType(key: string, dept: string): "single" | "multi" | "match" | "open" {
   const singles = getSingleQuestions(dept);
   if (singles.find(q => q.key === key)) return "single";
 
   const multis = getMultiQuestions();
   if (multis.find(q => q.key === key)) return "multi";
+
+  if (TKM_SECTION3_MATCH.find(q => q.key === key)) return "match";
 
   return "open";
 }
