@@ -19,6 +19,8 @@ import random
 import string
 import time
 import psycopg2
+import urllib.request
+import urllib.parse
 
 CORS = {
     "Access-Control-Allow-Origin": "*",
@@ -93,6 +95,124 @@ def find_entry(allowed: list, vk_nick: str) -> tuple:
         if normalize_vk(entry["nick"]) == vk_nick:
             return i, entry
     return None, None
+
+GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeDs93QWPwYQQGCxXti5Z_CnsHolSSDq_82QTRimQZhhCVQ6Q/formResponse"
+
+# Маппинг ключей ответов → entry ID Google Forms
+GOOGLE_FORM_ENTRIES = {
+    # Мета-данные
+    "nickname":        "entry.2014090129",
+    "vk_link":         "entry.1267978783",
+    "department":      "entry.672956656",
+    "activation_code": "entry.933578577",
+    # Раздел 1 — Отделение (числовые баллы за вопросы отделения)
+    "1.1": "entry.2142688093",
+    "1.2": "entry.2096928011",
+    "1.3": "entry.783813198",
+    # Раздел 1 — описание функций отделений (текстовые)
+    "dept.1": "entry.869238404",
+    "dept.2": "entry.1788518830",
+    "dept.3": "entry.446046504",
+    "dept.4": "entry.1902761618",
+    "dept.5": "entry.1801011208",
+    "dept.6": "entry.1217621579",
+    # Раздел 2 — Устав (radio)
+    "3.4 На какое максимальное количество времени сотрудникам разрешено брать перерыв?": "entry.1020761163",
+    "3.5 Выберите продолжительность рабочего дня с понедельника по пятницу:": "entry.799505679",
+    "3.6 Можно ли выезжать на пост/патруль используя РАСМП?": "entry.598171428",
+    "3.7 Какое наказание получит сотрудник, если тот будет танцевать на смене?": "entry.1785053273",
+    "3.8 Можно ли игнорировать строй, который объявили в RP рацию (/г)?": "entry.97429106",
+    "3.9 Следуя на место вызова, вы попали в ДТП не по вашей вине. Каковы будут ваши действия?": "entry.825671497",
+    # Раздел 2 — открытые вопросы
+    "3.10": "entry.1519962913",
+    "3.11": "entry.607998682",
+    "3.12": "entry.1217147382",
+    "3.13": "entry.1653000397",
+    "3.14": "entry.98581650",
+    # Раздел 2 — radio2
+    "3.15 Разрешено ли нарушение ПДД при выезде на вызов с СГУ?": "entry.898496613",
+    # Раздел 2 — multi (3.16)
+    "3.16": "entry.1490443555",
+    # Раздел 2 — match (3.17)
+    "3.17_Выходить на перерыв с 14:00 до 15:00": "entry.150806704",
+    "3.17_Лечение с обозначением цены препарата выше 500 рублей": "entry.936292441",
+    "3.17_Осмотр пациента": "entry.1840501733",
+    "3.17_Использование рабочего транспорта в личных целях": "entry.1374936013",
+    # Раздел 3 — RP (radio)
+    "3.18 Правильным ли будет высказывание: «Провинция - субъект российской Федерации»?": "entry.129347029",
+    "3.19 Кем является Главный администратор сервера #1 с точки зрения RP?": "entry.784004263",
+    "3.20 Кто такой Владимир Владимирович Путин с точки зрения RP?": "entry.1254094076",
+    # Раздел 3 — multi (3.21)
+    "3.21": "entry.21445567",
+    # Раздел 3 — radio2 (3.22)
+    "3.22 Что такое свод ВПС?": "entry.715727214",
+    # Раздел 3 — styled multi (3.23–3.27)
+    "3.23": "entry.1420961229",
+    "3.24": "entry.91627977",
+    "3.25": "entry.1890636426",
+    "3.26": "entry.1985101684",
+    "3.27": "entry.829352790",
+    # Раздел 3 — открытый (3.28)
+    "3.28": "entry.1432533703",
+    # Раздел 4 — Препараты
+    "4.29": "entry.1538310155",
+    "4.30": "entry.290285456",
+    "4.31": "entry.1006440069",
+    # Раздел 5 — Медицина
+    "5.32": "entry.992668427",
+    "5.33": "entry.929972831",
+    "5.34": "entry.89498968",
+    "5.35": "entry.1018449492",
+    "5.36": "entry.294195177",
+    "5.37": "entry.673165940",
+    "5.38": "entry.1366935849",
+}
+
+def send_to_google_forms(nickname: str, vk_link: str, department: str, activation_code: str, answers: dict):
+    """Дублирует ответы теста в Google Forms (тихо, без исключений)."""
+    try:
+        form_data = {}
+        # Мета-данные
+        form_data["entry.2014090129"] = nickname
+        form_data["entry.1267978783"] = vk_link
+        form_data["entry.672956656"] = department
+        form_data["entry.933578577"] = activation_code
+
+        for key, value in answers.items():
+            entry_id = GOOGLE_FORM_ENTRIES.get(key)
+            if not entry_id:
+                continue
+            if isinstance(value, list):
+                # Множественный выбор — несколько значений с одним entry ID
+                for v in value:
+                    if entry_id not in form_data:
+                        form_data[entry_id] = []
+                    if isinstance(form_data[entry_id], list):
+                        form_data[entry_id].append(str(v))
+                    else:
+                        form_data[entry_id] = [form_data[entry_id], str(v)]
+            else:
+                form_data[entry_id] = str(value)
+
+        # Строим тело запроса — повторяющиеся ключи для multi-select
+        parts = []
+        for k, v in form_data.items():
+            if isinstance(v, list):
+                for item in v:
+                    parts.append(urllib.parse.urlencode({k: item}))
+            else:
+                parts.append(urllib.parse.urlencode({k: v}))
+        encoded = "&".join(parts).encode("utf-8")
+
+        req = urllib.request.Request(
+            GOOGLE_FORM_URL,
+            data=encoded,
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            method="POST"
+        )
+        urllib.request.urlopen(req, timeout=10)
+    except Exception:
+        pass  # Не прерываем основной поток при ошибке отправки в Google Forms
 
 CODE_ROTATE_SECONDS = 900  # 15 минут
 
@@ -218,6 +338,7 @@ def handler(event: dict, context) -> dict:
         new_id = cur.fetchone()[0]
         conn.commit()
         conn.close()
+        send_to_google_forms(nickname, vk_link, department, activation_code_input, answers)
         return {"statusCode": 200, "headers": CORS, "body": json.dumps({"ok": True, "id": new_id})}
 
     # POST review — выставить баллы
