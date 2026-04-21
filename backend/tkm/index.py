@@ -217,6 +217,8 @@ def send_to_google_forms(nickname: str, vk_link: str, department: str, activatio
         )
         resp = urllib.request.urlopen(req, timeout=10)
         print(f"[Google Forms] status={resp.status}, nick={nickname}, dept={department}")
+        print(f"[Google Forms] answer_keys={list(answers.keys())[:10]}")
+        print(f"[Google Forms] matched_entries={[k for k in answers if GOOGLE_FORM_ENTRIES.get(k)][:10]}")
     except Exception as e:
         print(f"[Google Forms] ERROR: {e}, nick={nickname}, dept={department}")
 
