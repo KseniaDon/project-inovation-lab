@@ -69,11 +69,20 @@ export default function TkmReviewModal({
         ) : (
           <div className="flex flex-col gap-0 divide-y divide-zinc-800">
 
-            {/* VK ссылка */}
-            <div className="px-5 py-3">
+            {/* VK ссылка + кнопка Google Forms */}
+            <div className="px-5 py-3 flex items-center justify-between gap-4 flex-wrap">
               <a href={selected.vk_link} target="_blank" rel="noreferrer" className="text-sm text-blue-400 hover:underline flex items-center gap-1.5">
                 <Icon name="ExternalLink" size={13} />
                 {selected.vk_link}
+              </a>
+              <a
+                href="https://docs.google.com/forms/d/1IOGPpJjesge1fM6UGaeHBa9zqr9uruKE6v5tJ_fS_e4/edit#responses"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-1.5 text-xs px-3 py-1.5 border border-green-700 text-green-400 hover:bg-green-900/20 transition-colors"
+              >
+                <Icon name="ClipboardCheck" size={13} />
+                Открыть в Google Forms
               </a>
             </div>
 
