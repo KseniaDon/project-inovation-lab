@@ -175,7 +175,12 @@ def send_to_google_forms(nickname: str, vk_link: str, department: str, activatio
         # Мета-данные
         form_data["entry.2014090129"] = nickname
         form_data["entry.1267978783"] = vk_link
-        form_data["entry.672956656"] = department
+        dept_map = {
+            "ОИК": "ОИК (Отделение Инфекционного Контроля)",
+            "СОП": "СОП (Стоматологическое Отделение Поликлиники)",
+            "ОДС": "ОДС (Отделение Дневного Стационара)",
+        }
+        form_data["entry.672956656"] = dept_map.get(department, department)
         form_data["entry.933578577"] = activation_code
 
         for key, value in answers.items():
