@@ -37,7 +37,7 @@ export default function AnswerRow({ qKey, answer, dept, manualScore, maxScore, o
   const qType = getQuestionType(qKey, dept);
 
   const matchQ = TKM_SECTION3_MATCH.find(q => q.key === qKey);
-  if (qKey === "3.17") console.log("3.17 debug:", { qType, matchQ, qKey, TKM_SECTION3_MATCH });
+
 
   let selectedList: string[] = [];
   const selectedSingle = answer;
