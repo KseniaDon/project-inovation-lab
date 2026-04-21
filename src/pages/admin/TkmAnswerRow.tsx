@@ -7,7 +7,6 @@ import {
   getQuestionNum,
   getQuestionOptions,
   getQuestionType,
-  OPEN_MAX_SCORES,
 } from "./TkmReviewTypes";
 
 interface AnswerRowProps {
@@ -17,17 +16,26 @@ interface AnswerRowProps {
   manualScore: string;
   maxScore: number;
   onManualScore: (v: string) => void;
+  autoScore?: number;
 }
 
-export default function AnswerRow({ qKey, answer, dept, manualScore, maxScore, onManualScore }: AnswerRowProps) {
+function getNumFromKey(key: string): number | null {
+  const num = getQuestionNum(key);
+  if (num != null) return num;
+  // Извлекаем номер из ключа типа "3.4 Текст..." → 4, "2.1 Текст..." → 1
+  const m = key.match(/^\d+\.(\d+)/);
+  if (m) return parseInt(m[1]);
+  return null;
+}
+
+export default function AnswerRow({ qKey, answer, dept, manualScore, maxScore, onManualScore, autoScore }: AnswerRowProps) {
   const status = checkAnswer(qKey, answer, dept);
   const correct = getCorrectAnswer(qKey, dept);
   const label = getQuestionLabel(qKey, dept);
-  const num = getQuestionNum(qKey);
+  const num = getNumFromKey(qKey);
   const options = getQuestionOptions(qKey, dept);
   const qType = getQuestionType(qKey, dept);
 
-  // Вопрос на соответствие
   const matchQ = TKM_SECTION3_MATCH.find(q => q.key === qKey);
 
   let selectedList: string[] = [];
@@ -51,16 +59,41 @@ export default function AnswerRow({ qKey, answer, dept, manualScore, maxScore, o
     status === "wrong"   ? <Icon name="XCircle"     size={14} className="text-red-400 shrink-0" /> :
                            <Icon name="FileText"    size={14} className="text-zinc-500 shrink-0" />;
 
+  const matchAllCorrect = matchQ
+    ? matchQ.rows.every(row => {
+        try { const sel: Record<string, string> = JSON.parse(answer); return sel[row.label] === row.correct; }
+        catch { return false; }
+      })
+    : false;
+
   return (
     <div className={`border px-4 py-3 flex flex-col gap-3 ${borderClass}`}>
 
       {/* Заголовок вопроса */}
-      <div className="flex items-start gap-2">
-        {statusIcon}
-        <p className="text-sm font-medium text-zinc-200 leading-snug">
-          {num != null && <span className="text-zinc-500 font-normal mr-1">№{num}.</span>}
-          {label || qKey}
-        </p>
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex items-start gap-2 flex-1">
+          {statusIcon}
+          <p className="text-sm font-medium text-zinc-200 leading-snug">
+            {num != null && <span className="text-zinc-500 font-normal mr-1">№{num}.</span>}
+            {label || qKey}
+          </p>
+        </div>
+        {/* Авто-баллы для single и match */}
+        {(qType === "single" || qType === "match") && (
+          <span className={`text-xs font-semibold shrink-0 px-2 py-0.5 rounded ${
+            status === "correct" ? "bg-green-900/40 text-green-400" : "bg-red-900/40 text-red-400"
+          }`}>
+            {status === "correct" ? autoScore ?? maxScore : 0} / {autoScore ?? maxScore} б.
+          </span>
+        )}
+        {/* Авто-баллы для multi */}
+        {qType === "multi" && !matchQ && (
+          <span className={`text-xs font-semibold shrink-0 px-2 py-0.5 rounded ${
+            status === "correct" ? "bg-green-900/40 text-green-400" : "bg-zinc-800 text-zinc-500"
+          }`}>
+            {status === "correct" ? (autoScore ?? maxScore) : 0} / {autoScore ?? maxScore} б.
+          </span>
+        )}
       </div>
 
       {/* Вопрос на соответствие */}
@@ -86,7 +119,7 @@ export default function AnswerRow({ qKey, answer, dept, manualScore, maxScore, o
             );
           })}
           <div className="flex items-center gap-2 mt-1 border-t border-zinc-700/30 pt-2">
-            <span className="text-xs text-zinc-500">Баллов (авто): {matchQ.rows.every(row => { try { const sel: Record<string,string> = JSON.parse(answer); return sel[row.label] === row.correct; } catch { return false; } }) ? maxScore : 0} из {maxScore}</span>
+            <span className="text-xs text-zinc-500">Авто: {matchAllCorrect ? maxScore : 0} из {maxScore} б.</span>
           </div>
         </div>
       )}
@@ -177,7 +210,7 @@ export default function AnswerRow({ qKey, answer, dept, manualScore, maxScore, o
         </>
       )}
 
-      {/* Легенда + ручные баллы для wrong multi */}
+      {/* Легенда для wrong multi */}
       {!matchQ && status === "wrong" && options && (
         <div className="flex flex-col gap-2 pt-1 border-t border-zinc-700/30">
           <div className="flex items-center gap-3 flex-wrap">

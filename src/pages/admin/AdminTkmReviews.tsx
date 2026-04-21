@@ -10,6 +10,7 @@ import {
   checkAnswer,
   getQuestionType,
   groupAnswersBySection,
+  getAutoScore,
 } from "./TkmReviewTypes";
 import TkmReviewModal from "./TkmReviewModal";
 
@@ -95,47 +96,12 @@ export default function AdminTkmReviews({ reviewerNick }: Props) {
     setDetailLoading(false);
   };
 
-  const AUTO_SCORES: Record<string, number> = {
-    // Раздел 1
-    "2.1": 1, "2.2": 1, "2.3": 1,
-    // Раздел 2
-    "3.4 На какое максимальное количество времени сотрудникам разрешено брать перерыв?": 1,
-    "3.5 Выберите продолжительность рабочего дня с понедельника по пятницу:": 1,
-    "3.6 Можно ли выезжать на пост/патруль используя РАСМП?": 1,
-    "3.7 Какое наказание получит сотрудник, если тот будет танцевать на смене?": 1,
-    "3.8 Можно ли игнорировать строй, который объявили в RP рацию (/г)?": 1,
-    "3.9 Следуя на место вызова, вы попали в ДТП не по вашей вине. Каковы будут ваши действия?": 1,
-    "3.15 Разрешено ли нарушение ПДД при выезде на вызов с СГУ?": 1,
-    "3.16": 4,
-    "3.17": 4,
-    // Раздел 3
-    "3.18 Правильным ли будет высказывание: «Провинция - субъект российской Федерации»?": 1,
-    "3.19 Кем является Главный администратор сервера #1 с точки зрения RP?": 1,
-    "3.20 Кто такой Владимир Владимирович Путин с точки зрения RP?": 1,
-    "3.21": 2,
-    "3.22 Что такое свод ВПС?": 1,
-    "3.23": 4,
-    "3.24": 6,
-    "3.25": 3,
-    "3.26": 4,
-    "3.27": 4,
-    // Раздел 4
-    "4.29": 3,
-    // Раздел 5
-    "5.32": 1,
-    "5.33": 4,
-    "5.34": 1,
-  };
-
   const calcAutoScore = (answers: Record<string, string>, dept: string) => {
     let auto = 0;
     for (const [key, val] of Object.entries(answers)) {
       const status = checkAnswer(key, val, dept);
       if (status === "correct") {
-        // Ищем вес по полному ключу или по началу (2.1, 2.2, 2.3)
-        const prefix = key.split(" ")[0];
-        const weight = AUTO_SCORES[key] ?? AUTO_SCORES[prefix] ?? 1;
-        auto += weight;
+        auto += getAutoScore(key);
       }
     }
     return auto;

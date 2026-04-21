@@ -8,6 +8,7 @@ import {
   getCorrectAnswer,
   getQuestionType,
   groupAnswersBySection,
+  getAutoScore,
 } from "./TkmReviewTypes";
 
 interface Props {
@@ -125,6 +126,7 @@ export default function TkmReviewModal({
                             manualScore={manualScores[k] ?? "0"}
                             maxScore={maxScore}
                             onManualScore={v => onManualScore(k, v)}
+                            autoScore={getAutoScore(k)}
                           />
                         );
                       })}
