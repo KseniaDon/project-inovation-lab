@@ -20,12 +20,7 @@ interface AnswerRowProps {
 }
 
 function getNumFromKey(key: string): number | null {
-  const num = getQuestionNum(key);
-  if (num != null) return num;
-  // Извлекаем номер из ключа типа "3.4 Текст..." → 4, "2.1 Текст..." → 1
-  const m = key.match(/^\d+\.(\d+)/);
-  if (m) return parseInt(m[1]);
-  return null;
+  return getQuestionNum(key);
 }
 
 export default function AnswerRow({ qKey, answer, dept, manualScore, maxScore, onManualScore, autoScore }: AnswerRowProps) {
