@@ -210,9 +210,10 @@ def send_to_google_forms(nickname: str, vk_link: str, department: str, activatio
             headers={"Content-Type": "application/x-www-form-urlencoded"},
             method="POST"
         )
-        urllib.request.urlopen(req, timeout=10)
-    except Exception:
-        pass  # Не прерываем основной поток при ошибке отправки в Google Forms
+        resp = urllib.request.urlopen(req, timeout=10)
+        print(f"[Google Forms] status={resp.status}, nick={nickname}, dept={department}")
+    except Exception as e:
+        print(f"[Google Forms] ERROR: {e}, nick={nickname}, dept={department}")
 
 CODE_ROTATE_SECONDS = 900  # 15 минут
 
