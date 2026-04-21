@@ -196,9 +196,9 @@ def send_to_google_forms(nickname: str, vk_link: str, department: str, activatio
                 "2.3": "entry.446046504",
             },
             "ОДС": {
-                "2.1": "entry.1902761618",  # уточнить если не совпадёт
-                "2.2": "entry.1801011208",
-                "2.3": "entry.1217621579",  # уточнить если не совпадёт
+                "2.1": "entry.2142688093",
+                "2.2": "entry.869238404",
+                "2.3": "entry.2096928011",
             },
         }
         dept_entry_map = DEPT_ENTRIES.get(department, DEPT_ENTRIES["ОИК"])
