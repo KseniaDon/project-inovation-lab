@@ -260,6 +260,10 @@ def send_to_google_forms(nickname: str, vk_link: str, department: str, activatio
         )
         resp = urllib.request.urlopen(req, timeout=10)
         print(f"[Google Forms] status={resp.status}, nick={nickname}, dept={department}")
+        # Лог значений вопросов 2.x
+        for k in ["2.3 На каком этаже проводятся услуги НИИ Эпидемиологии?", "2.3 На каком этаже проводятся услуги Стоматологической поликлиники «Дентист»?", "2.3 На каком этаже проводятся услуги Травматолого-ортопедического центра?"]:
+            if k in answers:
+                print(f"[Google Forms] {k} = {answers[k]!r}")
         print(f"[Google Forms] answer_keys={list(answers.keys())}")
         print(f"[Google Forms] unmatched={[k for k in answers if not GOOGLE_FORM_ENTRIES.get(k)]}")
     except Exception as e:
