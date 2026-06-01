@@ -21,7 +21,7 @@ CORS = {
 }
 
 VK_APP_ID = 54606591
-VK_REDIRECT_URL = "https://mz-cgb-n-otdelenie-internatury.ru/admin/login"
+VK_REDIRECT_URL = "https://mz-cgbn-oi.ru/admin/login"
 
 def resp(status, body):
     return {"statusCode": status, "headers": CORS, "body": json.dumps(body, ensure_ascii=False)}

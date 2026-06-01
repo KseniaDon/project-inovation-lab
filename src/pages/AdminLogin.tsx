@@ -68,7 +68,7 @@ export default function AdminLogin() {
 
       VKID.Config.init({
         app: VK_APP_ID,
-        redirectUrl: "https://mz-cgb-n-otdelenie-internatury.ru/admin/login",
+        redirectUrl: "https://mz-cgbn-oi.ru/admin/login",
         responseMode: VKID.ConfigResponseMode.Callback,
         source: VKID.ConfigSource.LOWCODE,
         scope: "",
