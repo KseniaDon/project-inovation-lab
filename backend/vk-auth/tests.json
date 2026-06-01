@@ -13,17 +13,16 @@
       "expectedStatus": 401
     },
     {
-      "name": "check_nick unknown returns 403",
+      "name": "vk_callback без кода",
       "method": "POST",
-      "path": "/?action=check_nick",
-      "body": {"nickname": "unknown_xyz_123"},
-      "expectedStatus": 403
+      "path": "/?action=vk_callback",
+      "body": {},
+      "expectedStatus": 400
     },
     {
-      "name": "check_nick super_admin returns 200",
-      "method": "POST",
-      "path": "/?action=check_nick",
-      "body": {"nickname": "soul__shu"},
+      "name": "GET site_data",
+      "method": "GET",
+      "path": "/?action=site_data",
       "expectedStatus": 200
     }
   ]

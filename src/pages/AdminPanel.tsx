@@ -8,7 +8,6 @@ import { Role, AccessUser, ROLE_META, normalizeRole, TkmAllowedEntry } from "./a
 import AdminHome, { HomeLink, DEFAULT_LINKS } from "./admin/AdminHome";
 import AdminStaff, { StaffMember } from "./admin/AdminStaff";
 import AdminAccess, { HospitalRole } from "./admin/AdminAccess";
-import AdminPassword from "./admin/AdminPassword";
 import AdminWhatsNew from "./admin/AdminWhatsNew";
 import AdminTkm from "./admin/AdminTkm";
 import AdminTkmReviews from "./admin/AdminTkmReviews";
@@ -17,7 +16,7 @@ import { WhatsNewEntry } from "@/components/WhatsNew";
 
 const API = "https://functions.poehali.dev/ee0c9d49-3da0-4e2e-a2ab-1f68f29a1405";
 
-type Tab = "home" | "whats_new" | "staff" | "access" | "tkm" | "password";
+type Tab = "home" | "whats_new" | "staff" | "access" | "tkm";
 type TkmSubTab = "access" | "reviews" | "preview";
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
@@ -26,8 +25,6 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "staff",     label: "Контакты РС ОИ", icon: "Users" },
   { id: "access",    label: "Доступы",        icon: "KeyRound" },
   { id: "tkm",       label: "ТКМ",            icon: "ClipboardList" },
-
-  { id: "password",  label: "Мой пароль",     icon: "Shield" },
 ];
 
 const TKM_SUB_TABS: { id: TkmSubTab; label: string }[] = [
@@ -75,13 +72,6 @@ export default function AdminPanel() {
   const [newAccessRole, setNewAccessRole] = useState<Role>("editor");
   const [newHospitalRole, setNewHospitalRole] = useState<HospitalRole>("Нет");
   const [accessMsg, setAccessMsg] = useState("");
-
-  // Password state
-  const [pwCurrent, setPwCurrent] = useState("");
-  const [pwNew, setPwNew] = useState("");
-  const [pwConfirm, setPwConfirm] = useState("");
-  const [pwMsg, setPwMsg] = useState("");
-  const [pwLoading, setPwLoading] = useState(false);
 
   const token = () => localStorage.getItem("admin_token") || "";
   const authFetch = useCallback((url: string, opts?: RequestInit) =>
@@ -213,9 +203,12 @@ export default function AdminPanel() {
   const addAccess = async () => {
     if (!newAccessNick.trim()) return;
     setAccessMsg("");
-    const r = await authFetch(`${API}?action=add_access`, { method: "POST", body: JSON.stringify({ nickname: newAccessNick.trim(), role: newAccessRole }) });
+    const r = await authFetch(`${API}?action=add_access`, {
+      method: "POST",
+      body: JSON.stringify({ vk_url: newAccessNick.trim(), role: newAccessRole, hospital_role: newHospitalRole !== "Нет" ? newHospitalRole : "" }),
+    });
     const d = await r.json();
-    if (d.ok) { setNewAccessNick(""); loadAccess(); setAccessMsg("Добавлено!"); setTimeout(() => setAccessMsg(""), 2000); }
+    if (d.ok) { setNewAccessNick(""); setNewHospitalRole("Нет"); loadAccess(); setAccessMsg("Добавлено!"); setTimeout(() => setAccessMsg(""), 2000); }
     else setAccessMsg(d.error || "Ошибка");
   };
 
@@ -231,24 +224,6 @@ export default function AdminPanel() {
     const d = await r.json();
     if (d.ok) loadAccess();
     else setAccessMsg(d.error || "Ошибка");
-  };
-
-  const changePassword = async () => {
-    setPwMsg("");
-    if (!pwNew || pwNew !== pwConfirm) { setPwMsg("Пароли не совпадают"); return; }
-    if (pwNew.length < 6) { setPwMsg("Минимум 6 символов"); return; }
-    setPwLoading(true);
-    const checkR = await fetch(`${API}?action=login`, {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nickname: me!.nickname, password: pwCurrent }),
-    });
-    const checkD = await checkR.json();
-    if (!checkD.token) { setPwMsg("Неверный текущий пароль"); setPwLoading(false); return; }
-    const r = await authFetch(`${API}?action=set_password`, { method: "POST", body: JSON.stringify({ nickname: me!.nickname, password: pwNew }) });
-    const d = await r.json();
-    if (d.ok) { setPwMsg("Пароль успешно изменён!"); setPwCurrent(""); setPwNew(""); setPwConfirm(""); }
-    else setPwMsg(d.error || "Ошибка");
-    setPwLoading(false);
   };
 
   const updateMember = useCallback((i: number, field: keyof StaffMember, val: string) => {
@@ -329,11 +304,6 @@ export default function AdminPanel() {
             <AdminTkmPreview />
           )}
         </div>
-      )}
-      {tab === "password" && (
-        <AdminPassword pwCurrent={pwCurrent} setPwCurrent={setPwCurrent}
-          pwNew={pwNew} setPwNew={setPwNew} pwConfirm={pwConfirm} setPwConfirm={setPwConfirm}
-          pwMsg={pwMsg} pwLoading={pwLoading} onChangePassword={changePassword} />
       )}
     </>
   );

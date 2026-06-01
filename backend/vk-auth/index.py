@@ -1,14 +1,17 @@
 """
-Авторизация администраторов по никнейму ВК + пароль.
-Доступы хранятся в БД. Пароли — SHA-256 хэш.
+Авторизация администраторов через VK ID OAuth.
+Проверяет vk_id пользователя по таблице access_list.
+Действия: vk_callback, me, access_list, add_access, remove_access, update_access,
+          site_data, save_site_data, audit_log
 """
 import json
 import os
 import hmac
 import hashlib
 import base64
-
 import time
+import urllib.request
+import urllib.parse
 import psycopg2
 
 CORS = {
@@ -16,6 +19,9 @@ CORS = {
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, X-Authorization",
 }
+
+VK_APP_ID = 54606591
+VK_REDIRECT_URL = "https://mz-cgb-n-otdelenie-internatury.ru/admin/login"
 
 def resp(status, body):
     return {"statusCode": status, "headers": CORS, "body": json.dumps(body, ensure_ascii=False)}
@@ -26,13 +32,10 @@ def get_schema():
 def get_conn():
     return psycopg2.connect(os.environ["DATABASE_URL"])
 
-def hash_pw(pw: str) -> str:
-    return hashlib.sha256(pw.encode("utf-8")).hexdigest()
-
-def make_token(nickname: str, role: str) -> str:
+def make_token(vk_id: int, nickname: str, role: str) -> str:
     secret = os.environ.get("ADMIN_SECRET_KEY", "fallback-secret")
     payload = base64.b64encode(
-        json.dumps({"nick": nickname, "role": role, "t": int(time.time())}).encode()
+        json.dumps({"vk_id": vk_id, "nick": nickname, "role": role, "t": int(time.time())}).encode()
     ).decode()
     sig = hmac.new(secret.encode(), payload.encode(), hashlib.sha256).hexdigest()
     return f"{payload}.{sig}"
@@ -64,11 +67,9 @@ def get_current_user(event):
     token = _header(event.get("headers") or {}, "X-Authorization").replace("Bearer ", "").strip()
     return verify_token(token)
 
-# Иерархия ролей: чем меньше индекс — тем выше роль
 ROLE_HIERARCHY = ["super_admin", "head_admin", "admin", "moderator", "editor"]
 VALID_ROLES = set(ROLE_HIERARCHY)
 
-# Маппинг старых ролей на новые
 ROLE_COMPAT = {
     "curator": "super_admin", "head_doctor": "head_admin",
     "curator_oi": "admin", "ward_head": "moderator", "deputy": "editor",
@@ -90,6 +91,17 @@ def can_manage(actor_role: str, target_role: str) -> bool:
 def can_add_users(role: str) -> bool:
     return normalize_role(role) in ("super_admin", "head_admin", "admin", "moderator")
 
+def extract_vk_id_from_url(url: str):
+    """Извлекает числовой vk_id из ссылок типа vk.com/id132273284 или id132273284."""
+    url = url.strip().lower()
+    for prefix in ["https://vk.com/", "https://vk.ru/", "http://vk.com/", "http://vk.ru/", "vk.com/", "vk.ru/", "@"]:
+        if url.startswith(prefix):
+            url = url[len(prefix):]
+    url = url.strip("/").strip()
+    if url.startswith("id") and url[2:].isdigit():
+        return int(url[2:])
+    return None
+
 def clean_nick(raw: str) -> str:
     raw = raw.strip().lower()
     for prefix in ["https://vk.ru/", "https://vk.com/", "http://vk.ru/", "http://vk.com/", "vk.ru/", "vk.com/", "@"]:
@@ -98,10 +110,6 @@ def clean_nick(raw: str) -> str:
     return raw.strip("/").strip()
 
 def pg_json_cell(val):
-    """
-    Значение из колонки TEXT / JSON / JSONB после SELECT.
-    psycopg2 для JSONB часто отдаёт уже dict/list — json.loads() на нём даёт TypeError.
-    """
     if val is None:
         return None
     if isinstance(val, (dict, list)):
@@ -116,7 +124,6 @@ def pg_json_cell(val):
     return None
 
 def parse_jsonb_details(val):
-    """Поле audit_log.details для ответа API: всегда объект dict."""
     v = pg_json_cell(val)
     if v is None:
         return {}
@@ -126,83 +133,104 @@ def parse_jsonb_details(val):
         return {"items": v}
     return {}
 
+def audit(conn, actor: str, action: str, details: dict):
+    s = get_schema()
+    cur = conn.cursor()
+    cur.execute(
+        f"INSERT INTO {s}.audit_log (actor, action, details) VALUES (%s, %s, %s)",
+        (actor, action, json.dumps(details, ensure_ascii=False))
+    )
+
 def handler(event: dict, context) -> dict:
-    """Авторизация по никнейму ВК + пароль, управление доступами и данными сайта."""
+    """Авторизация через VK ID, управление доступами и данными сайта."""
     if event.get("httpMethod") == "OPTIONS":
         return {"statusCode": 200, "headers": CORS, "body": ""}
 
     qs = event.get("queryStringParameters") or {}
     action = qs.get("action", "")
 
-    # ── POST check_nick — проверка никнейма, есть ли в БД и есть ли пароль ───
-    if action == "check_nick":
+    # ── POST vk_callback — обмен code+device_id на vk_id ────────────────────
+    if action == "vk_callback":
         body = json.loads(event.get("body") or "{}")
-        nick = clean_nick(body.get("nickname") or "")
-        if not nick:
-            return resp(400, {"error": "Введите никнейм"})
-        conn = get_conn()
-        cur = conn.cursor()
-        s = get_schema()
-        cur.execute(f"SELECT role, password_hash FROM {s}.access_list WHERE nickname = %s", (nick,))
-        row = cur.fetchone()
-        conn.close()
-        if not row:
-            return resp(403, {"error": "denied"})
-        role, pw_hash = row
-        has_password = pw_hash is not None
-        return resp(200, {"role": role, "has_password": has_password})
+        code = (body.get("code") or "").strip()
+        device_id = (body.get("device_id") or "").strip()
+        code_verifier = (body.get("code_verifier") or "").strip()
 
-    # ── POST login — вход с паролем ───────────────────────────────────────────
-    if action == "login":
-        body = json.loads(event.get("body") or "{}")
-        nick = clean_nick(body.get("nickname") or "")
-        password = (body.get("password") or "").strip()
-        if not nick or not password:
-            return resp(400, {"error": "Введите никнейм и пароль"})
-        conn = get_conn()
-        cur = conn.cursor()
-        s = get_schema()
-        cur.execute(f"SELECT role, password_hash FROM {s}.access_list WHERE nickname = %s", (nick,))
-        row = cur.fetchone()
-        conn.close()
-        if not row:
-            return resp(403, {"error": "denied"})
-        role, pw_hash = row
-        if pw_hash is None:
-            return resp(400, {"error": "no_password", "message": "Пароль ещё не задан"})
-        if not hmac.compare_digest(hash_pw(password), pw_hash):
-            return resp(401, {"error": "wrong_password", "message": "Неверный пароль"})
-        token = make_token(nick, role)
-        return resp(200, {"token": token, "nickname": nick, "role": role})
+        if not code or not device_id:
+            return resp(400, {"error": "Нет кода авторизации"})
 
-    # ── POST set_password — установить/сменить пароль (только свой) ──────────
-    if action == "set_password":
-        body = json.loads(event.get("body") or "{}")
-        nick = clean_nick(body.get("nickname") or "")
-        password = (body.get("password") or "").strip()
-        if not nick or not password:
-            return resp(400, {"error": "Не все поля заполнены"})
-        if len(password) < 6:
-            return resp(400, {"error": "Пароль должен быть не менее 6 символов"})
-        # Для смены пароля нужен токен (кроме первичной установки)
-        user = get_current_user(event)
+        client_secret = os.environ.get("VK_CLIENT_SECRET", "")
+
+        # Обмен code на access_token через VK API
+        params = {
+            "grant_type": "authorization_code",
+            "code": code,
+            "client_id": str(VK_APP_ID),
+            "device_id": device_id,
+            "redirect_uri": VK_REDIRECT_URL,
+        }
+        if client_secret:
+            params["client_secret"] = client_secret
+        if code_verifier:
+            params["code_verifier"] = code_verifier
+
+        data = urllib.parse.urlencode(params).encode()
+        req = urllib.request.Request(
+            "https://id.vk.com/oauth2/auth",
+            data=data,
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            method="POST"
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=10) as r:
+                vk_resp = json.loads(r.read().decode())
+        except Exception as e:
+            return resp(502, {"error": f"Ошибка VK API: {str(e)}"})
+
+        if "error" in vk_resp:
+            return resp(401, {"error": vk_resp.get("error_description", vk_resp["error"])})
+
+        access_token = vk_resp.get("access_token")
+        if not access_token:
+            return resp(401, {"error": "Не удалось получить токен VK"})
+
+        # Получаем информацию о пользователе
+        user_info_req = urllib.request.Request(
+            f"https://id.vk.com/oauth2/user_info",
+            data=urllib.parse.urlencode({"access_token": access_token, "client_id": str(VK_APP_ID)}).encode(),
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            method="POST"
+        )
+        try:
+            with urllib.request.urlopen(user_info_req, timeout=10) as r:
+                user_data = json.loads(r.read().decode())
+        except Exception as e:
+            return resp(502, {"error": f"Ошибка получения данных пользователя: {str(e)}"})
+
+        user = user_data.get("user", {})
+        vk_id = user.get("user_id") or user.get("id")
+        if not vk_id:
+            return resp(401, {"error": "Не удалось получить VK ID"})
+
+        vk_id = int(vk_id)
+
+        # Проверяем доступ по vk_id
         conn = get_conn()
         cur = conn.cursor()
         s = get_schema()
-        cur.execute(f"SELECT role, password_hash FROM {s}.access_list WHERE nickname = %s", (nick,))
+        cur.execute(
+            f"SELECT nickname, role FROM {s}.access_list WHERE vk_id = %s",
+            (vk_id,)
+        )
         row = cur.fetchone()
-        if not row:
-            conn.close()
-            return resp(403, {"error": "Нет доступа"})
-        _, existing_hash = row
-        if existing_hash is not None:
-            if not user or user.get("nick") != nick:
-                conn.close()
-                return resp(403, {"error": "Можно менять только свой пароль"})
-        cur.execute(f"UPDATE {s}.access_list SET password_hash = %s WHERE nickname = %s", (hash_pw(password), nick))
-        conn.commit()
         conn.close()
-        return resp(200, {"ok": True})
+
+        if not row:
+            return resp(403, {"error": "denied", "vk_id": vk_id})
+
+        nickname, role = row
+        token = make_token(vk_id, nickname, role)
+        return resp(200, {"token": token, "nickname": nickname, "role": role, "vk_id": vk_id})
 
     # ── GET me ────────────────────────────────────────────────────────────────
     if action == "me":
@@ -210,17 +238,21 @@ def handler(event: dict, context) -> dict:
         if not user:
             return resp(401, {"error": "Unauthorized"})
         nick = user.get("nick", "")
+        vk_id = user.get("vk_id")
         conn = get_conn()
         cur = conn.cursor()
         s = get_schema()
-        cur.execute(f"SELECT role FROM {s}.access_list WHERE nickname = %s", (nick,))
+        if vk_id:
+            cur.execute(f"SELECT nickname, role FROM {s}.access_list WHERE vk_id = %s", (vk_id,))
+        else:
+            cur.execute(f"SELECT nickname, role FROM {s}.access_list WHERE nickname = %s", (nick,))
         row = cur.fetchone()
         conn.close()
         if not row:
             return resp(401, {"error": "Unauthorized"})
-        return resp(200, {"nickname": nick, "role": row[0]})
+        return resp(200, {"nickname": row[0], "role": row[1]})
 
-    # ── GET access_list — список доступов (все авторизованные) ───────────────
+    # ── GET access_list — список доступов ────────────────────────────────────
     if action == "access_list":
         user = get_current_user(event)
         if not user:
@@ -228,132 +260,150 @@ def handler(event: dict, context) -> dict:
         conn = get_conn()
         cur = conn.cursor()
         s = get_schema()
-        cur.execute(f"SELECT nickname, role, created_at, created_by, href, hospital_role FROM {s}.access_list ORDER BY created_at")
+        cur.execute(
+            f"SELECT nickname, role, created_at, created_by, href, hospital_role, vk_id, is_permanent "
+            f"FROM {s}.access_list ORDER BY created_at"
+        )
         rows = cur.fetchall()
         conn.close()
-        users = [{"nickname": r[0], "role": r[1], "created_at": str(r[2]), "created_by": r[3], "href": r[4] or "", "hospital_role": r[5] or ""} for r in rows]
+        users = []
+        for r in rows:
+            users.append({
+                "nickname": r[0], "role": r[1],
+                "created_at": r[2].isoformat() if r[2] else None,
+                "created_by": r[3], "href": r[4] or "",
+                "hospital_role": r[5] or "",
+                "vk_id": r[6], "is_permanent": r[7],
+            })
         return resp(200, {"users": users})
 
-    # ── POST add_access — добавить пользователя ───────────────────────────────
+    # ── POST add_access — добавить пользователя по ссылке VK ────────────────
     if action == "add_access":
         user = get_current_user(event)
-        if not user or not can_add_users(user.get("role", "")):
-            return resp(403, {"error": "Недостаточно прав для добавления пользователей"})
+        if not user:
+            return resp(401, {"error": "Unauthorized"})
+        actor_role = normalize_role(user.get("role", ""))
+        if not can_add_users(actor_role):
+            return resp(403, {"error": "Нет прав на добавление"})
         body = json.loads(event.get("body") or "{}")
-        new_nick = clean_nick(body.get("nickname") or "")
-        role = body.get("role", "deputy")
-        if not new_nick:
-            return resp(400, {"error": "Введите никнейм"})
+        vk_url = (body.get("vk_url") or "").strip()
+        role = normalize_role((body.get("role") or "editor").strip())
+        hospital_role = (body.get("hospital_role") or "").strip()
+
+        if not vk_url:
+            return resp(400, {"error": "Укажите ссылку ВКонтакте"})
         if role not in VALID_ROLES:
-            role = "deputy"
-        if not can_manage(user.get("role", ""), role):
-            return resp(403, {"error": "Нельзя выдать роль выше или равную своей"})
+            return resp(400, {"error": "Неверная роль"})
+        if not can_manage(actor_role, role):
+            return resp(403, {"error": "Нельзя назначить роль выше своей"})
+
+        # Извлекаем vk_id и nickname из ссылки
+        vk_id = extract_vk_id_from_url(vk_url)
+        nickname = clean_nick(vk_url)
+        href = f"https://vk.com/{nickname}"
+
         conn = get_conn()
         cur = conn.cursor()
         s = get_schema()
-        cur.execute(f"SELECT id FROM {s}.access_list WHERE nickname = %s", (new_nick,))
+
+        # Проверяем дубликат
+        if vk_id:
+            cur.execute(f"SELECT id FROM {s}.access_list WHERE vk_id = %s", (vk_id,))
+            if cur.fetchone():
+                conn.close()
+                return resp(409, {"error": "Пользователь уже есть в списке"})
+        cur.execute(f"SELECT id FROM {s}.access_list WHERE nickname = %s", (nickname,))
         if cur.fetchone():
             conn.close()
             return resp(409, {"error": "Пользователь уже есть в списке"})
+
         cur.execute(
-            f"INSERT INTO {s}.access_list (nickname, role, created_by) VALUES (%s, %s, %s)",
-            (new_nick, role, user.get("nick"))
+            f"INSERT INTO {s}.access_list (nickname, role, created_by, href, hospital_role, vk_id) "
+            f"VALUES (%s, %s, %s, %s, %s, %s)",
+            (nickname, role, user.get("nick"), href, hospital_role, vk_id)
         )
-        cur.execute(
-            f"INSERT INTO {s}.audit_log (actor, action, details) VALUES (%s, %s, %s)",
-            (user.get("nick", ""), "add_access", json.dumps({"nickname": new_nick, "role": role}, ensure_ascii=False))
-        )
+        audit(conn, user.get("nick", ""), "add_access", {"nickname": nickname, "vk_id": vk_id, "role": role})
         conn.commit()
         conn.close()
         return resp(200, {"ok": True})
 
-    # ── POST remove_access — удалить пользователя ─────────────────────────────
+    # ── POST remove_access ────────────────────────────────────────────────────
     if action == "remove_access":
         user = get_current_user(event)
         if not user:
             return resp(401, {"error": "Unauthorized"})
         body = json.loads(event.get("body") or "{}")
-        target = clean_nick(body.get("nickname") or "")
-        if not target:
-            return resp(400, {"error": "Введите никнейм"})
-        if target == user.get("nick"):
-            return resp(400, {"error": "Нельзя удалить самого себя"})
+        target_nick = (body.get("nickname") or "").strip().lower()
+        if not target_nick:
+            return resp(400, {"error": "Не указан никнейм"})
         conn = get_conn()
         cur = conn.cursor()
         s = get_schema()
-        cur.execute(f"SELECT role FROM {s}.access_list WHERE nickname = %s", (target,))
+        cur.execute(f"SELECT role, is_permanent FROM {s}.access_list WHERE nickname = %s", (target_nick,))
         row = cur.fetchone()
         if not row:
             conn.close()
             return resp(404, {"error": "Пользователь не найден"})
-        target_role = row[0]
-        if not can_manage(user.get("role", ""), target_role):
+        target_role, is_permanent = row
+        if is_permanent:
             conn.close()
-            return resp(403, {"error": "Недостаточно прав для удаления этого пользователя"})
-        cur.execute(f"DELETE FROM {s}.access_list WHERE nickname = %s", (target,))
-        cur.execute(
-            f"INSERT INTO {s}.audit_log (actor, action, details) VALUES (%s, %s, %s)",
-            (user.get("nick", ""), "remove_access", json.dumps({"nickname": target, "role": target_role}, ensure_ascii=False))
-        )
+            return resp(403, {"error": "Нельзя удалить постоянного администратора"})
+        actor_role = normalize_role(user.get("role", ""))
+        if not can_manage(actor_role, normalize_role(target_role)):
+            conn.close()
+            return resp(403, {"error": "Недостаточно прав"})
+        cur.execute(f"DELETE FROM {s}.access_list WHERE nickname = %s", (target_nick,))
+        audit(conn, user.get("nick", ""), "remove_access", {"nickname": target_nick})
         conn.commit()
         conn.close()
         return resp(200, {"ok": True})
 
-    # ── POST update_access — редактировать роль/ссылку пользователя ──────────
+    # ── POST update_access ────────────────────────────────────────────────────
     if action == "update_access":
         user = get_current_user(event)
         if not user:
             return resp(401, {"error": "Unauthorized"})
         body = json.loads(event.get("body") or "{}")
-        target = clean_nick(body.get("nickname") or "")
-        new_role = body.get("role")
-        new_href = body.get("href")
-        new_hospital = body.get("hospital_role")
-        if not target:
-            return resp(400, {"error": "Введите никнейм"})
+        target_nick = (body.get("nickname") or "").strip().lower()
+        if not target_nick:
+            return resp(400, {"error": "Не указан никнейм"})
         conn = get_conn()
         cur = conn.cursor()
         s = get_schema()
-        cur.execute(f"SELECT role FROM {s}.access_list WHERE nickname = %s", (target,))
+        cur.execute(f"SELECT role FROM {s}.access_list WHERE nickname = %s", (target_nick,))
         row = cur.fetchone()
         if not row:
             conn.close()
             return resp(404, {"error": "Пользователь не найден"})
-        target_role = row[0]
-        actor_role = user.get("role", "")
-        # Суперадмин может редактировать себя и всех, остальные — только ниже по иерархии
-        if target != user.get("nick") and not can_manage(actor_role, target_role):
+        old_role = row[0]
+        actor_role = normalize_role(user.get("role", ""))
+        new_role = normalize_role((body.get("role") or old_role).strip())
+        href = body.get("href")
+        hospital_role = body.get("hospital_role")
+        if not can_manage(actor_role, normalize_role(old_role)):
             conn.close()
             return resp(403, {"error": "Недостаточно прав"})
-        if new_role and new_role != target_role:
-            if new_role not in VALID_ROLES:
-                conn.close()
-                return resp(400, {"error": "Неверная роль"})
+        fields, vals = [], []
+        if new_role and new_role != old_role:
             if not can_manage(actor_role, new_role):
                 conn.close()
-                return resp(403, {"error": "Нельзя назначить роль выше или равную своей"})
-            cur.execute(f"UPDATE {s}.access_list SET role = %s WHERE nickname = %s", (new_role, target))
-        if new_href is not None:
-            cur.execute(f"UPDATE {s}.access_list SET href = %s WHERE nickname = %s", (new_href, target))
-        if new_hospital is not None:
-            cur.execute(f"UPDATE {s}.access_list SET hospital_role = %s WHERE nickname = %s", (new_hospital, target))
-        changes = {"nickname": target}
-        if new_role and new_role != target_role:
-            changes["old_role"] = target_role
-            changes["new_role"] = new_role
-        if new_href is not None:
-            changes["href"] = new_href
-        if new_hospital is not None:
-            changes["hospital_role"] = new_hospital
-        cur.execute(
-            f"INSERT INTO {s}.audit_log (actor, action, details) VALUES (%s, %s, %s)",
-            (user.get("nick", ""), "edit_access", json.dumps(changes, ensure_ascii=False))
-        )
-        conn.commit()
+                return resp(403, {"error": "Нельзя назначить роль выше своей"})
+            fields.append("role = %s"); vals.append(new_role)
+        if href is not None:
+            fields.append("href = %s"); vals.append(href)
+        if hospital_role is not None:
+            fields.append("hospital_role = %s"); vals.append(hospital_role)
+        if fields:
+            vals.append(target_nick)
+            cur.execute(f"UPDATE {s}.access_list SET {', '.join(fields)} WHERE nickname = %s", vals)
+            audit(conn, user.get("nick", ""), "edit_access",
+                  {"nickname": target_nick, "old_role": old_role, "new_role": new_role,
+                   "hospital_role": hospital_role})
+            conn.commit()
         conn.close()
         return resp(200, {"ok": True})
 
-    # ── GET site_data — публичный, без авторизации ────────────────────────────
+    # ── GET site_data ─────────────────────────────────────────────────────────
     if action == "site_data":
         conn = get_conn()
         cur = conn.cursor()
@@ -361,8 +411,11 @@ def handler(event: dict, context) -> dict:
         cur.execute(f"SELECT key, value FROM {s}.site_content")
         rows = cur.fetchall()
         conn.close()
-        data = {r[0]: pg_json_cell(r[1]) for r in rows}
-        return resp(200, {"data": data})
+        result = {}
+        for key, val in rows:
+            parsed = pg_json_cell(val)
+            result[key] = parsed if parsed is not None else val
+        return resp(200, result)
 
     # ── POST save_site_data ───────────────────────────────────────────────────
     if action == "save_site_data":
@@ -370,22 +423,20 @@ def handler(event: dict, context) -> dict:
         if not user:
             return resp(401, {"error": "Unauthorized"})
         body = json.loads(event.get("body") or "{}")
-        key = body.get("key")
+        key = (body.get("key") or "").strip()
         value = body.get("value")
-        if not key:
-            return resp(400, {"error": "Нет key"})
+        if not key or value is None:
+            return resp(400, {"error": "Укажите key и value"})
+        val_str = json.dumps(value, ensure_ascii=False) if not isinstance(value, str) else value
         conn = get_conn()
         cur = conn.cursor()
         s = get_schema()
         cur.execute(
             f"INSERT INTO {s}.site_content (key, value, updated_by) VALUES (%s, %s, %s) "
             f"ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_by = EXCLUDED.updated_by, updated_at = NOW()",
-            (key, json.dumps(value, ensure_ascii=False), user.get("nick", ""))
+            (key, val_str, user.get("nick", ""))
         )
-        cur.execute(
-            f"INSERT INTO {s}.audit_log (actor, action, details) VALUES (%s, %s, %s)",
-            (user.get("nick", ""), "edit_content", json.dumps({"key": key}, ensure_ascii=False))
-        )
+        audit(conn, user.get("nick", ""), "edit_content", {"key": key})
         conn.commit()
         conn.close()
         return resp(200, {"ok": True})
@@ -395,40 +446,17 @@ def handler(event: dict, context) -> dict:
         user = get_current_user(event)
         if not user:
             return resp(401, {"error": "Unauthorized"})
-        conn = None
-        try:
-            conn = get_conn()
-            cur = conn.cursor()
-            s = get_schema()
-            # Авто-очистка записей старше 30 дней
-            cur.execute(f"DELETE FROM {s}.audit_log WHERE created_at < NOW() - INTERVAL '30 days'")
-            cur.execute(
-                f"SELECT actor, action, details, created_at FROM {s}.audit_log ORDER BY created_at DESC LIMIT 50"
-            )
-            rows = cur.fetchall()
-            conn.commit()
-            logs = [
-                {
-                    "actor": r[0],
-                    "action": r[1],
-                    "details": parse_jsonb_details(r[2]),
-                    "created_at": str(r[3]),
-                }
-                for r in rows
-            ]
-            return resp(200, {"logs": logs})
-        except Exception as e:
-            if conn is not None:
-                try:
-                    conn.rollback()
-                except Exception:
-                    pass
-            return resp(500, {"error": "audit_log", "message": str(e)[:500]})
-        finally:
-            if conn is not None:
-                try:
-                    conn.close()
-                except Exception:
-                    pass
+        conn = get_conn()
+        cur = conn.cursor()
+        s = get_schema()
+        cur.execute(
+            f"SELECT actor, action, details, created_at FROM {s}.audit_log "
+            f"ORDER BY created_at DESC LIMIT 50"
+        )
+        rows = cur.fetchall()
+        conn.close()
+        logs = [{"actor": r[0], "action": r[1], "details": parse_jsonb_details(r[2]),
+                 "created_at": r[3].isoformat() if r[3] else None} for r in rows]
+        return resp(200, {"logs": logs})
 
-    return resp(400, {"error": "Укажите action"})
+    return resp(400, {"error": "Неизвестное действие"})

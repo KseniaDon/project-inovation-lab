@@ -293,16 +293,16 @@ export default function AdminAccess({
         <div className="border border-zinc-700/40 bg-zinc-900/40 p-5">
           <p className="text-sm font-semibold mb-3 text-zinc-300">Добавить пользователя</p>
           <div className="flex flex-col gap-3">
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs select-none">vk.ru/</span>
+            <div>
               <input
                 type="text"
-                placeholder="nickname"
+                placeholder="https://vk.com/id132273284 или vk.com/nickname"
                 value={newAccessNick}
                 onChange={e => setNewAccessNick(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && onAdd()}
-                className="w-full bg-zinc-900 border border-zinc-700 text-white pl-12 pr-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors"
+                className="w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2.5 text-sm outline-none focus:border-red-600 transition-colors"
               />
+              <p className="text-xs text-zinc-600 mt-1">Вставьте ссылку на страницу ВКонтакте</p>
             </div>
             <div className="flex gap-2">
               <div className="flex flex-col gap-1 flex-1">
