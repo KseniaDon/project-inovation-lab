@@ -42,6 +42,7 @@ export default function AdminLogin() {
         }),
       });
       const result = await r.json();
+      console.log("VK backend response:", r.status, JSON.stringify(result));
       if (r.status === 403 || result.error === "denied") {
         setDenied(true);
         setLoading(false);
@@ -94,6 +95,7 @@ export default function AdminLogin() {
           setError("Ошибка виджета VK: " + (err?.message || ""));
         })
         .on(VKID.OneTapInternalEvents.LOGIN_SUCCESS, (payload: { code: string; device_id: string; code_verifier?: string }) => {
+          console.log("VK LOGIN_SUCCESS payload:", JSON.stringify(payload));
           handleVkSuccess({ code: payload.code, device_id: payload.device_id, code_verifier: payload.code_verifier });
         });
 
