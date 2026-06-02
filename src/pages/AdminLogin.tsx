@@ -68,10 +68,26 @@ export default function AdminLogin() {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
     const device_id = params.get("device_id");
+    const payload = params.get("payload");
+
     if (code && device_id) {
       redirectHandled.current = true;
       window.history.replaceState({}, "", window.location.pathname);
       handleVkSuccess({ code, device_id });
+      return;
+    }
+
+    if (payload) {
+      try {
+        const parsed = JSON.parse(decodeURIComponent(payload));
+        const pCode = parsed.code || parsed.access_token;
+        const pDevice = parsed.device_id;
+        if (pCode && pDevice) {
+          redirectHandled.current = true;
+          window.history.replaceState({}, "", window.location.pathname);
+          handleVkSuccess({ code: pCode, device_id: pDevice });
+        }
+      } catch { /* ignore */ }
     }
   }, [handleVkSuccess]);
 
@@ -83,7 +99,7 @@ export default function AdminLogin() {
       VKID.Config.init({
         app: VK_APP_ID,
         redirectUrl: "https://mz-cgbn-oi.ru/admin/login",
-        responseMode: VKID.ConfigResponseMode.Callback,
+        responseMode: VKID.ConfigResponseMode.Redirect,
         source: VKID.ConfigSource.LOWCODE,
         scope: "",
       });
@@ -93,10 +109,6 @@ export default function AdminLogin() {
         .render({ container: containerRef.current, showAlternativeLogin: true })
         .on(VKID.WidgetEvents.ERROR, (err: { message?: string }) => {
           setError("Ошибка виджета VK: " + (err?.message || ""));
-        })
-        .on(VKID.OneTapInternalEvents.LOGIN_SUCCESS, (payload: { code: string; device_id: string; code_verifier?: string }) => {
-          console.log("VK LOGIN_SUCCESS payload:", JSON.stringify(payload));
-          handleVkSuccess({ code: payload.code, device_id: payload.device_id, code_verifier: payload.code_verifier });
         });
 
       setSdkReady(true);
