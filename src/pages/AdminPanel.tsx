@@ -35,8 +35,7 @@ const TKM_SUB_TABS: { id: TkmSubTab; label: string }[] = [
 
 const defaultStaff: StaffMember[] = [
   { role: "Куратор Отделения Интернатуры", name: "Ksenia Donskaya", nickname: "Ksenia_Donskaya", href: "https://vk.ru/soul__shu", badge: "Куратор", badgeColor: "bg-red-600" },
-  { role: "Заместитель Заведующего ОИ", name: "Egor Maslow", nickname: "Egor_Maslow", href: "https://vk.ru/cccuvigon", badge: "Зам. Зав.", badgeColor: "bg-zinc-700" },
-  { role: "Заместитель Заведующего ОИ", name: "Andrei Schmidt", nickname: "Andrei_Schmidt", href: "https://vk.com/id392167605", badge: "Зам. Зав.", badgeColor: "bg-zinc-700" },
+  { role: "Заместитель Заведующего ОИ по ЗОИ", name: "Egor Maslow", nickname: "Egor_Maslow", href: "https://vk.ru/cccuvigon", badge: "ЗОИ", badgeColor: "bg-zinc-700" },
 ];
 
 export default function AdminPanel() {
@@ -59,6 +58,8 @@ export default function AdminPanel() {
   const [staff, setStaff] = useState<StaffMember[]>(defaultStaff);
   const [staffSaving, setStaffSaving] = useState(false);
   const [staffSaved, setStaffSaved] = useState(false);
+
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   // TKM allowed list
   const [tkmAllowed, setTkmAllowed] = useState<TkmAllowedEntry[]>([]);
@@ -102,7 +103,7 @@ export default function AdminPanel() {
   }, [navigate, checkSession]);
 
   useEffect(() => {
-    if (!me) return;
+    if (!me || dataLoaded) return;
     authFetch(`${API}?action=site_data`).then(r => r.json()).then(d => {
       if (d.data?.staff) setStaff(d.data.staff);
       if (d.data?.home_links) setLinks(d.data.home_links);
@@ -111,8 +112,9 @@ export default function AdminPanel() {
         const raw = d.data.tkm_allowed as Array<string | TkmAllowedEntry>;
         setTkmAllowed(raw.map(e => typeof e === "string" ? { nick: e.toLowerCase(), attempts: 3 } : e));
       }
+      setDataLoaded(true);
     });
-  }, [me, authFetch]);
+  }, [me, authFetch, dataLoaded]);
 
   const loadAccess = useCallback(() => {
     setAccessLoading(true);
@@ -238,10 +240,11 @@ export default function AdminPanel() {
     setStaff(prev => [...prev, { role: "", name: "", nickname: "", href: "", badge: "", badgeColor: "bg-zinc-700" }]);
   }, []);
 
-  if (!me) {
+  if (!me || !dataLoaded) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+      <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center gap-3">
         <div className="w-8 h-8 border-2 border-red-600 border-t-transparent rounded-full animate-spin" />
+        <span className="text-xs text-zinc-500 tracking-wide">Загрузка панели...</span>
       </div>
     );
   }
