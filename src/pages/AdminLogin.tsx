@@ -93,11 +93,8 @@ export default function AdminLogin() {
         .on(VKID.WidgetEvents.ERROR, (err: { message?: string }) => {
           setError("Ошибка виджета VK: " + (err?.message || ""));
         })
-        .on(VKID.OneTapInternalEvents.LOGIN_SUCCESS, (payload: { code: string; device_id: string }) => {
-          const { code, device_id } = payload;
-          VKID.Auth.exchangeCode(code, device_id)
-            .then((result: VkCallbackData) => handleVkSuccess({ ...result, code, device_id }))
-            .catch(() => setError("Ошибка авторизации VK"));
+        .on(VKID.OneTapInternalEvents.LOGIN_SUCCESS, (payload: { code: string; device_id: string; code_verifier?: string }) => {
+          handleVkSuccess({ code: payload.code, device_id: payload.device_id, code_verifier: payload.code_verifier });
         });
 
       setSdkReady(true);
