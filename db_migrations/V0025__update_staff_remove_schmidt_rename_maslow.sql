@@ -1,0 +1,3 @@
+UPDATE t_p7851806_project_inovation_la.site_content
+SET value = '[{"role": "Куратор Отделения Интернатуры", "name": "Ksenia_Donskaya", "nickname": "soul__shu", "href": "https://vk.com/id132273284", "badge": "КОИ", "badgeColor": "bg-red-600"}, {"role": "Заместитель Заведующего ОИ по ЗОИ", "name": "Egor_Maslow", "nickname": "cccuvigon", "href": "https://vk.com/id560666897", "badge": "ЗОИ", "badgeColor": "bg-orange-600"}]'
+WHERE key = 'staff';
