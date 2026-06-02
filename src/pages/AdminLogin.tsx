@@ -26,6 +26,7 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false);
   const [denied, setDenied] = useState(false);
   const [sdkReady, setSdkReady] = useState(false);
+  const redirectHandled = useRef(false);
 
   const handleVkSuccess = useCallback(async (data: VkCallbackData) => {
     setLoading(true);
@@ -60,6 +61,18 @@ export default function AdminLogin() {
       setLoading(false);
     }
   }, [navigate]);
+
+  useEffect(() => {
+    if (redirectHandled.current) return;
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    const device_id = params.get("device_id");
+    if (code && device_id) {
+      redirectHandled.current = true;
+      window.history.replaceState({}, "", window.location.pathname);
+      handleVkSuccess({ code, device_id });
+    }
+  }, [handleVkSuccess]);
 
   useEffect(() => {
     const initSdk = () => {
