@@ -48,7 +48,7 @@ export default function Hero() {
         className="absolute inset-0 w-full h-full"
       >
         <img
-          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/07e6a93b-1feb-4637-bcab-fbcec24a04e3.png"
+          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/020d9b55-9e6a-4851-95e2-b98424a21f79.png"
           alt="Background"
           className="w-full h-full object-cover"
           style={{ filter: "grayscale(85%) brightness(0.45) blur(1.5px)" }}
