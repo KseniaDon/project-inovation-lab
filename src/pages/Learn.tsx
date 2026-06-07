@@ -43,12 +43,16 @@ import LearnTkmSection from "./learn/LearnTkmSection";
 
 
 const TKM_STORAGE_KEY = "tkm_session";
+const TKM_DURATION_MS = 90 * 60 * 1000;
 function hasActiveTkmSession(): boolean {
   try {
     const raw = localStorage.getItem(TKM_STORAGE_KEY);
     if (!raw) return false;
     const s = JSON.parse(raw);
-    return s?.stage && s.stage !== "form" && s.stage !== "done";
+    if (!s?.stage || s.stage === "form" || s.stage === "done") return false;
+    // Если время уже истекло — не считаем активной
+    if (s.startedAt && Date.now() - s.startedAt >= TKM_DURATION_MS) return false;
+    return true;
   } catch { return false; }
 }
 
