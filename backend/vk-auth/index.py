@@ -404,7 +404,7 @@ def handler(event: dict, context) -> dict:
         for key, val in rows:
             parsed = pg_json_cell(val)
             result[key] = parsed if parsed is not None else val
-        return resp(200, result)
+        return resp(200, {"data": result})
 
     # ── POST save_site_data ───────────────────────────────────────────────────
     if action == "save_site_data":
