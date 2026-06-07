@@ -42,8 +42,22 @@ import LearnFeldsherTkmSection from "./learn/LearnFeldsherTkmSection";
 import LearnTkmSection from "./learn/LearnTkmSection";
 
 
+const TKM_STORAGE_KEY = "tkm_session";
+function hasActiveTkmSession(): boolean {
+  try {
+    const raw = localStorage.getItem(TKM_STORAGE_KEY);
+    if (!raw) return false;
+    const s = JSON.parse(raw);
+    return s?.stage && s.stage !== "form" && s.stage !== "done";
+  } catch { return false; }
+}
+
 export default function Learn() {
-  const [active, setActive] = useState<SectionId>("intro");
+  const [active, setActive] = useState<SectionId>(() => {
+    if (hasActiveTkmSession()) return "tkm";
+    const hash = window.location.hash.replace("#", "") as SectionId;
+    return hash || "intro";
+  });
   const navigate = useNavigate();
 
   const go = (id: SectionId) => {
@@ -53,6 +67,11 @@ export default function Learn() {
   };
 
   useEffect(() => {
+    if (hasActiveTkmSession()) {
+      setActive("tkm");
+      window.history.replaceState(null, "", "/learn#tkm");
+      return;
+    }
     const hash = window.location.hash.replace("#", "") as SectionId;
     if (hash) setActive(hash);
   }, []);
