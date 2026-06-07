@@ -1,0 +1,1 @@
+UPDATE t_p7851806_project_inovation_la.access_list SET role = 'editor', is_permanent = false WHERE nickname = 'soul__shu_vk_duplicate';
