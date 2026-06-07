@@ -88,7 +88,7 @@ export default function LearnTkmSection() {
   const isWarning = timeLeft <= 10 * 60 * 1000 && timeLeft > 0;
   const isCritical = timeLeft <= 3 * 60 * 1000 && timeLeft > 0;
 
-  const isFullscreen = isActive && stage !== "form" && stage !== "done";
+  const isFullscreen = false;
 
   const timerBlock = isActive && (
     <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border font-mono text-lg font-bold shrink-0 transition-colors ${
