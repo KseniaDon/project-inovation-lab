@@ -48,10 +48,10 @@ export default function Hero() {
         className="absolute inset-0 w-full h-full"
       >
         <img
-          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/020d9b55-9e6a-4851-95e2-b98424a21f79.png"
+          src="https://cdn.poehali.dev/projects/e2f7351e-e666-4647-88af-b4a6ed42363d/bucket/b5b6d0ac-4378-49a3-8057-c20998879e75.png"
           alt="Background"
           className="w-full h-full object-cover"
-          style={{ filter: "grayscale(40%) brightness(0.45) blur(1.5px)" }}
+          style={{ filter: "grayscale(40%) brightness(0.45) blur(0.5px)" }}
         />
       </motion.div>
 
