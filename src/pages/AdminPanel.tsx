@@ -98,8 +98,6 @@ export default function AdminPanel() {
     if (!t || !nick || !role) { navigate("/admin/login"); return; }
     setMe({ nickname: nick, role });
     checkSession();
-    const interval = setInterval(checkSession, 30_000);
-    return () => clearInterval(interval);
   }, [navigate, checkSession]);
 
   useEffect(() => {
