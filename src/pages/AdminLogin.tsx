@@ -50,6 +50,8 @@ export default function AdminLogin() {
       localStorage.setItem("admin_token", result.token);
       localStorage.setItem("admin_nickname", result.nickname);
       localStorage.setItem("admin_role", result.role);
+      localStorage.setItem("admin_display_name", result.display_name || "");
+      localStorage.setItem("admin_vk_photo", result.vk_photo || "");
       navigate("/admin");
     } catch {
       setError("Ошибка соединения");

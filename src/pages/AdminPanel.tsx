@@ -43,7 +43,7 @@ const VALID_TABS: Tab[] = ["home", "whats_new", "staff", "access", "tkm"];
 export default function AdminPanel() {
   const navigate = useNavigate();
   const { tab: tabParam } = useParams<{ tab?: string }>();
-  const [me, setMe] = useState<{ nickname: string; role: Role } | null>(null);
+  const [me, setMe] = useState<{ nickname: string; role: Role; display_name: string; vk_photo: string } | null>(null);
   const tab: Tab = VALID_TABS.includes(tabParam as Tab) ? (tabParam as Tab) : "home";
   const [tkmSubTab, setTkmSubTab] = useState<TkmSubTab>("reviews");
 
@@ -88,7 +88,11 @@ export default function AdminPanel() {
       const res = await authFetch(`${API}?action=me`);
       const d = await res.json();
       if (d.nickname) {
-        setMe({ nickname: d.nickname, role: d.role });
+        const display_name = d.display_name || localStorage.getItem("admin_display_name") || "";
+        const vk_photo = d.vk_photo || localStorage.getItem("admin_vk_photo") || "";
+        if (display_name) localStorage.setItem("admin_display_name", display_name);
+        if (vk_photo) localStorage.setItem("admin_vk_photo", vk_photo);
+        setMe({ nickname: d.nickname, role: d.role, display_name, vk_photo });
       } else {
         localStorage.clear();
         navigate("/admin/login");
@@ -101,7 +105,11 @@ export default function AdminPanel() {
     const nick = localStorage.getItem("admin_nickname");
     const role = localStorage.getItem("admin_role") as Role | null;
     if (!t || !nick || !role) { navigate("/admin/login"); return; }
-    setMe({ nickname: nick, role });
+    setMe({
+      nickname: nick, role,
+      display_name: localStorage.getItem("admin_display_name") || "",
+      vk_photo: localStorage.getItem("admin_vk_photo") || "",
+    });
     checkSession();
   }, [navigate, checkSession]);
 
@@ -325,11 +333,15 @@ export default function AdminPanel() {
         </div>
         <div className="flex items-center gap-2">
           <div className="hidden sm:flex items-center gap-2 mr-1">
-            <div className="w-7 h-7 bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
-              <Icon name="User" size={13} className="text-zinc-400" />
-            </div>
+            {me.vk_photo ? (
+              <img src={me.vk_photo} alt="" className="w-7 h-7 rounded-full object-cover shrink-0 border border-zinc-700" />
+            ) : (
+              <div className="w-7 h-7 bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0 rounded-full">
+                <Icon name="User" size={13} className="text-zinc-400" />
+              </div>
+            )}
             <div>
-              <p className="text-xs font-semibold leading-none">vk.ru/{me.nickname}</p>
+              <p className="text-xs font-semibold leading-none">{me.display_name || me.nickname}</p>
               <p className="text-[10px] text-zinc-500 mt-0.5 tracking-wide">{ROLE_META[normalizeRole(me.role as string)]?.label ?? me.role}</p>
             </div>
           </div>

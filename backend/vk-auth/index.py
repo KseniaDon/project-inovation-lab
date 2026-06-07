@@ -176,13 +176,16 @@ def handler(event: dict, context) -> dict:
             return resp(401, {"error": "Не удалось получить VK ID"})
 
         vk_id = int(vk_id)
+        vk_photo = user.get("avatar") or user.get("photo_200") or ""
+        vk_first = user.get("first_name") or ""
+        vk_last = user.get("last_name") or ""
 
         # Проверяем доступ по vk_id
         conn = get_conn()
         cur = conn.cursor()
         s = get_schema()
         cur.execute(
-            f"SELECT nickname, role FROM {s}.access_list WHERE vk_id = %s",
+            f"SELECT nickname, role, display_name FROM {s}.access_list WHERE vk_id = %s",
             (vk_id,)
         )
         row = cur.fetchone()
@@ -191,9 +194,21 @@ def handler(event: dict, context) -> dict:
         if not row:
             return resp(403, {"error": "denied", "vk_id": vk_id})
 
-        nickname, role = row
+        nickname, role, display_name = row
+        # Сохраняем актуальное фото VK
+        if vk_photo:
+            conn2 = get_conn()
+            cur2 = conn2.cursor()
+            cur2.execute(f"UPDATE {s}.access_list SET vk_photo = %s WHERE vk_id = %s", (vk_photo, vk_id))
+            conn2.commit()
+            conn2.close()
         token = make_token(vk_id, nickname, role)
-        return resp(200, {"token": token, "nickname": nickname, "role": role, "vk_id": vk_id})
+        return resp(200, {
+            "token": token, "nickname": nickname, "role": role, "vk_id": vk_id,
+            "display_name": display_name or "",
+            "vk_photo": vk_photo,
+            "vk_name": f"{vk_first} {vk_last}".strip(),
+        })
 
     # ── GET me ────────────────────────────────────────────────────────────────
     if action == "me":
@@ -206,14 +221,14 @@ def handler(event: dict, context) -> dict:
         cur = conn.cursor()
         s = get_schema()
         if vk_id:
-            cur.execute(f"SELECT nickname, role FROM {s}.access_list WHERE vk_id = %s", (vk_id,))
+            cur.execute(f"SELECT nickname, role, display_name, vk_photo FROM {s}.access_list WHERE vk_id = %s", (vk_id,))
         else:
-            cur.execute(f"SELECT nickname, role FROM {s}.access_list WHERE nickname = %s", (nick,))
+            cur.execute(f"SELECT nickname, role, display_name, vk_photo FROM {s}.access_list WHERE nickname = %s", (nick,))
         row = cur.fetchone()
         conn.close()
         if not row:
             return resp(401, {"error": "Unauthorized"})
-        return resp(200, {"nickname": row[0], "role": row[1]})
+        return resp(200, {"nickname": row[0], "role": row[1], "display_name": row[2] or "", "vk_photo": row[3] or ""})
 
     # ── GET access_list — список доступов ────────────────────────────────────
     if action == "access_list":
@@ -261,10 +276,12 @@ def handler(event: dict, context) -> dict:
         if not can_manage(actor_role, role):
             return resp(403, {"error": "Нельзя назначить роль выше своей"})
 
-        # Извлекаем vk_id и nickname из ссылки
+        # Принимаем только числовой id: vk.com/id123456
         vk_id = extract_vk_id_from_url(vk_url)
-        nickname = clean_nick(vk_url)
-        href = f"https://vk.com/{nickname}"
+        if not vk_id:
+            return resp(400, {"error": "Принимается только ссылка с числовым ID, например: vk.com/id132273284"})
+        nickname = f"id{vk_id}"
+        href = f"https://vk.com/id{vk_id}"
 
         conn = get_conn()
         cur = conn.cursor()
@@ -316,6 +333,13 @@ def handler(event: dict, context) -> dict:
         if not can_manage(actor_role, normalize_role(target_role)):
             conn.close()
             return resp(403, {"error": "Недостаточно прав"})
+        # Запрет удаления последнего super_admin
+        if normalize_role(target_role) == "super_admin":
+            cur.execute(f"SELECT COUNT(*) FROM {s}.access_list WHERE role = 'super_admin'", )
+            cnt = cur.fetchone()[0]
+            if cnt <= 1:
+                conn.close()
+                return resp(403, {"error": "Нельзя удалить единственного суперадмина"})
         cur.execute(f"DELETE FROM {s}.access_list WHERE nickname = %s", (target_nick,))
         audit(conn, user.get("nick", ""), "remove_access", {"nickname": target_nick})
         conn.commit()
