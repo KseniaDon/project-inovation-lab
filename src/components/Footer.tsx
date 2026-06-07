@@ -42,7 +42,7 @@ export default function Footer() {
               {/* Правая часть — подпись */}
               <p className="text-neutral-400 text-[10px] sm:text-xs text-right">
                 Сделано с{" "}
-                <span className="heart-beat" aria-hidden="true">♥</span>
+                <span className="heart-beat" aria-hidden="true">❤️</span>
                 {" "}для Отделения интернатуры<br className="hidden sm:inline" /> ЦГБ города Невский by{" "}
                 <a
                   href="https://vk.com/id132273284"
