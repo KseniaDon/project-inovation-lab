@@ -134,13 +134,6 @@ export default function LearnTkmSection() {
 
       {stage === "form" && (
         <>
-          <div className="flex items-start gap-3 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3.5 max-w-2xl">
-            <Icon name="AlertTriangle" size={17} className="text-red-400 shrink-0 mt-0.5" />
-            <p className="text-sm text-red-300 leading-relaxed">
-              <span className="font-semibold text-red-400">ТКМ открывается в полноэкранном режиме!</span>{" "}
-              Допишите тест, либо дождитесь окончания времени.
-            </p>
-          </div>
           <TkmForm onDepartmentSelected={(dept, info) => {
             startSession({ nickname: info.nickname, vkLink: info.vkLink, department: dept, activationCode: info.activationCode });
             autoSubmittedRef.current = false;
