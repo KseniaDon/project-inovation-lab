@@ -100,7 +100,7 @@ export default function AdminAccess({
     const nick = u.nickname.toLowerCase();
     setEditState({
       role: normalizeRole(u.role as string),
-      display_name: (u as AccessUser & { display_name?: string }).display_name || "",
+      display_name: u.display_name || "",
       hospital_role: u.hospital_role || "Нет",
       tkm: tkmAllowed.some(e => e?.nick?.toLowerCase() === nick),
     });
@@ -185,9 +185,9 @@ export default function AdminAccess({
                     </button>
                   </div>
 
-                  {(u as AccessUser & { vk_photo?: string }).vk_photo ? (
+                  {u.vk_photo ? (
                     <img
-                      src={(u as AccessUser & { vk_photo?: string }).vk_photo}
+                      src={u.vk_photo}
                       alt=""
                       className="w-9 h-9 rounded-full object-cover shrink-0 border border-zinc-700"
                     />
@@ -200,7 +200,7 @@ export default function AdminAccess({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="font-semibold text-sm truncate">
-                        {(u as AccessUser & { display_name?: string }).display_name || u.nickname}
+                        {u.display_name || u.nickname}
                       </span>
                       {isSelf && <span className="text-[10px] text-zinc-600 shrink-0">· это вы</span>}
                     </div>

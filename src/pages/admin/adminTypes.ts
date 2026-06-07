@@ -38,7 +38,7 @@ export type Tab =
   | "access" | "password";
 
 export type Report = { label: string; template: string };
-export type AccessUser = { nickname: string; role: Role; created_at: string; created_by: string | null; href: string; hospital_role: string };
+export type AccessUser = { nickname: string; role: Role; created_at: string; created_by: string | null; href: string; hospital_role: string; vk_id?: number | null; is_permanent?: boolean; display_name?: string; vk_photo?: string; };
 export type TkmAllowedEntry = { nick: string; attempts: number; allowed: boolean };
 
 export type Section = { id: string; title: string; items: string[] };
