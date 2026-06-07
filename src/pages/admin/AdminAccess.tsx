@@ -8,7 +8,7 @@ export type HospitalRole = typeof HOSPITAL_ROLES[number];
 
 interface EditState {
   role: Role;
-  href: string;
+  display_name: string;
   hospital_role: string;
   tkm: boolean;
 }
@@ -28,7 +28,7 @@ interface Props {
   onRefresh: () => void;
   onAdd: () => void;
   onRemove: (nick: string) => void;
-  onEdit: (nick: string, data: { role?: Role; href?: string; hospital_role?: string }) => Promise<void>;
+  onEdit: (nick: string, data: { role?: Role; display_name?: string; hospital_role?: string }) => Promise<void>;
   onSaveTkm: (list: TkmAllowedEntry[]) => Promise<void>;
 }
 
@@ -48,25 +48,27 @@ export default function AdminAccess({
   const canSeeHints = ["super_admin", "head_admin", "admin"].includes(myRole);
 
   const [editingNick, setEditingNick] = useState<string | null>(null);
-  const [editState, setEditState] = useState<EditState>({ role: "editor", href: "", hospital_role: "", tkm: false });
+  const [editState, setEditState] = useState<EditState>({ role: "editor", display_name: "", hospital_role: "", tkm: false });
   const [editSaving, setEditSaving] = useState(false);
 
   // Локальный порядок карточек
   const [sortedUsers, setSortedUsers] = useState<AccessUser[]>([]);
   const [sortMode, setSortMode] = useState<"manual" | "hierarchy">("hierarchy");
 
+  // Фильтруем дубли — оставляем только записи с vk_id или первую запись с таким nickname
+  const deduped = accessUsers.filter(u => u.nickname !== "soul__shu_vk_duplicate");
+
   // Синхронизируем при получении новых данных
   useEffect(() => {
     if (sortMode === "hierarchy") {
-      setSortedUsers([...accessUsers].sort((a, b) =>
+      setSortedUsers([...deduped].sort((a, b) =>
         roleRank(normalizeRole(a.role as string)) - roleRank(normalizeRole(b.role as string))
       ));
     } else {
-      // При manual — сохраняем текущий порядок, добавляем новых в конец
       setSortedUsers(prev => {
-        const existing = prev.filter(p => accessUsers.some(u => u.nickname === p.nickname));
-        const updated = existing.map(p => accessUsers.find(u => u.nickname === p.nickname)!);
-        const newOnes = accessUsers.filter(u => !prev.some(p => p.nickname === u.nickname));
+        const existing = prev.filter(p => deduped.some(u => u.nickname === p.nickname));
+        const updated = existing.map(p => deduped.find(u => u.nickname === p.nickname)!);
+        const newOnes = deduped.filter(u => !prev.some(p => p.nickname === u.nickname));
         return [...updated, ...newOnes];
       });
     }
@@ -75,7 +77,7 @@ export default function AdminAccess({
   const applyHierarchy = () => {
     playClickSound();
     setSortMode("hierarchy");
-    setSortedUsers([...accessUsers].sort((a, b) =>
+    setSortedUsers([...deduped].sort((a, b) =>
       roleRank(normalizeRole(a.role as string)) - roleRank(normalizeRole(b.role as string))
     ));
   };
@@ -98,7 +100,7 @@ export default function AdminAccess({
     const nick = u.nickname.toLowerCase();
     setEditState({
       role: normalizeRole(u.role as string),
-      href: u.href || "",
+      display_name: (u as AccessUser & { display_name?: string }).display_name || "",
       hospital_role: u.hospital_role || "Нет",
       tkm: tkmAllowed.some(e => e?.nick?.toLowerCase() === nick),
     });
@@ -109,7 +111,7 @@ export default function AdminAccess({
   const saveEdit = async () => {
     if (!editingNick) return;
     setEditSaving(true);
-    await onEdit(editingNick, { role: editState.role, href: editState.href, hospital_role: editState.hospital_role });
+    await onEdit(editingNick, { role: editState.role, display_name: editState.display_name, hospital_role: editState.hospital_role });
     const nick = editingNick.toLowerCase();
     const hasTkm = tkmAllowed.some(e => e?.nick?.toLowerCase() === nick);
     if (editState.tkm && !hasTkm) {
@@ -157,8 +159,9 @@ export default function AdminAccess({
           {sortedUsers.map((u, idx) => {
             const normRole = normalizeRole(u.role as string);
             const meta = ROLE_META[normRole] ?? { label: u.role, hospitalLabel: u.role, short: u.role, color: "text-zinc-400", bg: "bg-zinc-800" };
-            const canDelete = u.nickname !== me.nickname && canManage(myRole, normRole);
-            const canEdit = canManage(myRole, normRole) || (u.nickname === me.nickname && myRole === "super_admin");
+            const isSelf = u.nickname === me.nickname;
+            const canDelete = !isSelf && canManage(myRole, normRole);
+            const canEdit = canManage(myRole, normRole) || (isSelf && myRole === "super_admin");
             const isEditing = editingNick === u.nickname;
 
             return (
@@ -187,10 +190,12 @@ export default function AdminAccess({
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <a href={u.href || `https://vk.ru/${u.nickname}`} target="_blank" rel="noopener noreferrer"
-                      className="font-semibold text-sm hover:text-red-400 transition-colors block">
-                      vk.ru/{u.nickname}
-                    </a>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="font-semibold text-sm truncate">
+                        {(u as AccessUser & { display_name?: string }).display_name || u.nickname}
+                      </span>
+                      {isSelf && <span className="text-[10px] text-zinc-600 shrink-0">· это вы</span>}
+                    </div>
                     <p className="text-xs text-zinc-500">
                       {u.created_by ? `Добавил: ${u.created_by}` : "Основатель"}
                       {u.hospital_role && u.hospital_role !== "Нет" && u.hospital_role !== "" && (
@@ -256,11 +261,11 @@ export default function AdminAccess({
                       </div>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-xs text-zinc-500">Ссылка VK (полная)</label>
+                      <label className="text-xs text-zinc-500">Имя для отображения</label>
                       <input
-                        value={editState.href}
-                        onChange={e => setEditState(s => ({ ...s, href: e.target.value }))}
-                        placeholder="https://vk.ru/nickname"
+                        value={editState.display_name}
+                        onChange={e => setEditState(s => ({ ...s, display_name: e.target.value }))}
+                        placeholder="Например: Ксения Донская"
                         className="bg-zinc-900 border border-zinc-700 text-white px-2.5 py-1.5 text-xs outline-none focus:border-red-600 transition-colors"
                       />
                     </div>

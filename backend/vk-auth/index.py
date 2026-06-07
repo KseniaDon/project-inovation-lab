@@ -224,7 +224,7 @@ def handler(event: dict, context) -> dict:
         cur = conn.cursor()
         s = get_schema()
         cur.execute(
-            f"SELECT nickname, role, created_at, created_by, href, hospital_role, vk_id, is_permanent "
+            f"SELECT nickname, role, created_at, created_by, href, hospital_role, vk_id, is_permanent, display_name "
             f"FROM {s}.access_list ORDER BY created_at"
         )
         rows = cur.fetchall()
@@ -237,6 +237,7 @@ def handler(event: dict, context) -> dict:
                 "created_by": r[3], "href": r[4] or "",
                 "hospital_role": r[5] or "",
                 "vk_id": r[6], "is_permanent": r[7],
+                "display_name": r[8] or "",
             })
         return resp(200, {"users": users})
 
@@ -341,9 +342,10 @@ def handler(event: dict, context) -> dict:
         old_role = row[0]
         actor_role = normalize_role(user.get("role", ""))
         new_role = normalize_role((body.get("role") or old_role).strip())
-        href = body.get("href")
+        display_name = body.get("display_name")
         hospital_role = body.get("hospital_role")
-        if not can_manage(actor_role, normalize_role(old_role)):
+        is_self = user.get("nick", "").lower() == target_nick
+        if not is_self and not can_manage(actor_role, normalize_role(old_role)):
             conn.close()
             return resp(403, {"error": "Недостаточно прав"})
         fields, vals = [], []
@@ -352,8 +354,8 @@ def handler(event: dict, context) -> dict:
                 conn.close()
                 return resp(403, {"error": "Нельзя назначить роль выше своей"})
             fields.append("role = %s"); vals.append(new_role)
-        if href is not None:
-            fields.append("href = %s"); vals.append(href)
+        if display_name is not None:
+            fields.append("display_name = %s"); vals.append(display_name)
         if hospital_role is not None:
             fields.append("hospital_role = %s"); vals.append(hospital_role)
         if fields:

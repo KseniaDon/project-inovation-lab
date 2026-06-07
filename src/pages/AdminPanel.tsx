@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { playClickSound } from "@/hooks/useSound";
 import Icon from "@/components/ui/icon";
 import { invalidateSiteCache } from "@/hooks/useSiteData";
@@ -38,11 +38,16 @@ const defaultStaff: StaffMember[] = [
   { role: "Заместитель Заведующего ОИ по ЗОИ", name: "Egor Maslow", nickname: "Egor_Maslow", href: "https://vk.ru/cccuvigon", badge: "ЗОИ", badgeColor: "bg-zinc-700" },
 ];
 
+const VALID_TABS: Tab[] = ["home", "whats_new", "staff", "access", "tkm"];
+
 export default function AdminPanel() {
   const navigate = useNavigate();
+  const { tab: tabParam } = useParams<{ tab?: string }>();
   const [me, setMe] = useState<{ nickname: string; role: Role } | null>(null);
-  const [tab, setTab] = useState<Tab>("home");
+  const tab: Tab = VALID_TABS.includes(tabParam as Tab) ? (tabParam as Tab) : "home";
   const [tkmSubTab, setTkmSubTab] = useState<TkmSubTab>("reviews");
+
+  const setTab = (t: Tab) => { playClickSound(); navigate(`/admin/${t}`, { replace: false }); };
 
   // Whats new state
   const [whatsNew, setWhatsNew] = useState<WhatsNewEntry[]>([]);
@@ -219,7 +224,7 @@ export default function AdminPanel() {
     else setAccessMsg(d.error || "Ошибка");
   };
 
-  const editAccess = async (nick: string, data: { role?: Role; href?: string; hospital_role?: string }) => {
+  const editAccess = async (nick: string, data: { role?: Role; display_name?: string; hospital_role?: string }) => {
     const r = await authFetch(`${API}?action=update_access`, { method: "POST", body: JSON.stringify({ nickname: nick, ...data }) });
     const d = await r.json();
     if (d.ok) loadAccess();
@@ -349,7 +354,7 @@ export default function AdminPanel() {
       <div className="hidden md:flex flex-1 overflow-hidden">
         <aside className="w-56 border-r border-zinc-800 flex flex-col py-3 shrink-0 overflow-y-auto">
           {visibleTabs.map(t => (
-            <button key={t.id} onClick={() => { playClickSound(); setTab(t.id); }}
+            <button key={t.id} onClick={() => setTab(t.id)}
               className={`flex items-center gap-3 px-5 py-3 text-sm transition-colors text-left ${tab === t.id ? "bg-zinc-800 text-white border-r-2 border-red-600 font-semibold" : "text-zinc-400 hover:text-white hover:bg-zinc-900"}`}>
               <Icon name={t.icon as "Home"} size={16} className="shrink-0" />
               <span className="tracking-wide">{t.label}</span>
@@ -370,7 +375,7 @@ export default function AdminPanel() {
         </main>
         <nav className="fixed bottom-0 left-0 right-0 z-50 bg-zinc-900 border-t border-zinc-800 flex items-stretch">
           {visibleTabs.map(t => (
-            <button key={t.id} onClick={() => { playClickSound(); setTab(t.id); }}
+            <button key={t.id} onClick={() => setTab(t.id)}
               className={`flex-1 flex flex-col items-center justify-center py-2 gap-0.5 transition-colors min-w-0 ${tab === t.id ? "text-red-400 bg-zinc-800" : "text-zinc-500 hover:text-zinc-300"}`}>
               <Icon name={t.icon as "Home"} size={18} className="shrink-0" />
               <span className="text-[9px] uppercase tracking-wide leading-tight truncate w-full text-center px-0.5">{t.label}</span>
