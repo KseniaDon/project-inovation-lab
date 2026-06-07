@@ -227,8 +227,35 @@ export default function Hero() {
           animate="visible"
           custom={1.0}
         >
+          <style>{`
+            @keyframes mystic-shimmer {
+              0%   { background-position: 0% 50%; }
+              50%  { background-position: 100% 50%; }
+              100% { background-position: 0% 50%; }
+            }
+            .mystic-text {
+              background: linear-gradient(
+                90deg,
+                #dc2626,
+                #f87171,
+                #fca5a5,
+                #fff,
+                #fca5a5,
+                #c026d3,
+                #dc2626,
+                #7c3aed,
+                #dc2626
+              );
+              background-size: 300% 300%;
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              background-clip: text;
+              animation: mystic-shimmer 4s ease infinite;
+              filter: drop-shadow(0 0 8px rgba(220,38,38,0.5));
+            }
+          `}</style>
           <p
-            className="text-red-500/80 text-center tracking-wide"
+            className="mystic-text text-center tracking-wide"
             style={{ fontFamily: "'Cinzel', serif", fontSize: "0.95rem", lineHeight: 1.6 }}
           >
             Aliis inserviendo consumor
