@@ -47,7 +47,6 @@ export default function AdminLogin() {
         setLoading(false);
         return;
       }
-      console.log("VK login result:", JSON.stringify({ vk_photo: result.vk_photo, _debug_user_keys: result._debug_user_keys }));
       localStorage.setItem("admin_token", result.token);
       localStorage.setItem("admin_nickname", result.nickname);
       localStorage.setItem("admin_role", result.role);
