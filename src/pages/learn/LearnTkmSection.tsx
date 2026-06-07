@@ -88,35 +88,37 @@ export default function LearnTkmSection() {
   const isWarning = timeLeft <= 10 * 60 * 1000 && timeLeft > 0;
   const isCritical = timeLeft <= 3 * 60 * 1000 && timeLeft > 0;
 
-  return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Раздел</p>
-          <h1 className="text-2xl sm:text-3xl font-bold">ТКМ</h1>
-          <p className="text-xs text-muted-foreground mt-1">{SECTION_LABELS[stage]}</p>
-        </div>
+  const isFullscreen = isActive && stage !== "form" && stage !== "done";
 
-        {isActive && !expired && (
-          <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border font-mono text-lg font-bold shrink-0 transition-colors ${
-            isCritical
-              ? "border-red-500 bg-red-500/10 text-red-400 animate-pulse"
-              : isWarning
-              ? "border-yellow-500 bg-yellow-500/10 text-yellow-400"
-              : "border-border bg-card text-foreground"
-          }`}>
-            <Icon name="Timer" size={18} className={isCritical ? "text-red-400" : isWarning ? "text-yellow-400" : "text-muted-foreground"} />
-            {formatTime(timeLeft)}
-          </div>
-        )}
+  const timerBlock = isActive && (
+    <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border font-mono text-lg font-bold shrink-0 transition-colors ${
+      expired
+        ? "border-red-500 bg-red-500/10 text-red-400"
+        : isCritical
+        ? "border-red-500 bg-red-500/10 text-red-400 animate-pulse"
+        : isWarning
+        ? "border-yellow-500 bg-yellow-500/10 text-yellow-400"
+        : "border-border bg-card text-foreground"
+    }`}>
+      <Icon name={expired ? "TimerOff" : "Timer"} size={18} className={expired || isCritical ? "text-red-400" : isWarning ? "text-yellow-400" : "text-muted-foreground"} />
+      {expired ? "00:00" : formatTime(timeLeft)}
+    </div>
+  );
 
-        {isActive && expired && (
-          <div className="flex items-center gap-2 px-4 py-2 rounded-xl border border-red-500 bg-red-500/10 text-red-400 font-mono text-lg font-bold shrink-0">
-            <Icon name="TimerOff" size={18} />
-            00:00
-          </div>
-        )}
+  const header = (
+    <div className="flex items-start justify-between gap-4">
+      <div>
+        <p className="text-xs uppercase tracking-widest text-red-600 mb-1">Раздел</p>
+        <h1 className="text-2xl sm:text-3xl font-bold">ТКМ</h1>
+        <p className="text-xs text-muted-foreground mt-1">{SECTION_LABELS[stage]}</p>
       </div>
+      {timerBlock}
+    </div>
+  );
+
+  const content = (
+    <div className={`flex flex-col gap-6 ${isFullscreen ? "w-full max-w-3xl mx-auto" : ""}`}>
+      {!isFullscreen && header}
 
       {expired && stage !== "done" && (
         <div className="rounded-xl border border-green-700/40 bg-green-900/10 p-5 flex flex-col gap-2">
@@ -233,4 +235,25 @@ export default function LearnTkmSection() {
       )}
     </div>
   );
+
+  if (isFullscreen) {
+    return (
+      <div className="fixed inset-0 z-50 bg-background overflow-y-auto">
+        <div className="min-h-full flex flex-col">
+          <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b border-border px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+              <span className="text-sm font-semibold tracking-wide">ТКМ · {SECTION_LABELS[stage]}</span>
+            </div>
+            {timerBlock}
+          </div>
+          <div className="flex-1 px-4 py-6 sm:px-8">
+            {content}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return content;
 }
