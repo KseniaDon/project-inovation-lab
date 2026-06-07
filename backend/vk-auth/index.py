@@ -173,10 +173,14 @@ def handler(event: dict, context) -> dict:
         user = user_data.get("user", {})
         vk_id = user.get("user_id") or user.get("id")
         if not vk_id:
-            return resp(401, {"error": "Не удалось получить VK ID"})
+            return resp(401, {"error": "Не удалось получить VK ID", "debug": user_data})
 
         vk_id = int(vk_id)
-        vk_photo = user.get("avatar") or user.get("photo_200") or ""
+        # Перебираем все возможные названия поля с фото
+        vk_photo = (user.get("avatar") or user.get("photo_max_orig") or
+                    user.get("photo_200") or user.get("photo_100") or
+                    user.get("photo_50") or user.get("photo") or "")
+        _debug_keys = list(user.keys())
         vk_first = user.get("first_name") or ""
         vk_last = user.get("last_name") or ""
 
@@ -208,6 +212,7 @@ def handler(event: dict, context) -> dict:
             "display_name": display_name or "",
             "vk_photo": vk_photo,
             "vk_name": f"{vk_first} {vk_last}".strip(),
+            "_debug_user_keys": _debug_keys,
         })
 
     # ── GET me ────────────────────────────────────────────────────────────────
