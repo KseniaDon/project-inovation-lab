@@ -185,9 +185,17 @@ export default function AdminAccess({
                     </button>
                   </div>
 
-                  <div className="w-9 h-9 bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
-                    <Icon name="User" size={15} className="text-zinc-400" />
-                  </div>
+                  {(u as AccessUser & { vk_photo?: string }).vk_photo ? (
+                    <img
+                      src={(u as AccessUser & { vk_photo?: string }).vk_photo}
+                      alt=""
+                      className="w-9 h-9 rounded-full object-cover shrink-0 border border-zinc-700"
+                    />
+                  ) : (
+                    <div className="w-9 h-9 bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0 rounded-full">
+                      <Icon name="User" size={15} className="text-zinc-400" />
+                    </div>
+                  )}
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 min-w-0">
