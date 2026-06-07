@@ -96,7 +96,7 @@ const ANSWER_ALIASES: Record<string, string[]> = {
   "3.22 Что такое ВПС?": ["Внутренние правила сервера", "Внутренний свод правил сервера"],
 };
 
-function normalizeKey(key: string): string {
+export function normalizeKey(key: string): string {
   return KEY_ALIASES[key] ?? key;
 }
 
