@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Icon from "@/components/ui/icon";
 import { SectionId } from "./learnConfig";
 import { useSiteData } from "@/hooks/useSiteData";
@@ -9,6 +10,19 @@ interface LearnMisSectionProps {
 }
 
 const MIS_URL = "https://docs.google.com/forms/d/e/1FAIpQLScO0bFomyEMvIseA4JHYSQiNTWdmN3DinF4Ra7gv7eCQKMqEw/viewform";
+
+function PulsingHeart() {
+  const [beat, setBeat] = useState(false);
+  useEffect(() => {
+    const interval = setInterval(() => setBeat(v => !v), 800);
+    return () => clearInterval(interval);
+  }, []);
+  return (
+    <span className="transition-transform duration-300 select-none inline-block" style={{ fontSize: 18, transform: beat ? "scale(1.3)" : "scale(1)" }}>
+      ❤️
+    </span>
+  );
+}
 
 export default function LearnMisSection({ go }: LearnMisSectionProps) {
   const data = useSiteData<SimplePageData>("mis_page", defaultMisPage);
@@ -108,7 +122,7 @@ export default function LearnMisSection({ go }: LearnMisSectionProps) {
       <div className="flex items-start gap-3 bg-sky-50 dark:bg-sky-950/40 border border-sky-300 dark:border-sky-700 rounded-sm px-4 py-3">
         <Icon name="Lightbulb" size={18} className="text-sky-500 shrink-0 mt-0.5" />
         <p className="text-sm text-sky-800 dark:text-sky-200 leading-relaxed">
-          <strong>Совет:</strong> чтобы улучшить проверку Вашего отчёта и получить одобрение, сортируйте все свои доказательства по папкам. Например: лечения в одну папку с лечениями, строи в папку со строями, чтобы каждый строй был в отдельных папках. Пока что учитесь и повышайтесь, всему остальному мы Вас научим ❤️
+          <strong>Совет:</strong> чтобы улучшить проверку Вашего отчёта и получить одобрение, сортируйте все свои доказательства по папкам. Например: лечения в одну папку с лечениями, строи в папку со строями, чтобы каждый строй был в отдельных папках. Пока что учитесь и повышайтесь, всему остальному мы Вас научим <PulsingHeart />
         </p>
       </div>
 
