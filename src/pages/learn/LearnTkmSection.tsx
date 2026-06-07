@@ -133,10 +133,19 @@ export default function LearnTkmSection() {
       )}
 
       {stage === "form" && (
-        <TkmForm onDepartmentSelected={(dept, info) => {
-          startSession({ nickname: info.nickname, vkLink: info.vkLink, department: dept, activationCode: info.activationCode });
-          autoSubmittedRef.current = false;
-        }} />
+        <>
+          <div className="flex items-start gap-3 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3.5 max-w-2xl">
+            <Icon name="AlertTriangle" size={17} className="text-red-400 shrink-0 mt-0.5" />
+            <p className="text-sm text-red-300 leading-relaxed">
+              <span className="font-semibold text-red-400">ТКМ открывается в полноэкранном режиме!</span>{" "}
+              Допишите тест, либо дождитесь окончания времени.
+            </p>
+          </div>
+          <TkmForm onDepartmentSelected={(dept, info) => {
+            startSession({ nickname: info.nickname, vkLink: info.vkLink, department: dept, activationCode: info.activationCode });
+            autoSubmittedRef.current = false;
+          }} />
+        </>
       )}
 
       {!expired && stage === "section2" && meta && meta.department === "ОИК" && (
@@ -238,7 +247,16 @@ export default function LearnTkmSection() {
 
   if (isFullscreen) {
     return (
-      <div className="fixed inset-0 z-50 bg-background overflow-y-auto">
+      <div
+        className="fixed inset-0 z-50 bg-background overflow-y-auto"
+        style={{ userSelect: "none", WebkitUserSelect: "none" }}
+        onContextMenu={e => e.preventDefault()}
+        onCopy={e => e.preventDefault()}
+        onCut={e => e.preventDefault()}
+      >
+        <style>{`
+          @media print { body { display: none !important; } }
+        `}</style>
         <div className="min-h-full flex flex-col">
           <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b border-border px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
