@@ -88,6 +88,18 @@ export function formatDate(iso: string) {
   return d.toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
 }
 
+const KEY_ALIASES: Record<string, string> = {
+  "3.22 Что такое свод ВПС?": "3.22 Что такое ВПС?",
+};
+
+const ANSWER_ALIASES: Record<string, string[]> = {
+  "3.22 Что такое ВПС?": ["Внутренние правила сервера", "Внутренний свод правил сервера"],
+};
+
+function normalizeKey(key: string): string {
+  return KEY_ALIASES[key] ?? key;
+}
+
 function getSingleQuestions(dept: string): TkmQuestion[] {
   return [
     ...(TKM_QUESTIONS[dept] || []),
@@ -126,33 +138,40 @@ function getAllQuestionsWithNum(): { key: string; num?: number; text?: string; t
 }
 
 export function getQuestionOptions(key: string, dept: string): string[] | null {
+  const nKey = normalizeKey(key);
   const singles = getSingleQuestions(dept);
-  const single = singles.find(q => q.key === key);
+  const single = singles.find(q => q.key === nKey);
   if (single) return single.options;
 
   const multis = getMultiQuestions();
-  const multi = multis.find(q => q.key === key);
+  const multi = multis.find(q => q.key === nKey);
   if (multi) return multi.options;
 
   return null;
 }
 
 export function getQuestionType(key: string, dept: string): "single" | "multi" | "match" | "open" {
+  const nKey = normalizeKey(key);
   const singles = getSingleQuestions(dept);
-  if (singles.find(q => q.key === key)) return "single";
+  if (singles.find(q => q.key === nKey)) return "single";
 
   const multis = getMultiQuestions();
-  if (multis.find(q => q.key === key)) return "multi";
+  if (multis.find(q => q.key === nKey)) return "multi";
 
-  if (TKM_SECTION3_MATCH.find(q => q.key === key)) return "match";
+  if (TKM_SECTION3_MATCH.find(q => q.key === nKey)) return "match";
 
   return "open";
 }
 
 export function checkAnswer(key: string, answer: string, dept: string): "correct" | "wrong" | "open" | "unknown" {
+  const nKey = normalizeKey(key);
   const singles = getSingleQuestions(dept);
-  const single = singles.find(q => q.key === key);
-  if (single) return answer === single.correct ? "correct" : "wrong";
+  const single = singles.find(q => q.key === nKey);
+  if (single) {
+    const aliases = ANSWER_ALIASES[nKey];
+    const isCorrect = aliases ? aliases.includes(answer) : answer === single.correct;
+    return isCorrect ? "correct" : "wrong";
+  }
 
   const multis = getMultiQuestions();
   const multi = multis.find(q => q.key === key);
@@ -179,31 +198,33 @@ export function checkAnswer(key: string, answer: string, dept: string): "correct
 }
 
 export function getCorrectAnswer(key: string, dept: string): string | string[] | null {
+  const nKey = normalizeKey(key);
   const singles = getSingleQuestions(dept);
-  const single = singles.find(q => q.key === key);
+  const single = singles.find(q => q.key === nKey);
   if (single) return single.correct;
 
   const multis = getMultiQuestions();
-  const multi = multis.find(q => q.key === key);
+  const multi = multis.find(q => q.key === nKey);
   if (multi) return multi.correct;
 
   return null;
 }
 
 export function getQuestionNum(key: string): number | null {
-  const found = getAllQuestionsWithNum().find(q => q.key === key);
+  const nKey = normalizeKey(key);
+  const found = getAllQuestionsWithNum().find(q => q.key === nKey);
   if (found && "num" in found && typeof found.num === "number") return found.num;
   return null;
 }
 
 export function getQuestionLabel(key: string, dept: string): string {
-  // Сначала ищем по всем одиночным и мульти (у них text всегда есть)
+  const nKey = normalizeKey(key);
   const singles = getSingleQuestions(dept);
-  const single = singles.find(q => q.key === key);
+  const single = singles.find(q => q.key === nKey);
   if (single) return single.text;
 
   const multis = getMultiQuestions();
-  const multi = multis.find(q => q.key === key);
+  const multi = multis.find(q => q.key === nKey);
   if (multi) return multi.text;
 
   // Открытые и спец. вопросы
