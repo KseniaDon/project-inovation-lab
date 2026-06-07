@@ -250,8 +250,8 @@ export const TKM_SECTION4_MULTI: TkmMultiQuestion[] = [
 
 export const TKM_SECTION4_RADIO2: TkmQuestion[] = [
   {
-    key: "3.22 Что такое свод ВПС?",
-    text: "Что такое свод ВПС?",
+    key: "3.22 Что такое ВПС?",
+    text: "Что такое ВПС?",
     options: [
       "Верхний пищеводный сфинктер",
       "Врожденные пороки сердца",
