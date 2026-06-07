@@ -149,54 +149,17 @@ def handler(event: dict, context) -> dict:
     qs = event.get("queryStringParameters") or {}
     action = qs.get("action", "")
 
-    # ── POST vk_callback — обмен code+device_id на vk_id ────────────────────
+    # ── POST vk_callback — SDK сам обменял code, мы получаем access_token ────
     if action == "vk_callback":
         body = json.loads(event.get("body") or "{}")
-        code = (body.get("code") or "").strip()
-        device_id = (body.get("device_id") or "").strip()
-        code_verifier = (body.get("code_verifier") or "").strip()
+        access_token = (body.get("access_token") or "").strip()
 
-        if not code or not device_id:
-            return resp(400, {"error": "Нет кода авторизации"})
-
-        client_secret = os.environ.get("VK_CLIENT_SECRET", "")
-
-        # Обмен code на access_token через VK API
-        params = {
-            "grant_type": "authorization_code",
-            "code": code,
-            "client_id": str(VK_APP_ID),
-            "device_id": device_id,
-            "redirect_uri": VK_REDIRECT_URL,
-        }
-        if client_secret:
-            params["client_secret"] = client_secret
-        if code_verifier:
-            params["code_verifier"] = code_verifier
-
-        data = urllib.parse.urlencode(params).encode()
-        req = urllib.request.Request(
-            "https://id.vk.com/oauth2/auth",
-            data=data,
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
-            method="POST"
-        )
-        try:
-            with urllib.request.urlopen(req, timeout=10) as r:
-                vk_resp = json.loads(r.read().decode())
-        except Exception as e:
-            return resp(502, {"error": f"Ошибка VK API: {str(e)}"})
-
-        if "error" in vk_resp:
-            return resp(401, {"error": vk_resp.get("error_description", vk_resp["error"])})
-
-        access_token = vk_resp.get("access_token")
         if not access_token:
-            return resp(401, {"error": "Не удалось получить токен VK"})
+            return resp(400, {"error": "Нет access_token"})
 
-        # Получаем информацию о пользователе
+        # Получаем информацию о пользователе по токену
         user_info_req = urllib.request.Request(
-            f"https://id.vk.com/oauth2/user_info",
+            "https://id.vk.com/oauth2/user_info",
             data=urllib.parse.urlencode({"access_token": access_token, "client_id": str(VK_APP_ID)}).encode(),
             headers={"Content-Type": "application/x-www-form-urlencoded"},
             method="POST"

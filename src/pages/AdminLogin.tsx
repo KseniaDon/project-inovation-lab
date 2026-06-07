@@ -14,9 +14,7 @@ declare global {
 }
 
 type VkCallbackData = {
-  code?: string;
-  device_id?: string;
-  code_verifier?: string;
+  access_token: string;
 };
 
 export default function AdminLogin() {
@@ -35,11 +33,7 @@ export default function AdminLogin() {
       const r = await fetch(`${API}?action=vk_callback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          code: data.code,
-          device_id: data.device_id,
-          code_verifier: data.code_verifier,
-        }),
+        body: JSON.stringify({ access_token: data.access_token }),
       });
       const result = await r.json();
       console.log("VK backend response:", r.status, JSON.stringify(result));
@@ -63,33 +57,7 @@ export default function AdminLogin() {
     }
   }, [navigate]);
 
-  useEffect(() => {
-    if (redirectHandled.current) return;
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
-    const device_id = params.get("device_id");
-    const payload = params.get("payload");
 
-    if (code && device_id) {
-      redirectHandled.current = true;
-      window.history.replaceState({}, "", window.location.pathname);
-      handleVkSuccess({ code, device_id });
-      return;
-    }
-
-    if (payload) {
-      try {
-        const parsed = JSON.parse(decodeURIComponent(payload));
-        const pCode = parsed.code || parsed.access_token;
-        const pDevice = parsed.device_id;
-        if (pCode && pDevice) {
-          redirectHandled.current = true;
-          window.history.replaceState({}, "", window.location.pathname);
-          handleVkSuccess({ code: pCode, device_id: pDevice });
-        }
-      } catch { /* ignore */ }
-    }
-  }, [handleVkSuccess]);
 
   useEffect(() => {
     const initSdk = () => {
@@ -99,7 +67,7 @@ export default function AdminLogin() {
       VKID.Config.init({
         app: VK_APP_ID,
         redirectUrl: "https://mz-cgbn-oi.ru/admin/login",
-        responseMode: VKID.ConfigResponseMode.Redirect,
+        responseMode: VKID.ConfigResponseMode.Callback,
         source: VKID.ConfigSource.LOWCODE,
         scope: "",
       });
@@ -109,6 +77,11 @@ export default function AdminLogin() {
         .render({ container: containerRef.current, showAlternativeLogin: true })
         .on(VKID.WidgetEvents.ERROR, (err: { message?: string }) => {
           setError("Ошибка виджета VK: " + (err?.message || ""));
+        })
+        .on(VKID.OneTapInternalEvents.LOGIN_SUCCESS, (payload: { code: string; device_id: string }) => {
+          VKID.Auth.exchangeCode(payload.code, payload.device_id)
+            .then((data: { access_token: string }) => handleVkSuccess({ access_token: data.access_token }))
+            .catch((err: { message?: string }) => setError("Ошибка VK: " + (err?.message || "")));
         });
 
       setSdkReady(true);
